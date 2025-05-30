@@ -35,6 +35,7 @@ composer install
 
 ```bash
 php init
+```
 
 ```bash
 php yii migrate
