@@ -23,7 +23,19 @@ Sistem Informasi Akademik (SIAKAD) berbasis [Yii2 Advanced Application Template]
 
 ```bash
 git clone https://github.com/username/siakad-yii2.git
+```
+
+```bash
 cd siakad-yii2
+```
+
+```bash
 composer install
+```
+
+```bash
 php init
+
+```bash
 php yii migrate
+```
