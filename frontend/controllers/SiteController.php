@@ -75,7 +75,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->user->logout();
+            return $this->redirect(['site/login']);
+        }
+        $heading = 'Dashboard';
+        return $this->render('index', compact('heading'));
     }
 
     /**
@@ -88,6 +93,8 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+
+        $this->layout = 'main-login';
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -114,45 +121,14 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        }
-
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-    /**
      * Signs user up.
      *
      * @return mixed
      */
     public function actionSignup()
     {
+        $this->layout = 'main-login';
+
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
@@ -171,6 +147,8 @@ class SiteController extends Controller
      */
     public function actionRequestPasswordReset()
     {
+        $this->layout = 'main-login';
+
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
@@ -196,6 +174,8 @@ class SiteController extends Controller
      */
     public function actionResetPassword($token)
     {
+        $this->layout = 'main-login';
+
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidArgumentException $e) {
@@ -222,6 +202,8 @@ class SiteController extends Controller
      */
     public function actionVerifyEmail($token)
     {
+        $this->layout = 'main-login';
+
         try {
             $model = new VerifyEmailForm($token);
         } catch (InvalidArgumentException $e) {
@@ -243,6 +225,8 @@ class SiteController extends Controller
      */
     public function actionResendVerificationEmail()
     {
+        $this->layout = 'main-login';
+
         $model = new ResendVerificationEmailForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {

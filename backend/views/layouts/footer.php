@@ -1,7 +1,8 @@
 <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 3.1.0
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+        What you do is what you get
     </div>
+    <!-- Default to the left -->
+    <strong>Crafted with ❤️ by <a href="javascript:void(0)" target="_blank">Aditia Saputra</a></strong>
 </footer>

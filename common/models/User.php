@@ -5,19 +5,23 @@ namespace common\models;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * User model
  *
  * @property integer $id
+ * @property string $name
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $verification_token
  * @property string $email
  * @property string $auth_key
+ * @property string image
  * @property integer $status
  * @property integer $role_id
  * @property integer $created_at
@@ -34,7 +38,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%user}}';
     }
@@ -42,7 +46,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             TimestampBehavior::class,
@@ -52,11 +56,12 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -85,6 +90,20 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    /**
+     * Find user by username or email
+     *
+     * @param $login
+     * @return array|ActiveRecord|null
+     */
+    public static function findByUsernameOrEmail($login)
+    {
+        return static::find()
+            ->where(['or', ['username' => $login], ['email' => $login]])
+            ->andWhere(['status' => self::STATUS_ACTIVE])
+            ->one();
     }
 
     /**
@@ -210,5 +229,43 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return ($this->role_id === 1);
+    }
+
+    /**
+     * Check user access
+     *
+     * @return bool
+     */
+    public function checkAccess(): bool
+    {
+        return ($this->role_id === 1) || ($this->role_id === 2) || $this->role_id === 3 || $this->role_id === 4;
+    }
+
+    /**
+     * Getter password
+     *
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get user role
+     *
+     * @return ActiveQuery
+     */
+    public function getRole(): ActiveQuery
+    {
+        return $this->hasOne(Role::class, ['id' => 'role']);
     }
 }

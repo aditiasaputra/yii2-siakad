@@ -19,25 +19,30 @@ class m130524_201442_init extends Migration
 
         $this->batchInsert('{{%role}}', ['name'], [
             ['administrator'],
-            ['manager'],
-            ['supervisor'],
+            ['operator'],
             ['staff'],
-            ['member'],
+            ['lecturer'],
+            ['student'],
         ]);
 
         $this->createTable('{{%user}}', [
             'id' => $this->primaryKey(),
+            'name' => $this->string(255)->notNull()->unique(),
             'username' => $this->string()->notNull()->unique(),
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
-            // 1|Admin,2|Manager,3|Supervisor,4|Staff,5|Member
+            // 1|Admin,2|Operator,3|Staff,4|Lecturer,5|Student
             'role_id' => $this->integer()->notNull()->defaultValue(5),
+            'image' => $this->string()->null(),
 
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
+            'created_by' => $this->integer()->null(),
+            'updated_by' => $this->integer()->null(),
+            'deleted_at' => $this->dateTime()->null(),
         ], $tableOptions);
 
         $this->addForeignKey(

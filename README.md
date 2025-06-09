@@ -3,14 +3,14 @@
 Sistem Informasi Akademik (SIAKAD) berbasis [Yii2 Advanced Application Template](https://www.yiiframework.com/) yang digunakan untuk mengelola data akademik di lingkungan kampus atau sekolah.
 
 ## 🚀 Fitur Utama
-- Manajemen Mahasiswa
-- Manajemen Dosen
-- Jadwal Perkuliahan
-- Input & Rekap Nilai
-- Otentikasi dan Hak Akses (RBAC)
-- Dashboard Admin
-- Modul Backend & Frontend terpisah
-- Support ChartJS, SweetAlert, dan lainnya
+- Manajemen Mahasiswa✅
+- Manajemen Dosen❌
+- Jadwal Perkuliahan❌
+- Input & Rekap Nilai❌
+- Otentikasi dan Hak Akses (RBAC)✅
+- Dashboard Admin✅
+- Modul Backend & Frontend terpisah✅
+- Support ChartJS, SweetAlert, dan lainnya❌
 
 ## 🛠️ Teknologi
 - PHP 8.x

@@ -20,6 +20,7 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'loginUrl' => ['site/login'],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -37,14 +38,16 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'login' => 'site/login',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
