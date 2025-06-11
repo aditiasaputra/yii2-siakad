@@ -1,9 +1,7 @@
 <?php
 
-use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use yii\helpers\Html;
-use yii\widgets\Pjax;
 
 /** @var $searchModel backend\models\UserSearch */
 /** @var $dataProvider yii\data\ActiveDataProvider */
@@ -68,6 +66,40 @@ $gridColumns = [
         'pageSummaryOptions' => ['colspan' => 3, 'data-colspan-dir' => 'rtl']
     ],
 ];
+
+$pdfHeader = [
+    'L' => [
+        'content' => 'Master User',
+        'font-size' => 8,
+        'color' => '#333333',
+    ],
+    'C' => [
+        'content' => $this->title,
+        'font-size' => 16,
+        'color' => '#333333',
+    ],
+    'R' => [
+        'content' => 'Generated: '.date('D, d-M-Y'),
+        'font-size' => 8,
+        'color' => '#333333',
+    ],
+];
+$pdfFooter = [
+    'L' => [
+        'content' => 'Test',
+        'font-size' => 8,
+        'font-style' => 'B',
+        'color' => '#999999',
+    ],
+    'R' => [
+        'content' => '1',
+        'font-size' => 10,
+        'font-style' => 'B',
+        'font-family' => 'serif',
+        'color' => '#333333',
+    ],
+    'line' => true,
+];
 ?>
 
 <div class="container-fluid">
@@ -110,7 +142,7 @@ $gridColumns = [
                                 </div>
                             </div>
                         ',
-                    'heading' => '<i class="fas fa-users"></i>  Data Pengguna',
+                    'heading' => '<i class="fas fa-users"></i>  Master User',
                     'type' => GridView::TYPE_DARK,
                 ],
                 'export' => [
@@ -121,27 +153,37 @@ $gridColumns = [
                 'exportConfig' => [
                     GridView::HTML => [
                         'label' => 'HTML',
-                        'filename' => 'Data-Pengguna-' . date('Ymd-His'),
+                        'filename' => 'Master-User-' . date('Ymd'),
                     ],
                     GridView::CSV => [
                         'label' => 'CSV',
-                        'filename' => 'Data-Pengguna-' . date('Ymd-His'),
+                        'filename' => 'Master-User-' . date('Ymd'),
                     ],
                     GridView::TEXT => [
                         'label' => 'Text',
-                        'filename' => 'Data-Pengguna-' . date('Ymd-His'),
+                        'filename' => 'Master-User-' . date('Ymd'),
                     ],
                     GridView::EXCEL => [
                         'label' => 'Excel',
-                        'filename' => 'Data-Pengguna-' . date('Ymd-His'),
+                        'filename' => 'Master-User-' . date('Ymd'),
                     ],
                     GridView::PDF => [
                         'label' => 'PDF',
-                        'filename' => 'Data-Pengguna-' . date('Ymd-His'),
+                        'filename' => 'Master-User-' . date('Ymd'),
+                        'config' => [
+                            'methods' => [
+                                'SetHeader' => [
+                                    ['odd' => $pdfHeader, 'even' => $pdfHeader],
+                                ],
+                                'SetFooter' => [
+                                    ['odd' => $pdfFooter, 'even' => $pdfFooter],
+                                ],
+                            ],
+                        ],
                     ],
                     GridView::JSON => [
                         'label' => 'JSON',
-                        'filename' => 'Data-Pengguna-' . date('Ymd-His'),
+                        'filename' => 'Data-User-' . date('Ymd'),
                     ],
                 ],
                 // set your toolbar
