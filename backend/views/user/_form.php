@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
+use common\widgets\Alert;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
@@ -39,90 +40,88 @@ JS
 
 
 ?>
-
+<?= Alert::widget() ?>
 <div class="card card-primary card-outline mb-3">
     <div class="card-header">
         <h1 class="card-title">Form User</h1>
     </div>
     <?php $form = ActiveForm::begin([
-        'options' => ['enctype' => 'multipart/form-data']
+        'options' => ['enctype' => 'multipart/form-data', 'autocomplete' => 'off']
     ]); ?>
         <div class="card-body">
 
             <div class="row">
-                <div class="col-lg-4 col-md-12 col-4">
-                    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
-                </div>
-                <div class="col-lg-4 col-md-12 col-4">
-                    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
-                </div>
-                <div class="col-lg-4 col-md-12 col-4">
-                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <?= $form->field($model, 'role_id')->widget(\kartik\select2\Select2::class, [
-                        'data' => \yii\helpers\ArrayHelper::map(\common\models\Role::find()->all(), 'id', 'name'), // ganti 'name' jika kolomnya beda
-                        'options' => [
-                            'placeholder' => '-- Select Role --',
-                        ],
-                        'pluginOptions' => [
-                            'allowClear' => true
-                        ],
-                    ]) ?>
-                </div>
-                <div class="col-md-6">
-                    <?= $form->field($model, 'status')->widget(Select2::class, [
-                        'data' => [
-                            10 => 'Active',
-                            0 => 'Inactive',
-                        ],
-                        'options' => ['placeholder' => 'Select status...'],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]) ?>
-                </div>
-            </div>
-
-            <?php if ($model->isNewRecord): ?>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-12">
-                        <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+                <div class="col-lg-5 col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'role_id')->widget(Select2::class, [
+                                'data' => ArrayHelper::map(Role::find()->all(), 'id', 'name'), // ganti 'name' jika kolomnya beda
+                                'options' => [
+                                    'placeholder' => '-- Select Role --',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ],
+                            ]) ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'status')->widget(Select2::class, [
+                                'data' => [
+                                    10 => 'Active',
+                                    0 => 'Inactive',
+                                ],
+                                'options' => ['placeholder' => 'Select status...'],
+                                'pluginOptions' => ['allowClear' => true],
+                            ]) ?>
+                        </div>
+                        <?php if ($model->isNewRecord): ?>
+                            <div class="col-lg-12 col-md-12 col-12">
+                                <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
-            <?php endif; ?>
+                <div class="col-lg-7 col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label"><strong>Pilih Avatar</strong></label>
+                            <div class="d-flex justify-content-evenly flex-wrap gap-4">
+                                <?php foreach ($avatars as $avatar): ?>
+                                    <label class="text-center">
+                                        <input type="radio" name="User[images]" value="<?= 'img/' . $avatar ?>"
+                                            <?= ($model->image === '/img/' . $avatar) ? 'checked' : '' ?> style="display: none;">
+                                        <img src="<?= $assetDir . '/img/' . $avatar ?>" class="img-thumbnail avatar-choice" style="width: 80px; height: 80px; cursor: pointer;">
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="form-text text-muted mt-2">Atau upload gambar kustom di bawah ini</div>
+                        </div>
 
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <label class="form-label"><strong>Pilih Avatar</strong></label>
-                    <div class="d-flex justify-content-evenly flex-wrap gap-4">
-                        <?php foreach ($avatars as $avatar): ?>
-                            <label class="text-center">
-                                <input type="radio" name="User[image]" value="<?= 'img/' . $avatar ?>"
-                                    <?= ($model->image === '/img/' . $avatar) ? 'checked' : '' ?> style="display: none;">
-                                <img src="<?= $assetDir . '/img/' . $avatar ?>" class="img-thumbnail avatar-choice" style="width: 80px; height: 80px; cursor: pointer;">
-                            </label>
-                        <?php endforeach; ?>
+                        <div class="col-md-12">
+                            <?= $form->field($model, 'image')->widget(FileInput::class, [
+                                'options' => ['accept' => 'image/*'],
+                                'pluginOptions' => [
+                                    'initialPreview' => ($model->isNewRecord || !$model->image
+                                    ? false
+                                    : [Yii::getAlias('@web/uploads/' . $model->image)]),
+                                    'initialPreviewAsData' => true,
+                                    'initialCaption' => $model->image,
+                                    'overwriteInitial' => true,
+                                    'showRemove' => true,
+                                    'showUpload' => false,
+                                ]
+                            ]) ?>
+                        </div>
                     </div>
-                    <div class="form-text text-muted mt-2">Atau upload gambar kustom di bawah ini</div>
-                </div>
-
-                <div class="col-md-12">
-                    <?= $form->field($model, 'image')->widget(FileInput::class, [
-                        'options' => ['accept' => 'image/*'],
-                        'pluginOptions' => [
-                            'initialPreview' =>
-                                $model->isNewRecord || !$model->image || str_contains($model->image, 'img/')
-                                    ? $assetDir . $model->image
-                                    : [Yii::getAlias('@web/uploads/' . $model->image)],
-                            'initialPreviewAsData' => true,
-                            'initialCaption' => $model->image,
-                            'overwriteInitial' => true,
-                            'showRemove' => true,
-                            'showUpload' => false,
-                        ]
-                    ]) ?>
                 </div>
             </div>
 

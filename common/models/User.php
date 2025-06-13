@@ -59,6 +59,23 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules(): array
     {
         return [
+            ['name', 'trim'],
+            ['name', 'required'],
+
+            ['username', 'trim'],
+            ['username', 'required'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'string', 'min' => 2, 'max' => 255],
+
+            ['email', 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+
+            // ['password', 'required'],
+            // ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
             [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
@@ -267,5 +284,22 @@ class User extends ActiveRecord implements IdentityInterface
     public function getRole(): ActiveQuery
     {
         return $this->hasOne(Role::class, ['id' => 'role']);
+    }
+
+    public function create()
+    {
+        if (!$this->validate()) {
+            return null;
+        }
+        
+        $user = new User();
+        $user->name = $this->name;
+        $user->username = $this->username;
+        $user->email = $this->email;
+        $user->setPassword($this->password);
+        $user->generateAuthKey();
+        $user->generateEmailVerificationToken();
+
+        return $user->save() && $this->sendEmail($user);
     }
 }

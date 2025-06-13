@@ -60,10 +60,15 @@ class UserController extends Controller
                 $uploadedFile->saveAs($uploadPath . $fileName);
 
                 $model->image = $fileName;
+            } else {
+                $model->image = $this->request->post('image');
             }
 
             if ($model->save()) {
+                Yii::$app->session->setFlash('success', "User succesfully created.");
                 return $this->redirect(['show', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', "User fail to created.");
             }
         }
 

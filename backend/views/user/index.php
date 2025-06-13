@@ -122,7 +122,7 @@ $pdfFooter = [
                 'showPageSummary' => false,
                 'panel' => [
                     'after' => '
-                            <div class="d-flex justify-content-between align-items-end px-3 py-2">
+                            <!-- <div class="d-flex justify-content-between align-items-end px-3 py-2">
                                 <div>
                                     <em>* Tabel ini menampilkan daftar pengguna yang terdaftar beserta status dan tanggal pendaftarannya.</em>
                                 </div>
@@ -140,7 +140,7 @@ $pdfFooter = [
                                         <i class="fas fa-download"></i> Download Selected
                                     </button>
                                 </div>
-                            </div>
+                            </div> -->
                         ',
                     'heading' => '<i class="fas fa-users"></i>  Master User',
                     'type' => GridView::TYPE_DARK,
@@ -151,20 +151,12 @@ $pdfFooter = [
                     'showPageSummary' => true,
                 ],
                 'exportConfig' => [
-                    GridView::HTML => [
-                        'label' => 'HTML',
+                    GridView::EXCEL => [
+                        'label' => 'Excel',
                         'filename' => 'Master-User-' . date('Ymd'),
                     ],
                     GridView::CSV => [
                         'label' => 'CSV',
-                        'filename' => 'Master-User-' . date('Ymd'),
-                    ],
-                    GridView::TEXT => [
-                        'label' => 'Text',
-                        'filename' => 'Master-User-' . date('Ymd'),
-                    ],
-                    GridView::EXCEL => [
-                        'label' => 'Excel',
                         'filename' => 'Master-User-' . date('Ymd'),
                     ],
                     GridView::PDF => [
@@ -181,10 +173,18 @@ $pdfFooter = [
                             ],
                         ],
                     ],
-                    GridView::JSON => [
-                        'label' => 'JSON',
-                        'filename' => 'Data-User-' . date('Ymd'),
-                    ],
+                    // GridView::HTML => [
+                    //     'label' => 'HTML',
+                    //     'filename' => 'Master-User-' . date('Ymd'),
+                    // ],
+                    // GridView::TEXT => [
+                    //     'label' => 'Text',
+                    //     'filename' => 'Master-User-' . date('Ymd'),
+                    // ],
+                    // GridView::JSON => [
+                    //     'label' => 'JSON',
+                    //     'filename' => 'Data-User-' . date('Ymd'),
+                    // ],
                 ],
                 // set your toolbar
                 'toolbar' =>  [
