@@ -11,7 +11,7 @@ class UserSearch extends User
     public function rules(): array
     {
         return [
-            [['id', 'status'], 'integer'],
+            [['id', 'status', 'role_id'], 'integer'],
             [['name', 'username', 'email', 'created_at'], 'safe'],
         ];
     }
@@ -24,7 +24,7 @@ class UserSearch extends User
 
     public function search($params)
     {
-        $query = User::find();
+        $query = User::find()->joinWith(['role']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -45,6 +45,7 @@ class UserSearch extends User
         $query->andFilterWhere([
             'id' => $this->id,
             'status' => $this->status,
+            'role_id' => $this->role_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

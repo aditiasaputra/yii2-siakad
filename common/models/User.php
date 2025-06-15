@@ -7,8 +7,8 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 use yii\web\IdentityInterface;
-use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * User model
@@ -20,9 +20,13 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property string $password_reset_token
  * @property string $verification_token
  * @property string $email
+ * @property string $personal_id
+ * @property string $family_id
  * @property string $auth_key
- * @property string image
+ * @property string $image
  * @property integer $status
+ * @property integer $gender
+ * @property string $birth_date
  * @property integer $role_id
  * @property integer $created_at
  * @property integer $updated_at
@@ -49,7 +53,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors(): array
     {
         return [
-            TimestampBehavior::class,
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
 
@@ -73,13 +82,57 @@ class User extends ActiveRecord implements IdentityInterface
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
-            // ['password', 'required'],
-            // ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+            ['personal_id', 'trim'],
+            ['personal_id', 'required'],
+            ['personal_id', 'string', 'min' => 5, 'max' => 16],
+
+            ['family_id', 'trim'],
+            ['family_id', 'required'],
+            ['family_id', 'string', 'min' => 5, 'max' => 16],
+
+            ['gender', 'required'],
+            ['gender', 'in', 'range' => [0, 1]],
+
+            ['birth_date', 'required'],
+            ['birth_date', 'date', 'format' => 'php:Y-m-d'],
+
+            ['address', 'trim'],
+
+            ['role_id', 'required'],
+            ['role_id', 'integer'],
+
+            ['phone', 'required'],
+            ['phone', 'string', 'min' => 8, 'max' => 15],
+            ['phone', 'match', 'pattern' => '/^(\+62|62|08)[0-9]{7,12}$/', 'message' => 'Format nomor telepon tidak valid. Contoh: +6281234567890 atau 081234567890.'],
+
+            ['birth_date', 'date', 'format' => 'php:Y-m-d'],
+            ['birth_date', 'validateBirthDate'],
+
+            ['password', 'required', 'on' => 'create'],
+            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
 
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
             [['image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if (!empty($this->phone) && str_starts_with($this->phone, '0')) {
+                $this->phone = preg_replace('/^0/', '+62', $this->phone);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function validateBirthDate($attribute, $params)
+    {
+        if (!empty($this->$attribute) && strtotime($this->$attribute) > time()) {
+            $this->addError($attribute, 'Tanggal lahir tidak boleh melebihi hari ini.');
+        }
     }
 
     /**
@@ -283,8 +336,28 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getRole(): ActiveQuery
     {
-        return $this->hasOne(Role::class, ['id' => 'role']);
+        return $this->hasOne(Role::class, ['id' => 'role_id']);
     }
+
+    public function getGenderLabel(): string
+    {
+        return $this->gender == 1 ? 'Laki-laki' : 'Perempuan';
+    }
+
+    public function getStatusLabel()
+    {
+        switch ($this->status) {
+            case 10:
+                return '<span class="badge badge-pill badge-success">Aktif</span>';
+            case 9:
+                return '<span class="badge badge-pill badge-warning">Tidak Aktif</span>';
+            case 0:
+                return '<span class="badge badge-pill badge-danger">Dihapus</span>';
+            default:
+                return '<span class="badge badge-pill badge-secondary">Tidak Diketahui</span>';
+        }
+    }
+
 
     public function create()
     {

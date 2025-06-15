@@ -6,45 +6,54 @@ use yii\helpers\Html;
 /** @var $searchModel backend\models\UserSearch */
 /** @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Master Users';
+$this->title = 'Master Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
 
 $gridColumns = [
     ['class' => 'yii\\grid\\SerialColumn'],
     'id',
     [
-        'attribute' => 'name',
-        'label' => 'Nama',
+        'attribute' => 'student_id',
+        'label' => 'NIM',
     ],
     [
-        'attribute' => 'username',
-        'label' => 'Username',
+        'attribute' => 'name',
+        'label' => 'Nama',
+        'format' => 'raw',
+        'value' => function ($model) {
+            return $model->user->name;
+        },
     ],
     [
         'attribute' => 'email',
         'label' => 'Email',
+        'value' => function ($model) {
+            return $model->user->email;
+        }
     ],
     [
-        'attribute' => 'role_id',
-        'label' => 'Role',
+        'attribute' => 'gender',
+        'label' => 'Jenis Kelamin',
+        'format' => 'raw',
         'value' => function ($model) {
-            return ucfirst($model->role->name) ?? '-';
+            return $model->user->getGenderLabel();
         },
         'filterType' => GridView::FILTER_SELECT2,
-        'filter' => \yii\helpers\ArrayHelper::map(
-            \common\models\Role::find()->all(), 'id', 'name'
-        ),
+        'filter' => [
+            0 => 'Perempuan',
+            1 => 'Laki-laki',
+        ],
         'filterWidgetOptions' => [
             'pluginOptions' => ['allowClear' => true],
         ],
-        'filterInputOptions' => ['placeholder' => 'Pilih Role'],
+        'filterInputOptions' => ['placeholder' => 'Pilih Jenis Kelamin'],
     ],
     [
         'attribute' => 'status',
         'label' => 'Status Akun',
         'format' => 'raw',
         'value' => function ($model) {
-            return $model->getStatusLabel();
+            return $model->user->getStatusLabel();
         },
         'filterType' => GridView::FILTER_SELECT2,
         'filter' => [
@@ -60,7 +69,18 @@ $gridColumns = [
     [
         'attribute' => 'created_at',
         'label' => 'Tanggal Dibuat',
-        'format' => ['datetime'],
+        'format' => 'raw',
+        'value' => function ($model) {
+            return Yii::$app->formatter->asDatetime($model->created_at);
+        },
+        'filterType' => GridView::FILTER_DATE_RANGE,
+        'filterWidgetOptions' => [
+            'convertFormat' => true,
+            'pluginOptions' => [
+                'locale' => ['format' => 'Y-m-d'],
+                'autoUpdateInput' => false,
+            ],
+        ],
     ],
     [
         'class' => 'kartik\\grid\\ActionColumn',
@@ -91,16 +111,16 @@ $gridColumns = [
         ],
         'contentOptions' => ['class' => 'text-nowrap'],
     ],
-    [
-        'class' => 'kartik\grid\CheckboxColumn',
-        'headerOptions' => ['class' => 'kartik-sheet-style'],
-        'pageSummaryOptions' => ['colspan' => 3, 'data-colspan-dir' => 'rtl']
-    ],
+    // [
+    //     'class' => 'kartik\grid\CheckboxColumn',
+    //     'headerOptions' => ['class' => 'kartik-sheet-style'],
+    //     'pageSummaryOptions' => ['colspan' => 3, 'data-colspan-dir' => 'rtl']
+    // ],
 ];
 
 $pdfHeader = [
     'L' => [
-        'content' => 'Master User',
+        'content' => 'Master Mahasiswa',
         'font-size' => 8,
         'color' => '#333333',
     ],
@@ -173,7 +193,7 @@ $pdfFooter = [
                                 </div>
                             </div> -->
                         ',
-                    'heading' => '<i class="fas fa-users"></i>  Master User',
+                    'heading' => '<i class="fas fa-users"></i>  Master Mahasiswa',
                     'type' => GridView::TYPE_DARK,
                 ],
                 'export' => [

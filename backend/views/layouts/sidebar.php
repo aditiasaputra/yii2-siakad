@@ -12,7 +12,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="<?= $assetDir; ?>/img/avatar.png" class="img-circle elevation-2" alt="User Image">
+                <img src="<?= $assetDir; ?>/<?= Yii::$app->user->identity->image ?? 'img/avatar.png'; ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block"><?= Yii::$app->user->identity->name; ?></a>
@@ -39,17 +39,39 @@
                 'options' => ['class' => 'nav nav-pills nav-sidebar flex-column', 'data-widget' => 'treeview', 'role' => 'menu', 'data-accordion' => 'false'],
                 'encodeLabels' => false,
                 'items' => [
+                    ['label' => 'MAIN NAVIGATION', 'header' => true],
                     [
                         'label' => 'Home',
                         'icon' => 'fas fa-tachometer-alt',
                         'url' => ['site/index'],
                     ],
                     [
-                        'label' => 'Users',
-                        'icon' => 'fas fa-users',
-                        'url' => ['user/index'],
-                        'active' => Yii::$app->controller->id == 'user',
+                        'label' => 'Master Data',
+                        'icon' => 'fas fa-database',
+                        'url' => '#',
+                        'active' => in_array(Yii::$app->controller->id, ['user', 'student', 'lecture']),
+                        'items' => [
+                            [
+                                'label' => 'Users',
+                                'icon' => 'fas fa-users',
+                                'url' => ['user/index'],
+                                'active' => Yii::$app->controller->id === 'user',
+                            ],
+                            [
+                                'label' => 'Dosen',
+                                'icon' => 'fas fa-chalkboard-teacher',
+                                'url' => ['lecture/index'],
+                                'active' => Yii::$app->controller->id === 'lecture',
+                            ],
+                            [
+                                'label' => 'Mahasiswa',
+                                'icon' => 'fas fa-user-graduate',
+                                'url' => ['student/index'],
+                                'active' => Yii::$app->controller->id === 'student',
+                            ],
+                        ],
                     ],
+                    ['label' => 'LAINNYA', 'header' => true],
                     [
                         'label' => 'About us',
                         'icon' => 'far fa-address-card',
