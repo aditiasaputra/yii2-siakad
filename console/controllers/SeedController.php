@@ -42,6 +42,7 @@ class SeedController extends Controller
         $admin->username = 'administrator';
         $admin->email = 'admin@admin.com';
         $admin->personal_id = rand(100000000000000, 1000000000000000);
+        $admin->family_id = rand(100000000000000, 1000000000000000);
         $admin->image = 'img/' . $avatars[array_rand($avatars)];
         $admin->birth_date = $faker->date('Y-m-d', '-20 years');
         $admin->address = $faker->address;
@@ -62,6 +63,7 @@ class SeedController extends Controller
             $user->username = $faker->unique()->userName;
             $user->email = $faker->unique()->safeEmail;
             $user->personal_id = rand(100000000000000, 1000000000000000);
+            $user->family_id = rand(100000000000000, 1000000000000000);
             $user->image = 'img/' . $avatars[array_rand($avatars)];
             $user->birth_date = $faker->date('Y-m-d', '-22 years');
             $user->phone = '08' . rand(111, 999) . rand(1000000, 9999999);
@@ -95,6 +97,7 @@ class SeedController extends Controller
             $user->username = $faker->unique()->userName;
             $user->email = $faker->unique()->safeEmail;
             $user->personal_id = rand(100000000000000, 1000000000000000);
+            $user->family_id = rand(100000000000000, 1000000000000000);
             $user->image = 'img/' . $avatars[array_rand($avatars)];
             $user->birth_date = $faker->date('Y-m-d', '-30 years');
             $user->phone = '08' . rand(111, 999) . rand(1000000, 9999999);
