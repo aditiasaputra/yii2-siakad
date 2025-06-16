@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%lecture}}`.
  */
-class m250614_112138_create_lecture_table extends Migration
+class m250614_112131_create_lecture_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -15,17 +15,16 @@ class m250614_112138_create_lecture_table extends Migration
         $this->createTable('{{%lecture}}', [
             'id' => $this->primaryKey(),
 
-            'user_id' => $this->integer()->notNull()->unique(),
-            'employee_id' => $this->string(10)->notNull()->unique(),
+            'employee_id' => $this->integer()->notNull(),
 
-            'lecture_nationality_number' => $this->string(10)->null()->unique(), // NIDN
-            'lecture_special_number' => $this->string(10)->null()->unique(), // NIDK
-            'teacher_national_number' => $this->string(10)->null()->unique(), // NUPN
-            'field_of_study' => $this->string()->null()->unique(), // Rumpun Ilmu
+            'lecture_nationality_number' => $this->string(10)->null(), // NIDN
+            'lecture_special_number' => $this->string(10)->null(), // NIDK
+            'teacher_national_number' => $this->string(10)->null(), // NUPN
+            'field_of_study' => $this->string()->null(), // Rumpun Ilmu
             'is_match_field' => $this->boolean()->notNull()->defaultValue(0), // Kesesuaian Rumpun Ilmu?
-            'competence' => $this->string()->null()->unique(), // Kompetensi
+            'competence' => $this->string()->null(), // Kompetensi
             'certificate_date' => $this->date()->null(), // Tanggal Sertifikat
-            'certificate_number' => $this->string()->null()->unique(), // No Sertifikat
+            'certificate_number' => $this->string()->null(), // No Sertifikat
             'education_number' => $this->integer(16)->null(), // NUPTK
 
             'created_at' => $this->dateTime()->notNull(),
@@ -35,13 +34,10 @@ class m250614_112138_create_lecture_table extends Migration
             'deleted_at' => $this->dateTime()->null(),
         ]);
 
-        $this->addForeignKey(
-            'fk-lecture-user_id',
+        $this->createIndex(
+            'idx-lecture-employee_id',
             'lecture',
-            'user_id',
-            'user',
-            'id',
-            'CASCADE'
+            'employee_id'
         );
     }
 

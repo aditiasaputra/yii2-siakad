@@ -103,7 +103,7 @@ $avatars = ['avatar.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.
                     <?= $form->field($person, 'employee_id')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($person, 'lecture_field')->textInput(['maxlength' => true]) ?>
                 <?php else: ?>
-                    <?= $form->field($person, 'student_id')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($person, 'student_nationality_number')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($person, 'program')->textInput(['maxlength' => true]) ?>
                 <?php endif; ?>
             </div>

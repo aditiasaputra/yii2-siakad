@@ -13,7 +13,7 @@ use yii\db\Expression;
  *
  * @property int $id
  * @property int $user_id
- * @property string $student_id
+ * @property string $student_nationality_number
  * @property string $created_at
  * @property string $updated_at
  * @property int|null $created_by
@@ -39,11 +39,11 @@ class Student extends ActiveRecord
     {
         return [
             [['created_by', 'updated_by', 'deleted_at'], 'default', 'value' => null],
-            [['user_id', 'student_id', 'created_at', 'updated_at'], 'required'],
+            [['user_id', 'student_nationality_number', 'created_at', 'updated_at'], 'required'],
             [['user_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['student_id'], 'string', 'max' => 20],
-            [['student_id'], 'unique'],
+            [['student_nationality_number'], 'string', 'max' => 20],
+            [['student_nationality_number'], 'unique'],
         ];
     }
 
@@ -55,7 +55,7 @@ class Student extends ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'student_id' => 'Nim',
+            'student_nationality_number' => 'Nim',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

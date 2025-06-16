@@ -27,10 +27,15 @@ use yii\web\IdentityInterface;
  * @property integer $status
  * @property integer $gender
  * @property string $birth_date
+ * @property string $address
+ * @property string $phone
  * @property integer $role_id
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property Employee $employee
+ * @property Lecture $lecture
+
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -327,6 +332,27 @@ class User extends ActiveRecord implements IdentityInterface
     public function getPassword(): string
     {
         return '';
+    }
+
+    /**
+     * Get user employee
+     *
+     * @return ActiveQuery
+     */
+    public function getEmployee()
+    {
+        return $this->hasOne(Employee::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * Get user lecture via employee
+     *
+     * @return ActiveQuery
+     */
+    public function getLecture()
+    {
+        return $this->hasOne(Lecture::class, ['employee_id' => 'id'])
+            ->via('employee');
     }
 
     /**

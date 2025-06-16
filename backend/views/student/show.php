@@ -90,7 +90,7 @@ $this->title = 'Detail Mahasiswa';
                     <div class="tab-pane" id="student">
                         <dl class="row">
                             <dt class="col-sm-4">NIM/NPM</dt>
-                            <dd class="col-sm-8"><?= $model->student_id ?? '-' ?></dd>
+                            <dd class="col-sm-8"><?= $model->student_nationality_number ?? '-' ?></dd>
                         </dl>
                     </div>
                     <div class="tab-pane" id="change-password">

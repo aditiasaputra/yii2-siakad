@@ -4,9 +4,10 @@ namespace console\controllers;
 
 use Yii;
 use Faker\Factory;
+use common\models\User;
 use common\models\Lecture;
 use common\models\Student;
-use common\models\User;
+use common\models\Employee;
 use yii\console\Controller;
 
 class SeedController extends Controller
@@ -25,14 +26,15 @@ class SeedController extends Controller
         // Truncate all related tables
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
 
-        Yii::$app->db->createCommand()->truncateTable(Student::tableName())->execute();
-        Yii::$app->db->createCommand()->truncateTable(Lecture::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(User::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Student::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Employee::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Lecture::tableName())->execute();
 
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
 
 
-        echo "Seeding users, students, and lectures...\n";
+        echo "Seeding users, employee, students, and lectures...\n";
 
         $avatars = ['avatar.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.png'];
 
@@ -41,10 +43,10 @@ class SeedController extends Controller
         $admin->name = 'Administrator';
         $admin->username = 'administrator';
         $admin->email = 'admin@admin.com';
-        $admin->personal_id = rand(100000000000000, 1000000000000000);
-        $admin->family_id = rand(100000000000000, 1000000000000000);
+        $admin->personal_id = rand(100000000000000, 999999999999999);
+        $admin->family_id = rand(100000000000000, 999999999999999);
         $admin->image = 'img/' . $avatars[array_rand($avatars)];
-        $admin->birth_date = $faker->date('Y-m-d', '-20 years');
+        $admin->birth_date = $faker->date('Y-m-d', '-30 years');
         $admin->address = $faker->address;
         $admin->phone = '08' . rand(111, 999) . rand(1000000, 9999999);
         $admin->setPassword('admin123');
@@ -62,30 +64,30 @@ class SeedController extends Controller
             $user->name = $faker->name;
             $user->username = $faker->unique()->userName;
             $user->email = $faker->unique()->safeEmail;
-            $user->personal_id = rand(100000000000000, 1000000000000000);
-            $user->family_id = rand(100000000000000, 1000000000000000);
+            $user->personal_id = rand(100000000000000, 999999999999999);
+            $user->family_id = rand(100000000000000, 999999999999999);
             $user->image = 'img/' . $avatars[array_rand($avatars)];
             $user->birth_date = $faker->date('Y-m-d', '-22 years');
-            $user->phone = '08' . rand(111, 999) . rand(1000000, 9999999);
             $user->address = $faker->address;
+            $user->phone = '08' . rand(111, 999) . rand(1000000, 9999999);
             $user->setPassword('user123');
             $user->generateAuthKey();
             $user->status = User::STATUS_ACTIVE;
-            $user->role_id = 5; // Student role
+            $user->role_id = 5; // Student
             $user->gender = rand(0, 1);
 
             if ($user->save()) {
                 $student = new Student();
                 $student->user_id = $user->id;
-                $student->student_id = 'NIM' . str_pad($i, 5, '0', STR_PAD_LEFT);
+                $student->student_nationality_number = 'NIM' . str_pad($i, 5, '0', STR_PAD_LEFT);
                 $student->created_at = date('Y-m-d H:i:s');
                 $student->updated_at = date('Y-m-d H:i:s');
                 if (!$student->save()) {
-                    echo "Student Gagal Disimpan: ";
+                    echo "Student gagal disimpan:\n";
                     print_r($student->getErrors());
                 }
             } else {
-                echo "User Mahasiswa Gagal: ";
+                echo "User Mahasiswa gagal disimpan:\n";
                 print_r($user->getErrors());
             }
         }
@@ -96,31 +98,46 @@ class SeedController extends Controller
             $user->name = $faker->name;
             $user->username = $faker->unique()->userName;
             $user->email = $faker->unique()->safeEmail;
-            $user->personal_id = rand(100000000000000, 1000000000000000);
-            $user->family_id = rand(100000000000000, 1000000000000000);
+            $user->personal_id = rand(100000000000000, 999999999999999);
+            $user->family_id = rand(100000000000000, 999999999999999);
             $user->image = 'img/' . $avatars[array_rand($avatars)];
             $user->birth_date = $faker->date('Y-m-d', '-30 years');
-            $user->phone = '08' . rand(111, 999) . rand(1000000, 9999999);
             $user->address = $faker->address;
+            $user->phone = '08' . rand(111, 999) . rand(1000000, 9999999);
             $user->setPassword('user123');
             $user->generateAuthKey();
             $user->status = User::STATUS_ACTIVE;
-            $user->role_id = 4; // Lecturer role
+            $user->role_id = 4; // Lecturer
             $user->gender = rand(0, 1);
 
             if ($user->save()) {
-                $lecture = new Lecture();
-                $lecture->user_id = $user->id;
-                $lecture->lecture_nationality_number = 'NIDN' . str_pad($i, 3, '0', STR_PAD_LEFT);
-                $lecture->employee_id = 'EMP' . str_pad($i, 3, '0', STR_PAD_LEFT);
-                $lecture->created_at = date('Y-m-d H:i:s');
-                $lecture->updated_at = date('Y-m-d H:i:s');
-                if (!$lecture->save()) {
-                    echo "Lecture Gagal Disimpan: ";
-                    print_r($lecture->getErrors());
+                $employee = new Employee();
+                $employee->user_id = $user->id;
+                $employee->employee_number = 'EMP' . str_pad($i, 4, '0', STR_PAD_LEFT);
+                $employee->account_name = $user->name;
+                $employee->account_number = '001' . rand(10000000, 99999999);
+                $employee->branch_name = 'Cabang ' . $faker->city;
+
+                if ($employee->save()) {
+                    $lecture = new Lecture();
+                    $lecture->employee_id = $employee->id;
+                    $lecture->lecture_nationality_number = 'NIDN' . str_pad($i, 4, '0', STR_PAD_LEFT);
+                    $lecture->competence = $faker->jobTitle;
+                    $lecture->field_of_study = $faker->word;
+                    $lecture->is_match_field = rand(0, 1);
+                    $lecture->created_at = date('Y-m-d H:i:s');
+                    $lecture->updated_at = date('Y-m-d H:i:s');
+
+                    if (!$lecture->save()) {
+                        echo "Lecture gagal disimpan:\n";
+                        print_r($lecture->getErrors());
+                    }
+                } else {
+                    echo "Employee gagal disimpan:\n";
+                    print_r($employee->getErrors());
                 }
             } else {
-                echo "User Dosen Gagal: ";
+                echo "User Dosen gagal disimpan:\n";
                 print_r($user->getErrors());
             }
         }

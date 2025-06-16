@@ -14,10 +14,10 @@ class m250614_112130_create_employee_table extends Migration
     {
         $this->createTable('{{%employee}}', [
             'id' => $this->primaryKey(),
-            'employee_number' => $this->string(255)->notNull(),
             'user_id' => $this->integer()->notNull(),
-            'tax_id' => $this->integer()->null(),
             'bank_id' => $this->integer()->null(),
+            'employee_number' => $this->string(255)->notNull(),
+            'tax_number' => $this->integer()->null(),
             'branch_name' => $this->string(255)->null(),
             'account_number' => $this->string(255)->null(),
             'account_name' => $this->string(255)->null(),
@@ -26,7 +26,21 @@ class m250614_112130_create_employee_table extends Migration
             'social_security_number' => $this->string(16)->null(),
             'health_insurance_number' => $this->string(16)->null(),
             'note' => $this->text()->null(),
+            'created_at' => $this->dateTime()->notNull(),
+            'updated_at' => $this->dateTime()->notNull(),
+            'created_by' => $this->integer()->null(),
+            'updated_by' => $this->integer()->null(),
+            'deleted_at' => $this->dateTime()->null(),
         ]);
+
+        $this->addForeignKey(
+            'fk-employee-user_id',
+            'employee',
+            'user_id',
+            'user',
+            'id',
+            'CASCADE'
+        );
     }
 
     /**

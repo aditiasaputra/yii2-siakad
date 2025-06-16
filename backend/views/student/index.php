@@ -13,7 +13,7 @@ $gridColumns = [
     ['class' => 'yii\\grid\\SerialColumn'],
     'id',
     [
-        'attribute' => 'student_id',
+        'attribute' => 'student_nationality_number',
         'label' => 'NIM',
     ],
     [

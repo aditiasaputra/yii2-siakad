@@ -8,13 +8,13 @@ use yii\data\ActiveDataProvider;
 
 class StudentSearch extends Student
 {
-    public $name, $email, $student_id, $status, $gender, $created_at;
+    public $name, $email, $student_nationality_number, $status, $gender, $created_at;
 
     public function rules()
     {
         return [
-            [['name', 'email', 'student_id', 'status', 'gender'], 'string'],
-            [['name', 'email', 'student_id', 'status', 'gender', 'created_at'], 'safe'],
+            [['name', 'email', 'student_nationality_number', 'status', 'gender'], 'string'],
+            [['name', 'email', 'student_nationality_number', 'status', 'gender', 'created_at'], 'safe'],
         ];
     }
 
@@ -43,9 +43,9 @@ class StudentSearch extends Student
             'desc' => ['user.email' => SORT_DESC],
         ];
 
-        $dataProvider->sort->attributes['student_id'] = [
-            'asc' => ['student_id' => SORT_ASC],
-            'desc' => ['student_id' => SORT_DESC],
+        $dataProvider->sort->attributes['student_nationality_number'] = [
+            'asc' => ['student_nationality_number' => SORT_ASC],
+            'desc' => ['student_nationality_number' => SORT_DESC],
         ];
 
         $dataProvider->sort->attributes['status'] = [
@@ -80,7 +80,7 @@ class StudentSearch extends Student
             'user.gender' => $this->gender,
         ]);
 
-        $query->andFilterWhere(['like', 'student_id',  $this->student_id])
+        $query->andFilterWhere(['like', 'student_nationality_number',  $this->student_nationality_number])
             ->andFilterWhere(['like', 'user.name', $this->name])
             ->andFilterWhere(['like', 'user.email', $this->email]);
 
