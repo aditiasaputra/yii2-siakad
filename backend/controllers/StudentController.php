@@ -2,13 +2,14 @@
 
 namespace backend\controllers;
 
-use backend\models\StudentForm;
-use common\models\Student;
 use Yii;
-use backend\models\StudentSearch;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
+use common\models\Student;
+use yii\filters\VerbFilter;
+use backend\models\StudentForm;
+use backend\models\StudentSearch;
 use yii\web\NotFoundHttpException;
+use backend\models\ChangePasswordForm;
 
 class StudentController extends Controller
 {
@@ -38,10 +39,12 @@ class StudentController extends Controller
     public function actionShow($id)
     {
         $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+        $changePasswordmodel = new ChangePasswordForm();
 
         return $this->render('show', [
             'model' => $this->findModel($id),
             'assetDir' => $assetDir,
+            'changePasswordmodel' => $changePasswordmodel
         ]);
     }
 

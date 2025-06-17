@@ -3,14 +3,15 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\helpers\FileHelper;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\data\ActiveDataProvider;
 use common\models\User;
-use backend\models\UserSearch;
+use yii\web\Controller;
 use yii\web\UploadedFile;
+use yii\filters\VerbFilter;
+use yii\helpers\FileHelper;
+use backend\models\UserSearch;
+use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
+use backend\models\ChangePasswordForm;
 
 class UserController extends Controller
 {
@@ -40,10 +41,12 @@ class UserController extends Controller
     public function actionShow($id)
     {
         $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+        $changePasswordmodel = new ChangePasswordForm();
 
         return $this->render('show', [
             'model' => $this->findModel($id),
             'assetDir' => $assetDir,
+            'changePasswordmodel' => $changePasswordmodel,
         ]);
     }
 

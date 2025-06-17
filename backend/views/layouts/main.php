@@ -4,10 +4,15 @@
 /* @var $content string */
 
 use yii\helpers\Html;
+use app\assets\ToastrAsset;
+use app\assets\SweetAlert2Asset;
 
 \hail812\adminlte3\assets\FontAwesomeAsset::register($this);
 \hail812\adminlte3\assets\AdminLteAsset::register($this);
 $this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
+
+SweetAlert2Asset::register($this);
+ToastrAsset::register($this);
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 
