@@ -3,18 +3,18 @@
 namespace backend\models;
 
 use yii\base\Model;
-use common\models\Lecture;
+use common\models\Employee;
 use common\models\User;
 use Yii;
 
-class LectureForm extends Model
+class EmployeeForm extends Model
 {
-    public $user, $lecture;
+    public $user, $employee;
 
-    public function __construct(Lecture $lecture = null, $config = [])
+    public function __construct(Employee $employee = null, $config = [])
     {
-        $this->lecture = $lecture ?: new Lecture();
-        $this->user = $this->lecture->user ?? new User(['scenario' => 'lecture']);
+        $this->employee = $employee ?: new Employee();
+        $this->user = $this->employee->user ?? new User(['scenario' => 'employee']);
         parent::__construct($config);
     }
 
@@ -22,13 +22,13 @@ class LectureForm extends Model
     {
         return array_merge(
             $this->user->rules(),
-            $this->lecture->rules()
+            $this->employee->rules()
         );
     }
 
     public function load($data, $formName = null)
     {
-        return $this->user->load($data) && $this->lecture->load($data);
+        return $this->user->load($data) && $this->employee->load($data);
     }
 
     public function validate($attributeNames = null, $clearErrors = true)
@@ -36,7 +36,7 @@ class LectureForm extends Model
         $valid = parent::validate($attributeNames, $clearErrors);
 
         $valid = $this->user->validate() && $valid;
-        $valid = $this->lecture->validate() && $valid;
+        $valid = $this->employee->validate() && $valid;
 
         return $valid;
     }
@@ -55,7 +55,7 @@ class LectureForm extends Model
             }
 
             $this->employee->user_id = $this->user->id;
-            if (!$this->lecture->save(false)) {
+            if (!$this->employee->save(false)) {
                 $transaction->rollBack();
                 return false;
             }

@@ -11,7 +11,7 @@ use common\widgets\Alert;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var common\models\User $model */
+/** @var common\models\Student $model */
 /** @var yii\widgets\ActiveForm $form */
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
@@ -55,7 +55,7 @@ if (!$model->isNewRecord) {
 <?= Alert::widget() ?>
 <div class="card card-primary card-outline mb-3">
     <div class="card-header">
-        <h1 class="card-title">Form User</h1>
+        <h1 class="card-title">Form Student</h1>
     </div>
     <?php $form = ActiveForm::begin([
         'options' => ['enctype' => 'multipart/form-data', 'autocomplete' => 'off']
@@ -107,7 +107,7 @@ if (!$model->isNewRecord) {
                         <div class="col-md-12">
                             <?= $form->field($model, 'address')->textarea([
                                 'rows' => 3,
-                                'class' => 'form-control form-control-user',
+                                'class' => 'form-control form-control-student',
                                 'placeholder' => 'Masukkan Alamat Lengkap...',
                                 'autofocus' => true
                             ])->label('Alamat') ?>
@@ -142,7 +142,7 @@ if (!$model->isNewRecord) {
                             <div class="d-flex justify-content-evenly flex-wrap gap-4">
                                 <?php foreach ($avatars as $avatar): ?>
                                     <label class="text-center">
-                                        <input type="radio" name="User[avatar]" value="<?= 'img/' . $avatar ?>"
+                                        <input type="radio" name="Student[avatar]" value="<?= 'img/' . $avatar ?>"
                                             <?= ($model->image === 'img/' . $avatar) ? 'checked' : '' ?> style="display: none;">
                                         <img src="<?= $assetDir . '/img/' . $avatar ?>" class="img-thumbnail avatar-choice" style="width: 80px; height: 80px; cursor: pointer;">
                                     </label>

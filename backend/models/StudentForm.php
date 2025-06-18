@@ -32,9 +32,14 @@ class StudentForm extends Model
         return $this->user->load($data) && $this->student->load($data);
     }
 
-    public function validate()
+    public function validate($attributeNames = null, $clearErrors = true)
     {
-        return $this->user->validate() & $this->student->validate();
+        $valid = parent::validate($attributeNames, $clearErrors);
+
+        $valid = $this->user->validate() && $valid;
+        $valid = $this->student->validate() && $valid;
+
+        return $valid;
     }
 
     public function save()

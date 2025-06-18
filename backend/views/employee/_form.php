@@ -10,12 +10,12 @@ use common\models\Role;
 use common\widgets\Alert;
 
 /** @var yii\web\View $this */
-/** @var backend\models\LectureForm|StudentForm $formModel */
+/** @var backend\models\EmployeeForm $formModel */
 /** @var yii\widgets\ActiveForm $form */
 
 $user = $formModel->user;
 
-$this->title = 'Form Dosen';
+$this->title = 'Form Karyawan';
 
 $this->registerCss(<<<CSS
     .avatar-choice {

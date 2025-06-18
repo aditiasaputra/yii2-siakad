@@ -26,11 +26,6 @@ class m250614_112130_create_employee_table extends Migration
             'social_security_number' => $this->string(16)->null(),
             'health_insurance_number' => $this->string(16)->null(),
             'note' => $this->text()->null(),
-            'created_at' => $this->dateTime()->notNull(),
-            'updated_at' => $this->dateTime()->notNull(),
-            'created_by' => $this->integer()->null(),
-            'updated_by' => $this->integer()->null(),
-            'deleted_at' => $this->dateTime()->null(),
         ]);
 
         $this->addForeignKey(
