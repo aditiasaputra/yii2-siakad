@@ -49,7 +49,7 @@
                         'label' => 'Master Data',
                         'icon' => 'fas fa-database',
                         'url' => '#',
-                        'active' => in_array(Yii::$app->controller->id, ['user', 'student', 'lecture']),
+                        'active' => in_array(Yii::$app->controller->id, ['user', 'student', 'lecture', 'employee']),
                         'items' => [
                             [
                                 'label' => 'Users',
@@ -58,8 +58,14 @@
                                 'active' => Yii::$app->controller->id === 'user',
                             ],
                             [
+                                'label' => 'Pegawai',
+                                'icon' => 'fas fa-id-badge',
+                                'url' => ['employee/index'],
+                                'active' => Yii::$app->controller->id === 'employee',
+                            ],
+                            [
                                 'label' => 'Dosen',
-                                'icon' => 'fas fa-chalkboard-teacher',
+                                'icon' => 'fas fa-user-tie',
                                 'url' => ['lecture/index'],
                                 'active' => Yii::$app->controller->id === 'lecture',
                             ],
