@@ -47,9 +47,9 @@ class EmployeeController extends Controller
 
     public function actionCreate()
     {
-        $form = new EmployeeForm();
+        $model = new EmployeeForm();
 
-        if ($form->load(Yii::$app->request->post()) && $form->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', "Karyawan berhasil ditambahkan.");
             return $this->redirect(['index']);
         } else {
@@ -57,7 +57,7 @@ class EmployeeController extends Controller
         }
 
         return $this->render('create', [
-            'formModel' => $form,
+            'model' => $model,
         ]);
     }
 

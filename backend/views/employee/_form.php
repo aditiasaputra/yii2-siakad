@@ -10,10 +10,10 @@ use common\models\Role;
 use common\widgets\Alert;
 
 /** @var yii\web\View $this */
-/** @var backend\models\EmployeeForm $formModel */
+/** @var backend\models\EmployeeForm $model */
 /** @var yii\widgets\ActiveForm $form */
 
-$user = $formModel->user;
+$user = $model->user;
 
 $this->title = 'Form Karyawan';
 
