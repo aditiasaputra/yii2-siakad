@@ -11,6 +11,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <?= $this->render('_form', ['model' => $model]) ?>
+        <?= $this->render('_form', ['model' => $formModel]) ?>
     </div>
 </div>

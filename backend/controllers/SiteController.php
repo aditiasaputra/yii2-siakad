@@ -7,7 +7,7 @@ use common\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\web\Controller;
+use backend\components\Controller;
 use yii\web\Response;
 
 /**

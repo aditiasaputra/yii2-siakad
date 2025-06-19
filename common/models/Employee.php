@@ -89,14 +89,14 @@ class Employee extends \yii\db\ActiveRecord
             'account_name' => 'Nama Pemilik Rekening',
             'national_social_security_number' => 'No BPJS Ketenagakerjaan',
             'national_health_insurance_number' => 'No BPJS Kesehatan',
-            'social_security_number' => 'No Jamsostek',
-            'health_insurance_number' => 'No Asuransi Kesehatan',
+            'social_security_number' => 'Asuransi Pegawai (Non Nasional)',
+            'health_insurance_number' => 'Asuransi Kesehatan (Non Nasional)',
             'note' => 'Catatan',
         ];
     }
 
     /**
-     * Gets related User model
+     * Gets a related User model
      * @return \yii\db\ActiveQuery
      */
     public function getUser()
@@ -105,7 +105,7 @@ class Employee extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets related Lecture model
+     * Gets a related Lecture model
      * @return \yii\db\ActiveQuery
      */
     public function getLecture()
@@ -114,7 +114,7 @@ class Employee extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets related Bank model
+     * Gets a related Bank model
      * @return \yii\db\ActiveQuery
      */
     // public function getBank()

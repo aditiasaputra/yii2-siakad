@@ -75,6 +75,12 @@ if (!$model->isNewRecord) {
                             <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
                         </div>
                         <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'personal_id')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'family_id')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
                             <?= $form->field($model, 'role_id')->widget(Select2::class, [
                                 'data' => ArrayHelper::map(
                                     Role::find()->select(['id', 'name'])->asArray()->all(),
@@ -83,16 +89,6 @@ if (!$model->isNewRecord) {
                                 'options' => ['placeholder' => '-- Pilih Role --', 'value' => $model->role_id],
                                 'pluginOptions' => ['allowClear' => true],
                             ])->label('Role') ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'status')->widget(Select2::class, [
-                                'data' => [
-                                    10 => 'Active',
-                                    0 => 'Inactive',
-                                ],
-                                'options' => ['placeholder' => '-- Pilih Status --'],
-                                'pluginOptions' => ['allowClear' => true],
-                            ]) ?>
                         </div>
                         <div class="col-md-12">
                             <?= $form->field($model, 'gender')->widget(Select2::class, [

@@ -4,10 +4,10 @@ namespace backend\controllers;
 
 use backend\models\LectureForm;
 use backend\models\LectureSearch;
+use backend\components\Controller;
 use common\models\Lecture;
 use Yii;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class LectureController extends Controller

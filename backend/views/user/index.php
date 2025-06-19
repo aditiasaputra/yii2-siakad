@@ -1,6 +1,7 @@
 <?php
 
 use kartik\grid\GridView;
+use common\widgets\Alert;
 use yii\helpers\Html;
 
 /** @var $searchModel backend\models\UserSearch */
@@ -60,7 +61,18 @@ $gridColumns = [
     [
         'attribute' => 'created_at',
         'label' => 'Tanggal Dibuat',
-        'format' => ['datetime'],
+        'format' => 'raw',
+        'value' => function ($model) {
+            return Yii::$app->formatter->asDatetime($model->created_at);
+        },
+        'filterType' => GridView::FILTER_DATE_RANGE,
+        'filterWidgetOptions' => [
+            'convertFormat' => true,
+            'pluginOptions' => [
+                'locale' => ['format' => 'Y-m-d'],
+                'autoUpdateInput' => false,
+            ],
+        ],
     ],
     [
         'class' => 'kartik\\grid\\ActionColumn',
@@ -132,6 +144,8 @@ $pdfFooter = [
     'line' => true,
 ];
 ?>
+
+<?= Alert::widget() ?>
 
 <div class="container-fluid">
     <div class="row">

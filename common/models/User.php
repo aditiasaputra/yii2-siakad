@@ -30,8 +30,8 @@ use yii\web\IdentityInterface;
  * @property string $address
  * @property string $phone
  * @property integer $role_id
- * @property integer $created_at
- * @property integer $updated_at
+ * @property string $created_at
+ * @property string $updated_at
  * @property string $password write-only password
  * @property Employee $employee
  * @property Lecture $lecture
@@ -111,7 +111,6 @@ class User extends ActiveRecord implements IdentityInterface
             ['phone', 'match', 'pattern' => '/^(\+62|62|08)[0-9]{7,12}$/', 'message' => 'Format nomor telepon tidak valid. Contoh: +6281234567890 atau 081234567890.'],
 
             ['birth_date', 'date', 'format' => 'php:Y-m-d'],
-            ['birth_date', 'validateBirthDate'],
 
             ['password', 'required', 'on' => 'create'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
@@ -131,13 +130,6 @@ class User extends ActiveRecord implements IdentityInterface
             return true;
         }
         return false;
-    }
-
-    public function validateBirthDate($attribute, $params)
-    {
-        if (!empty($this->$attribute) && strtotime($this->$attribute) > time()) {
-            $this->addError($attribute, 'Tanggal lahir tidak boleh melebihi hari ini.');
-        }
     }
 
     /**
@@ -332,6 +324,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function getPassword(): string
     {
         return '';
+    }
+
+    /**
+     * Get user student
+     *
+     * @return ActiveQuery
+     */
+    public function getStudent()
+    {
+        return $this->hasOne(Student::class, ['user_id' => 'id']);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\web\Response;
-use yii\web\Controller;
+use backend\components\Controller;
 use yii\filters\AccessControl;
 use backend\models\ChangePasswordForm;
 

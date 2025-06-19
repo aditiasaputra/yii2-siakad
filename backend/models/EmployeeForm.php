@@ -2,23 +2,25 @@
 
 namespace backend\models;
 
+use Yii;
 use yii\base\Model;
 use common\models\Employee;
 use common\models\User;
-use Yii;
 
 class EmployeeForm extends Model
 {
-    public $user, $employee;
+    public User $user;
+    public Employee $employee;
 
     public function __construct(Employee $employee = null, $config = [])
     {
         $this->employee = $employee ?: new Employee();
         $this->user = $this->employee->user ?? new User(['scenario' => 'employee']);
+
         parent::__construct($config);
     }
 
-    public function rules()
+    public function rules(): array
     {
         return array_merge(
             $this->user->rules(),
@@ -26,22 +28,23 @@ class EmployeeForm extends Model
         );
     }
 
-    public function load($data, $formName = null)
+    public function load($data, $formName = null): bool
     {
-        return $this->user->load($data) && $this->employee->load($data);
+        $userLoaded = $this->user->load($data);
+        $employeeLoaded = $this->employee->load($data);
+        return $userLoaded && $employeeLoaded;
     }
 
-    public function validate($attributeNames = null, $clearErrors = true)
+    public function validate($attributeNames = null, $clearErrors = true): bool
     {
-        $valid = parent::validate($attributeNames, $clearErrors);
+        $parentValid = parent::validate($attributeNames, $clearErrors);
+        $userValid = $this->user->validate($attributeNames, $clearErrors);
+        $employeeValid = $this->employee->validate($attributeNames, $clearErrors);
 
-        $valid = $this->user->validate() && $valid;
-        $valid = $this->employee->validate() && $valid;
-
-        return $valid;
+        return $parentValid && $userValid && $employeeValid;
     }
 
-    public function save()
+    public function save(): bool
     {
         if (!$this->validate()) {
             return false;
@@ -62,11 +65,30 @@ class EmployeeForm extends Model
 
             $transaction->commit();
             return true;
-
         } catch (\Throwable $e) {
             $transaction->rollBack();
             Yii::error($e->getMessage(), __METHOD__);
             return false;
         }
+    }
+
+    public function __get($name)
+    {
+        if ($name === 'password') {
+            return $this->user->password;
+        }
+    }
+
+    public function __set($name, $value)
+    {
+        if ($name === 'password') {
+            $this->user->password = $value;
+            return;
+        }
+    }
+
+    public function formName(): string
+    {
+        return '';
     }
 }

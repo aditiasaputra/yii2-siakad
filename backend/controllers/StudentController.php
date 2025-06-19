@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
+use backend\components\Controller;
 use common\models\Student;
 use yii\filters\VerbFilter;
 use backend\models\StudentForm;

@@ -67,13 +67,26 @@ JS);
 
 <?= Alert::widget() ?>
 
-<div class="d-flex">
-    <div class="ml-auto mb-2">
+<div class="d-flex mb-3">
+    <div id="action-left">
         <?= Html::a('Kembali', ['index'], [
             'class' => 'btn btn-sm btn-default'
         ]) ?>
         <?= Html::a('Buat Pengguna', ['create'], [
             'class' => 'btn btn-sm btn-success ml-1'
+        ]) ?>
+    </div>
+    <div class="ml-auto" id="action-right">
+        <?= Html::a('Edit', ['update', 'id' => $model->id], [
+            'class' => 'btn btn-sm btn-warning'
+        ]) ?>
+
+        <?= Html::a('Hapus', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-sm btn-danger mx-1',
+            'data' => [
+                'method' => 'post',
+                'confirm' => 'Yakin ingin hapus?',
+            ]
         ]) ?>
     </div>
 </div>
@@ -125,31 +138,46 @@ JS);
                 <div class="tab-content">
                     <div class="tab-pane active" id="profil">
                         <dl class="row">
-                            <dt class="col-sm-4">KTP</dt>
-                            <dd class="col-sm-8"><?= $model->personal_id ?? '-' ?></dd>
-
-                            <dt class="col-sm-4">Nama Lengkap</dt>
+                            <dt class="col-sm-3">Nama Lengkap</dt>
+                            <dd class="col-sm-1">:</dd>
                             <dd class="col-sm-8"><?= $model->name ?></dd>
 
-                            <dt class="col-sm-4">Jurusan</dt>
-                            <dd class="col-sm-8"><?= $model->major->name ?? '-' ?></dd>
+                            <?php if ($model->student): ?>
+                                <dt class="col-sm-3">Jurusan</dt>
+                            <dd class="col-sm-1">:</dd>
+                                <dd class="col-sm-8"><?= $model->major->name ?? '-' ?></dd>
+                            <?php endif; ?>
 
-                            <dt class="col-sm-4">Username</dt>
+                            <dt class="col-sm-3">Username</dt>
+                            <dd class="col-sm-1">:</dd>
                             <dd class="col-sm-8"><?= $model->username ?></dd>
 
-                            <dt class="col-sm-4">Jenis Kelamin</dt>
+                            <dt class="col-sm-3">KTP</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-8"><?= $model->personal_id ?? '-' ?></dd>
+
+                            <dt class="col-sm-3">Kartu Keluarga</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-8"><?= $model->family_id ?? '-' ?></dd>
+
+                            <dt class="col-sm-3">Jenis Kelamin</dt>
+                            <dd class="col-sm-1">:</dd>
                             <dd class="col-sm-8"><?= Html::encode($model->getGenderLabel() ?? '-') ?></dd>
 
-                            <dt class="col-sm-4">Role/Level</dt>
+                            <dt class="col-sm-3">Role/Level</dt>
+                            <dd class="col-sm-1">:</dd>
                             <dd class="col-sm-8"><?= ucfirst($model->role->name) ?></dd>
 
-                            <dt class="col-sm-4">Tanggal Registrasi</dt>
+                            <dt class="col-sm-3">Tanggal Registrasi</dt>
+                            <dd class="col-sm-1">:</dd>
                             <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->created_at, 'long') ?></dd>
 
-                            <dt class="col-sm-4">Terakhir Diperbarui</dt>
+                            <dt class="col-sm-3">Terakhir Diperbarui</dt>
+                            <dd class="col-sm-1">:</dd>
                             <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->updated_at, 'long') ?></dd>
 
-                            <dt class="col-sm-4">Status</dt>
+                            <dt class="col-sm-3">Status</dt>
+                            <dd class="col-sm-1">:</dd>
                             <dd class="col-sm-8">
                                 <span class="badge badge-pill <?= $model->status == 10 ? 'badge-success' : 'badge-danger' ?>">
                                     <?= $model->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
@@ -200,25 +228,6 @@ JS);
 
                         <?php ActiveForm::end(); ?>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer d-flex">
-                <div class="ml-auto" id="action-right">
-                    <?= Html::a('Edit', ['update', 'id' => $model->id], [
-                        'class' => 'btn btn-sm btn-warning'
-                    ]) ?>
-
-                    <?= Html::a('Hapus', ['delete', 'id' => $model->id], [
-                        'class' => 'btn btn-sm btn-danger mx-1',
-                        'data' => [
-                            'method' => 'post',
-                            'confirm' => 'Yakin ingin hapus?',
-                        ]
-                    ]) ?>
-
-                    <?= Html::a('Kembali', ['index'], [
-                        'class' => 'btn btn-sm btn-secondary'
-                    ]) ?>
                 </div>
             </div>
         </div>

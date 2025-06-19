@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use common\widgets\Alert;
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
-$this->title = 'Detail Karyawan';
+$this->title = 'Detail Pegawai';
 ?>
 
 <?= Alert::widget() ?>
@@ -58,39 +58,77 @@ $this->title = 'Detail Karyawan';
                     <div class="tab-pane active" id="profil">
                         <dl class="row">
                             <dt class="col-sm-4">KTP</dt>
-                            <dd class="col-sm-8"><?= $model->user->personal_id ?? '-' ?></dd>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->user->personal_id ?? '-' ?></dd>
 
                             <dt class="col-sm-4">Nama Lengkap</dt>
-                            <dd class="col-sm-8"><?= $model->user->name ?></dd>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->user->name ?></dd>
 
                             <dt class="col-sm-4">Username</dt>
-                            <dd class="col-sm-8"><?= $model->user->username ?></dd>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->user->username ?></dd>
 
                             <dt class="col-sm-4">Jenis Kelamin</dt>
-                            <dd class="col-sm-8"><?= Html::encode($model->user->getGenderLabel() ?? '-') ?></dd>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= Html::encode($model->user->getGenderLabel() ?? '-') ?></dd>
 
                             <dt class="col-sm-4">Role/Level</dt>
-                            <dd class="col-sm-8"><?= ucfirst($model->user->role->name) ?></dd>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= ucfirst($model->user->role->name) ?></dd>
 
                             <dt class="col-sm-4">Tanggal Registrasi</dt>
-                            <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->user->created_at, 'long') ?></dd>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= Yii::$app->formatter->asDate($model->user->created_at, 'long') ?></dd>
 
                             <dt class="col-sm-4">Terakhir Diperbarui</dt>
-                            <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->user->updated_at, 'long') ?></dd>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= Yii::$app->formatter->asDate($model->user->updated_at, 'long') ?></dd>
 
                             <dt class="col-sm-4">Status</dt>
-                            <dd class="col-sm-8"><span class="badge badge-pill <?= $model->user->status == 10 ? 'badge-success' : 'badge-danger' ?>">
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><span class="badge badge-pill <?= $model->user->status == 10 ? 'badge-success' : 'badge-danger' ?>">
                         <?= $model->user->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
                     </span></dd>
                         </dl>
                     </div>
                     <div class="tab-pane" id="employee">
                         <dl class="row">
-                            <dt class="col-sm-4">NIP</dt>
-                            <dd class="col-sm-8"><?= $model->employee_number ?? '-' ?></dd>
+                            <dt class="col-sm-5">NIP</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->employee_number ?? '-' ?></dd>
 
-                            <dt class="col-sm-4">NIP</dt>
-                            <dd class="col-sm-8"><?= $model->employee_id ?? '-' ?></dd>
+                            <dt class="col-sm-5">NPWP</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->tax_number ?? '-' ?></dd>
+
+                            <dt class="col-sm-5">Cabang Bank</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->branch_name ?? '-' ?></dd>
+
+                            <dt class="col-sm-5">Nomor Rekening</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->account_number ?? '-' ?></dd>
+
+                            <dt class="col-sm-5">Nama Pemilik Rekening</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->account_name ?? '-' ?></dd>
+
+                            <dt class="col-sm-5">No BPJS Ketenagakerjaan</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->national_social_security_number ?? '-' ?></dd>
+
+                            <dt class="col-sm-5">No BPJS Kesehatan</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->national_health_insurance_number ?? '-' ?></dd>
+
+                            <dt class="col-sm-5">Asuransi Pegawai (Non Nasional)</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->social_security_number ?? '-' ?></dd>
+
+                            <dt class="col-sm-5">Asuransi Kesehatan (Non Nasional)</dt>
+                            <dd class="col-sm-1">:</dd>
+                            <dd class="col-sm-6"><?= $model->health_insurance_number ?? '-' ?></dd>
                         </dl>
                     </div>
                     <div class="tab-pane" id="change-password">

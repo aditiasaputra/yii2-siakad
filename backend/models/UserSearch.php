@@ -8,6 +8,7 @@ use common\models\User;
 
 class UserSearch extends User
 {
+    public $id, $name, $username, $email, $status, $role_id;
     public function rules(): array
     {
         return [
@@ -37,9 +38,16 @@ class UserSearch extends User
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
+        }
+
+        if (!empty($this->created_at) && strpos($this->created_at, ' - ') !== false) {
+            list($start_date, $end_date) = explode(' - ', $this->created_at);
+            $query->andFilterWhere([
+                'between', 'user.created_at',
+                date('Y-m-d 00:00:00', strtotime($start_date)),
+                date('Y-m-d 23:59:59', strtotime($end_date))
+            ]);
         }
 
         $query->andFilterWhere([
@@ -48,9 +56,9 @@ class UserSearch extends User
             'role_id' => $this->role_id,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'email', $this->email]);
+        $query->andFilterWhere(['like', 'user.name', $this->name])
+            ->andFilterWhere(['like', 'user.username', $this->username])
+            ->andFilterWhere(['like', 'user.email', $this->email]);
 
         return $dataProvider;
     }

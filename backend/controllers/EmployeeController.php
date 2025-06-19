@@ -5,10 +5,12 @@ namespace backend\controllers;
 use backend\models\EmployeeForm;
 use backend\models\EmployeeSearch;
 use common\models\Employee;
+use common\models\User;
 use Yii;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
+use backend\components\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 class EmployeeController extends Controller
 {
@@ -47,23 +49,56 @@ class EmployeeController extends Controller
 
     public function actionCreate()
     {
-        $model = new EmployeeForm();
+        $userModel = new User();
+        $employeeModel = new Employee();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Karyawan berhasil ditambahkan.");
-            return $this->redirect(['index']);
-        } else {
-            Yii::$app->session->setFlash('success', "Karyawan gagal ditambahkan.");
+        if (Yii::$app->request->isPost && $userModel->load(Yii::$app->request->post()) && $employeeModel->load(Yii::$app->request->post())) {
+
+            $uploadedFile = UploadedFile::getInstance($userModel, 'image');
+
+            if ($uploadedFile) {
+                $fileName = uniqid() . '.' . $uploadedFile->extension;
+                $filePath = Yii::getAlias('@webroot/uploads/profiles/') . $fileName;
+
+                if (!is_dir(dirname($filePath))) {
+                    mkdir(dirname($filePath), 0775, true);
+                }
+
+                if ($uploadedFile->saveAs($filePath)) {
+                    $userModel->image = 'profiles/' . $fileName;
+                }
+            } else {
+                $userModel->image = 'img/avatar.png';
+            }
+
+            $userModel->generateAuthKey();
+            $userModel->setPassword($userModel->password);
+
+            if ($userModel->save()) {
+                $employeeModel->user_id = $userModel->id;
+
+                if ($employeeModel->save()) {
+                    Yii::$app->session->setFlash('success', 'Pegawai berhasil ditambahkan.');
+                    return $this->redirect(['show', 'id' => $employeeModel->id]);
+                } else {
+                    $userModel->delete();
+                    Yii::$app->session->setFlash('error', 'Gagal menyimpan data pegawai.');
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Gagal menyimpan data user.');
+            }
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'userModel' => $userModel,
+            'employeeModel' => $employeeModel,
         ]);
     }
 
+
     public function actionUpdate($id)
     {
-        $employee = Employee::findOne($id);
+        $employee = $this->findModel($id);
         if (!$employee) {
             throw new NotFoundHttpException("Employee not found.");
         }
@@ -87,7 +122,7 @@ class EmployeeController extends Controller
         }
 
         $employee->delete();
-        Yii::$app->session->setFlash('success', 'Karyawan berhasil dihapus.');
+        Yii::$app->session->setFlash('success', 'Pegawai berhasil dihapus.');
 
         return $this->redirect(['index']);
     }

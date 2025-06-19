@@ -1,12 +1,13 @@
 <?php
 
+use common\widgets\Alert;
 use kartik\grid\GridView;
 use yii\helpers\Html;
 
 /** @var $searchModel backend\models\UserSearch */
 /** @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Master Karyawan';
+$this->title = 'Master Pegawai';
 $this->params['breadcrumbs'][] = $this->title;
 
 $gridColumns = [
@@ -120,7 +121,7 @@ $gridColumns = [
 
 $pdfHeader = [
     'L' => [
-        'content' => 'Master Karyawan',
+        'content' => 'Master Pegawai',
         'font-size' => 8,
         'color' => '#333333',
     ],
@@ -152,6 +153,9 @@ $pdfFooter = [
     'line' => true,
 ];
 ?>
+
+<?= Alert::widget() ?>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -193,7 +197,7 @@ $pdfFooter = [
                                 </div>
                             </div> -->
                         ',
-                    'heading' => '<i class="fas fa-users"></i>  Master Karyawan',
+                    'heading' => '<i class="fas fa-users"></i>  Master Pegawai',
                     'type' => GridView::TYPE_DARK,
                 ],
                 'export' => [

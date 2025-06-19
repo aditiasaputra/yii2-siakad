@@ -10,10 +10,10 @@ use common\models\Role;
 use common\widgets\Alert;
 
 /** @var yii\web\View $this */
-/** @var backend\models\LectureForm|StudentForm $formModel */
+/** @var backend\models\LectureForm|StudentForm $model */
 /** @var yii\widgets\ActiveForm $form */
 
-$user = $formModel->user;
+$user = $model->user;
 
 $this->title = 'Form Dosen';
 
@@ -97,13 +97,8 @@ $avatars = ['avatar.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.
         </div>
         <div class="row">
             <div class="col-md-6">
-                <?php if ($isLecture): ?>
-                    <?= $form->field($person, 'employee_id')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($person, 'lecture_field')->textInput(['maxlength' => true]) ?>
-                <?php else: ?>
-                    <?= $form->field($person, 'student_nationality_number')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($person, 'program')->textInput(['maxlength' => true]) ?>
-                <?php endif; ?>
+                    <?= $form->field($model->employee, 'employee_id')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'lecture_field')->textInput(['maxlength' => true]) ?>
             </div>
         </div>
     </div>
