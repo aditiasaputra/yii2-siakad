@@ -9,7 +9,6 @@ use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use yii\helpers\FileHelper;
 use backend\models\UserSearch;
-use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use backend\models\ChangePasswordForm;
 
@@ -55,32 +54,38 @@ class UserController extends Controller
         $model = new User();
 
         if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
-
             $uploadedFile = UploadedFile::getInstance($model, 'image');
+
+            $model->image = 'img/avatar.png';
+            $uploaded = false;
 
             if ($uploadedFile) {
                 $fileName = uniqid() . '.' . $uploadedFile->extension;
-                $filePath = Yii::getAlias('@webroot/uploads/profiles/') . $fileName;
-
-                if (!is_dir(dirname($filePath))) {
-                    mkdir(dirname($filePath), 0775, true);
-                }
+                $uploadDir = Yii::getAlias('@webroot/uploads/profiles/');
+                FileHelper::createDirectory($uploadDir);
+                $filePath = $uploadDir . $fileName;
 
                 if ($uploadedFile->saveAs($filePath)) {
                     $model->image = 'profiles/' . $fileName;
+                    $uploaded = true;
                 }
-            } else {
-                $model->image = 'img/avatar.png';
             }
 
             $model->generateAuthKey();
             $model->setPassword($model->password);
 
             if ($model->save()) {
-                Yii::$app->session->setFlash('success', "Pengguna berhasil ditambahkan.");
+                Yii::$app->session->setFlash('success', 'Pengguna berhasil ditambahkan.');
                 return $this->redirect(['show', 'id' => $model->id]);
             } else {
-                Yii::$app->session->setFlash('error', "Pengguna gagal ditambahkan.");
+                if ($uploaded) {
+                    $fullPath = Yii::getAlias('@webroot/uploads/') . $model->image;
+                    if (file_exists($fullPath)) {
+                        @unlink($fullPath);
+                    }
+                }
+
+                Yii::$app->session->setFlash('error', 'Pengguna gagal ditambahkan.');
             }
         }
 
@@ -92,17 +97,17 @@ class UserController extends Controller
         $model = $this->findModel($id);
         $oldImage = $model->image;
 
-        if ($model->load(Yii::$app->request->post())) {
-
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
             $uploadedFile = UploadedFile::getInstance($model, 'image');
 
             if ($uploadedFile) {
                 $uploadDir = Yii::getAlias('@webroot/uploads/profiles/');
-                FileHelper::createDirectory($uploadDir);
+                FileHelper::createDirectory($uploadDir, 0775, true);
 
-                $fileName = uniqid('') . '.' . $uploadedFile->extension;
+                $fileName = uniqid() . '.' . $uploadedFile->extension;
+                $filePath = $uploadDir . $fileName;
 
-                if ($uploadedFile->saveAs($uploadDir . $fileName)) {
+                if ($uploadedFile->saveAs($filePath)) {
                     $model->image = 'profiles/' . $fileName;
 
                     if ($oldImage && !str_starts_with($oldImage, 'img/avatar')) {
@@ -113,7 +118,8 @@ class UserController extends Controller
                     }
                 }
             } else {
-                $model->image = Yii::$app->request->post('User')['avatar'] ?? $oldImage;
+                $post = Yii::$app->request->post('User');
+                $model->image = $post['avatar'] ?? $oldImage;
             }
 
             if ($model->save()) {
@@ -129,10 +135,44 @@ class UserController extends Controller
 
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', 'Pengguna berhasil dihapus.');
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $user = $this->findModel($id);
+
+            if ($user->employee && $user->employee->lecture) {
+                if (!$user->employee->lecture->delete()) {
+                    throw new \Exception('Gagal menghapus data Dosen.');
+                }
+            }
+
+            if ($user->employee) {
+                if (!$user->employee->delete()) {
+                    throw new \Exception('Gagal menghapus data Pegawai.');
+                }
+            }
+
+            if ($user->image && !str_starts_with($user->image, 'img/avatar')) {
+                $imagePath = Yii::getAlias('@webroot/uploads/') . $user->image;
+                if (file_exists($imagePath)) {
+                    @unlink($imagePath);
+                }
+            }
+
+            if (!$user->delete()) {
+                throw new \Exception('Gagal menghapus data Pengguna.');
+            }
+
+            $transaction->commit();
+            Yii::$app->session->setFlash('success', 'Pengguna dan data terkait berhasil dihapus.');
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            Yii::$app->session->setFlash('error', 'Pengguna gagal dihapus: ' . $e->getMessage());
+        }
+
         return $this->redirect(['index']);
     }
+
 
     protected function findModel($id)
     {
@@ -140,6 +180,6 @@ class UserController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Halaman yang diminta tidak ada.');
     }
 }

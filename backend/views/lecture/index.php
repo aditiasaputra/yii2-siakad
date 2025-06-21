@@ -1,5 +1,6 @@
 <?php
 
+use common\widgets\Alert;
 use kartik\grid\GridView;
 use yii\helpers\Html;
 
@@ -152,6 +153,8 @@ $pdfFooter = [
     'line' => true,
 ];
 ?>
+
+<?= Alert::widget() ?>
 
 <div class="container-fluid">
     <div class="row">

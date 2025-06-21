@@ -105,7 +105,7 @@ $gridColumns = [
                 return Html::a('<i class="fas fa-trash"></i>', $url, [
                     'title' => 'Delete',
                     'class' => 'btn btn-xs btn-danger',
-                    'data-confirm' => 'Are you sure you want to delete this item?',
+                    'data-confirm' => 'Apakah anda yakin akan menghapus data ini?',
                     'data-method' => 'post',
                 ]);
             },

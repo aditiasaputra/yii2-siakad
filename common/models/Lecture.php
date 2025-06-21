@@ -57,19 +57,42 @@ class Lecture extends ActiveRecord
     public function rules()
     {
         return [
-            [['lecture_nationality_number', 'created_at', 'updated_at'], 'required'],
             [['created_by', 'updated_by'], 'integer'],
 
             ['employee_id', 'trim'],
             ['employee_id', 'unique'],
-            ['employee_id', 'string'],
+            ['employee_id', 'integer'],
 
             ['lecture_nationality_number', 'trim'],
             ['lecture_nationality_number', 'unique'],
-            ['lecture_nationality_number', 'string', 'min' => 2, 'max' => 10],
+            ['lecture_nationality_number', 'integer'],
 
-            [['created_by', 'updated_by', 'deleted_at'], 'default', 'value' => null],
-            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            ['lecture_special_number', 'trim'],
+            ['lecture_special_number', 'unique'],
+            ['lecture_special_number', 'integer'],
+
+            ['teacher_national_number', 'trim'],
+            ['teacher_national_number', 'unique'],
+            ['teacher_national_number', 'integer'],
+
+            ['field_of_study', 'trim'],
+            ['field_of_study', 'unique'],
+            ['field_of_study', 'string', 'min' => 2, 'max' => 10],
+
+            ['is_match_field', 'integer'],
+
+            ['competence', 'trim'],
+            ['competence', 'string', 'min' => 2, 'max' => 10],
+
+            ['certificate_date', 'required'],
+            ['certificate_date', 'date', 'format' => 'php:Y-m-d'],
+            ['certificate_date', 'date', 'format' => 'php:Y-m-d'],
+
+            ['certificate_number', 'trim'],
+            ['certificate_number', 'unique'],
+            ['certificate_number', 'integer'],
+
+            ['education_number', 'integer'],
         ];
     }
 
@@ -80,7 +103,7 @@ class Lecture extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lecture_nationality_number' => 'Nidn',
+            'lecture_nationality_number' => 'NIDN',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

@@ -38,10 +38,7 @@ class Student extends ActiveRecord
     public function rules()
     {
         return [
-            [['created_by', 'updated_by', 'deleted_at'], 'default', 'value' => null],
-            [['user_id', 'student_nationality_number', 'created_at', 'updated_at'], 'required'],
-            [['user_id', 'created_by', 'updated_by'], 'integer'],
-            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['user_id', 'student_nationality_number'], 'required'],
             [['student_nationality_number'], 'string', 'max' => 20],
             [['student_nationality_number'], 'unique'],
         ];
@@ -55,7 +52,7 @@ class Student extends ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'student_nationality_number' => 'Nim',
+            'student_nationality_number' => 'NIM',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

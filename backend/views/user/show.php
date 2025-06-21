@@ -4,7 +4,10 @@ use common\widgets\Alert;
 use yii\widgets\ActiveForm;
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
-$this->title = 'Detail Pengguna';
+$this->title = 'Detail';
+
+$this->params['breadcrumbs'][] = ['label' => 'Master Pengguna', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
@@ -139,45 +142,45 @@ JS);
                     <div class="tab-pane active" id="profil">
                         <dl class="row">
                             <dt class="col-sm-3">Nama Lengkap</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= $model->name ?></dd>
 
                             <?php if ($model->student): ?>
                                 <dt class="col-sm-3">Jurusan</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                                 <dd class="col-sm-8"><?= $model->major->name ?? '-' ?></dd>
                             <?php endif; ?>
 
                             <dt class="col-sm-3">Username</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= $model->username ?></dd>
 
                             <dt class="col-sm-3">KTP</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= $model->personal_id ?? '-' ?></dd>
 
                             <dt class="col-sm-3">Kartu Keluarga</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= $model->family_id ?? '-' ?></dd>
 
                             <dt class="col-sm-3">Jenis Kelamin</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= Html::encode($model->getGenderLabel() ?? '-') ?></dd>
 
                             <dt class="col-sm-3">Role/Level</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= ucfirst($model->role->name) ?></dd>
 
                             <dt class="col-sm-3">Tanggal Registrasi</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->created_at, 'long') ?></dd>
 
                             <dt class="col-sm-3">Terakhir Diperbarui</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->updated_at, 'long') ?></dd>
 
                             <dt class="col-sm-3">Status</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-8">
                                 <span class="badge badge-pill <?= $model->status == 10 ? 'badge-success' : 'badge-danger' ?>">
                                     <?= $model->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>

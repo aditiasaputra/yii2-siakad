@@ -55,7 +55,7 @@ if (!$model->isNewRecord) {
 <?= Alert::widget() ?>
 <div class="card card-primary card-outline mb-3">
     <div class="card-header">
-        <h1 class="card-title">Form User</h1>
+        <h1 class="card-title">Form Pengguna</h1>
     </div>
     <?php $form = ActiveForm::begin([
         'options' => ['enctype' => 'multipart/form-data', 'autocomplete' => 'off']
@@ -107,6 +107,16 @@ if (!$model->isNewRecord) {
                                 'placeholder' => 'Masukkan Alamat Lengkap...',
                                 'autofocus' => true
                             ])->label('Alamat') ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'status')->widget(Select2::class, [
+                                'data' => [
+                                    10 => 'Active',
+                                    0 => 'Inactive',
+                                ],
+                                'options' => ['placeholder' => '-- Pilih Status --', 'value' => $model->status ?? 10],
+                                'pluginOptions' => ['allowClear' => true],
+                            ]) ?>
                         </div>
                     </div>
                 </div>

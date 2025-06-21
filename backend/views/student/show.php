@@ -4,7 +4,10 @@ use common\widgets\Alert;
 use yii\bootstrap4\ActiveForm;
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
-$this->title = 'Detail Mahasiswa';
+$this->title = 'Detail';
+
+$this->params['breadcrumbs'][] = ['label' => 'Master Mahasiswa', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
@@ -67,13 +70,26 @@ JS);
 
 <?= Alert::widget() ?>
 
-<div class="d-flex">
-    <div class="ml-auto mb-2">
+<div class="d-flex mb-3">
+    <div id="action-left">
         <?= Html::a('Kembali', ['index'], [
             'class' => 'btn btn-sm btn-default'
         ]) ?>
         <?= Html::a('Buat Pengguna', ['create'], [
             'class' => 'btn btn-sm btn-success ml-1'
+        ]) ?>
+    </div>
+    <div class="ml-auto" id="action-right">
+        <?= Html::a('Edit', ['update', 'id' => $model->id], [
+            'class' => 'btn btn-sm btn-warning'
+        ]) ?>
+
+        <?= Html::a('Hapus', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-sm btn-danger mx-1',
+            'data' => [
+                'method' => 'post',
+                'confirm' => 'Yakin ingin hapus?',
+            ]
         ]) ?>
     </div>
 </div>
@@ -206,25 +222,6 @@ JS);
 
                         <?php ActiveForm::end(); ?>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer d-flex">
-                <div class="ml-auto" id="action-right">
-                    <?= Html::a('Edit', ['update', 'id' => $model->user->id], [
-                        'class' => 'btn btn-sm btn-warning'
-                    ]) ?>
-
-                    <?= Html::a('Hapus', ['delete', 'id' => $model->user->id], [
-                        'class' => 'btn btn-sm btn-danger mx-1',
-                        'data' => [
-                            'method' => 'post',
-                            'confirm' => 'Yakin ingin hapus?',
-                        ]
-                    ]) ?>
-
-                    <?= Html::a('Kembali', ['index'], [
-                        'class' => 'btn btn-sm btn-secondary'
-                    ]) ?>
                 </div>
             </div>
         </div>

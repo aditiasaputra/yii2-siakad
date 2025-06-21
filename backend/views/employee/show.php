@@ -1,12 +1,99 @@
 <?php
+
 use yii\helpers\Html;
 use common\widgets\Alert;
+use yii\widgets\ActiveForm;
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
-$this->title = 'Detail Pegawai';
+$this->title = 'Detail';
+
+$this->params['breadcrumbs'][] = ['label' => 'Master Pegawai', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+
+<?php
+$this->registerJs(<<<JS
+$('#change-password-form').on('beforeSubmit', function(e) {
+    e.preventDefault();
+
+    const form = $(this);
+    const data = form.serialize();
+    const btnSubmit = form.find(':submit');
+
+    let btnSubmitText = btnSubmit.text();
+
+    form.find('.is-invalid').removeClass('is-invalid');
+    form.find('.invalid-feedback').remove();
+
+    form.find('.form-control').attr('readonly', true);
+    btnSubmit.attr('disabled', true);
+
+    btnSubmit.text('Processing..');
+
+    $.post(form.attr('action'), data)
+        .done(function(response) {
+            if (response.success) {
+                toastr.success(response.message);
+                form[0].reset();
+                form.find('.form-control').removeAttr('readonly');
+                btnSubmit.removeAttr('disabled');
+                btnSubmit.text(btnSubmitText);
+            }
+        })
+        .fail(function(jqXHR) {
+            const response = jqXHR.responseJSON;
+
+            if (jqXHR.status === 422) {
+                const errors = response.errors || {};
+
+                Object.entries(errors).forEach(([attribute, messages]) => {
+                    const input = form.find('[name*="[' + attribute + ']"]');
+                    input.addClass('is-invalid');
+
+                    const feedback = $('<div class="invalid-feedback"></div>');
+                    feedback.text(messages[0]);
+
+                    input.after(feedback);
+                });
+            }
+
+            toastr.error(response.message);
+            form.find('.form-control').removeAttr('readonly');
+            btnSubmit.removeAttr('disabled');
+            btnSubmit.text(btnSubmitText);
+        });
+
+    return false;
+});
+
+JS);
 ?>
 
 <?= Alert::widget() ?>
+
+<div class="d-flex mb-3">
+    <div id="action-left">
+        <?= Html::a('Kembali', ['index'], [
+            'class' => 'btn btn-sm btn-default'
+        ]) ?>
+        <?= Html::a('Buat Pengguna', ['create'], [
+            'class' => 'btn btn-sm btn-success ml-1'
+        ]) ?>
+    </div>
+    <div class="ml-auto" id="action-right">
+        <?= Html::a('Edit', ['update', 'id' => $model->id], [
+            'class' => 'btn btn-sm btn-warning'
+        ]) ?>
+
+        <?= Html::a('Hapus', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-sm btn-danger mx-1',
+            'data' => [
+                'method' => 'post',
+                'confirm' => 'Yakin ingin hapus?',
+            ]
+        ]) ?>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-3">
@@ -58,35 +145,35 @@ $this->title = 'Detail Pegawai';
                     <div class="tab-pane active" id="profil">
                         <dl class="row">
                             <dt class="col-sm-4">KTP</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->user->personal_id ?? '-' ?></dd>
 
                             <dt class="col-sm-4">Nama Lengkap</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->user->name ?></dd>
 
                             <dt class="col-sm-4">Username</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->user->username ?></dd>
 
                             <dt class="col-sm-4">Jenis Kelamin</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= Html::encode($model->user->getGenderLabel() ?? '-') ?></dd>
 
                             <dt class="col-sm-4">Role/Level</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= ucfirst($model->user->role->name) ?></dd>
 
                             <dt class="col-sm-4">Tanggal Registrasi</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= Yii::$app->formatter->asDate($model->user->created_at, 'long') ?></dd>
 
                             <dt class="col-sm-4">Terakhir Diperbarui</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= Yii::$app->formatter->asDate($model->user->updated_at, 'long') ?></dd>
 
                             <dt class="col-sm-4">Status</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><span class="badge badge-pill <?= $model->user->status == 10 ? 'badge-success' : 'badge-danger' ?>">
                         <?= $model->user->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
                     </span></dd>
@@ -95,74 +182,85 @@ $this->title = 'Detail Pegawai';
                     <div class="tab-pane" id="employee">
                         <dl class="row">
                             <dt class="col-sm-5">NIP</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->employee_number ?? '-' ?></dd>
 
                             <dt class="col-sm-5">NPWP</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->tax_number ?? '-' ?></dd>
 
                             <dt class="col-sm-5">Cabang Bank</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->branch_name ?? '-' ?></dd>
 
                             <dt class="col-sm-5">Nomor Rekening</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->account_number ?? '-' ?></dd>
 
                             <dt class="col-sm-5">Nama Pemilik Rekening</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->account_name ?? '-' ?></dd>
 
                             <dt class="col-sm-5">No BPJS Ketenagakerjaan</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->national_social_security_number ?? '-' ?></dd>
 
                             <dt class="col-sm-5">No BPJS Kesehatan</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->national_health_insurance_number ?? '-' ?></dd>
 
                             <dt class="col-sm-5">Asuransi Pegawai (Non Nasional)</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->social_security_number ?? '-' ?></dd>
 
                             <dt class="col-sm-5">Asuransi Kesehatan (Non Nasional)</dt>
-                            <dd class="col-sm-1">:</dd>
+                            <dd>:</dd>
                             <dd class="col-sm-6"><?= $model->health_insurance_number ?? '-' ?></dd>
                         </dl>
                     </div>
                     <div class="tab-pane" id="change-password">
-                        <div class="row">
-                            Ganti Password
+                        <?php $form = ActiveForm::begin([
+                            'id' => 'change-password-form',
+                            'action' => ['change-password/validate'],
+                            'enableClientValidation' => false,
+                            'enableAjaxValidation' => false,
+                            'options' => ['class' => 'needs-validation', 'novalidate' => true],
+                        ]); ?>
+
+                        <?= Html::activeHiddenInput($changePasswordmodel, 'id', [
+                            'value' => $model->id
+                        ]) ?>
+
+                        <div class="form-group">
+                            <?= $form->field($changePasswordmodel, 'old_password')->passwordInput([
+                                'class' => 'form-control',
+                                'placeholder' => 'Masukkan password lama',
+                                'required' => true,
+                            ])->label('Password Lama') ?>
                         </div>
+
+                        <div class="form-group">
+                            <?= $form->field($changePasswordmodel, 'new_password')->passwordInput([
+                                'class' => 'form-control',
+                                'placeholder' => 'Masukkan password baru',
+                                'required' => true,
+                            ])->label('Password Baru') ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?= $form->field($changePasswordmodel, 'repeat_password')->passwordInput([
+                                'class' => 'form-control',
+                                'placeholder' => 'Ulangi password baru',
+                                'required' => true,
+                            ])->label('Ulangi Password Baru') ?>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <?= Html::submitButton('Ubah Password', ['class' => 'btn btn-sm btn-info btn-block']) ?>
+                        </div>
+
+                        <?php ActiveForm::end(); ?>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer d-flex">
-                <div id="action-left">
-                    <?= Html::a('Kembali', ['index'], [
-                        'class' => 'btn btn-sm btn-default'
-                    ]) ?>
-                    <?= Html::a('Buat Pengguna', ['create'], [
-                        'class' => 'btn btn-sm btn-success ml-1'
-                    ]) ?>
-                </div>
-                <div class="ml-auto" id="action-right">
-                    <?= Html::a('Edit', ['update', 'id' => $model->user->id], [
-                        'class' => 'btn btn-sm btn-warning'
-                    ]) ?>
-
-                    <?= Html::a('Hapus', ['delete', 'id' => $model->user->id], [
-                        'class' => 'btn btn-sm btn-danger mx-1',
-                        'data' => [
-                            'method' => 'post',
-                            'confirm' => 'Yakin ingin hapus?',
-                        ]
-                    ]) ?>
-
-                    <?= Html::a('Kembali', ['index'], [
-                        'class' => 'btn btn-sm btn-secondary'
-                    ]) ?>
                 </div>
             </div>
         </div>

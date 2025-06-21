@@ -52,7 +52,7 @@
                         'active' => in_array(Yii::$app->controller->id, ['user', 'student', 'lecture', 'employee']),
                         'items' => [
                             [
-                                'label' => 'Users',
+                                'label' => 'Pengguna',
                                 'icon' => 'fas fa-users',
                                 'url' => ['user/index'],
                                 'active' => Yii::$app->controller->id === 'user',

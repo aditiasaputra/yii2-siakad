@@ -100,6 +100,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             ['birth_date', 'required'],
             ['birth_date', 'date', 'format' => 'php:Y-m-d'],
+            ['birth_date', 'date', 'format' => 'php:Y-m-d'],
 
             ['address', 'trim'],
 
@@ -109,8 +110,6 @@ class User extends ActiveRecord implements IdentityInterface
             ['phone', 'required'],
             ['phone', 'string', 'min' => 8, 'max' => 15],
             ['phone', 'match', 'pattern' => '/^(\+62|62|08)[0-9]{7,12}$/', 'message' => 'Format nomor telepon tidak valid. Contoh: +6281234567890 atau 081234567890.'],
-
-            ['birth_date', 'date', 'format' => 'php:Y-m-d'],
 
             ['password', 'required', 'on' => 'create'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],

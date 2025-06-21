@@ -80,7 +80,7 @@ class Employee extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'employee_number' => 'NIP / Nomor Pegawai',
+            'employee_number' => 'NIP',
             'user_id' => 'User',
             'tax_number' => 'NPWP',
             'bank_id' => 'Bank',
