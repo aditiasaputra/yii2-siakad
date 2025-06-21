@@ -8,7 +8,7 @@ use yii\helpers\Html;
 /** @var common\models\Lecture $lectureModel */
 
 $this->title = 'Form Dosen';
-$this->params['breadcrumbs'][] = ['label' => 'Lectures', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Master Dosen', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">

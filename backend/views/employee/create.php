@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /** @var common\models\User $userModel */
 /** @var common\models\Employee $employeeModel */
 
-$this->title = 'Buat Pegawai';
-$this->params['breadcrumbs'][] = ['label' => 'Employees', 'url' => ['index']];
+$this->title = 'Form Pegawai';
+$this->params['breadcrumbs'][] = ['label' => 'Master Pegawai', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
