@@ -41,7 +41,11 @@ class m130524_201442_init extends Migration
             'role_id' => $this->integer()->notNull()->defaultValue(5),
             'image' => $this->string()->null(),
             'gender' => $this->integer()->notNull()->defaultValue(0),
-            'place_of_birth' => $this->string()->null(),
+            'religion_id' => $this->integer()->notNull()->defaultValue(1),
+            'province_code' => $this->string()->null(),
+            'regency_code' => $this->string()->null(),
+            'district_code' => $this->string()->null(),
+            'village_code' => $this->string()->null(),
             'birth_date' => $this->date()->null(),
             'address' => $this->text()->null(),
             'phone' => $this->string(16)->null(),
@@ -65,10 +69,41 @@ class m130524_201442_init extends Migration
             'CASCADE',
             'CASCADE'
         );
+
+        // $this->addForeignKey('fk-user-religion_id', '{{%user}}', 'religion_id', '{{%religion}}', 'id', NULL, 'CASCADE');
+        // $this->addForeignKey('fk-user-province', 'user', 'province_code', 'region', 'kode', NULL, 'CASCADE');
+        // $this->addForeignKey('fk-user-regency', 'user', 'regency_code', 'region', 'kode', NULL, 'CASCADE');
+        // $this->addForeignKey('fk-user-district', 'user', 'district_code', 'region', 'kode', NULL, 'CASCADE');
+        // $this->addForeignKey('fk-user-village', 'user', 'village_code', 'region', 'kode', NULL, 'CASCADE');
     }
 
     public function down()
     {
         $this->dropTable('{{%user}}');
+    }
+
+    private function seedSql()
+    {
+        $path = Yii::getAlias('@console/sql');
+        $sqlFiles = glob($path . '/*.sql');
+        sort($sqlFiles);
+
+        if (empty($sqlFiles)) {
+            echo "\n❗ Tidak ada file .sql ditemukan di folder: $path\n";
+            return;
+        }
+
+        foreach ($sqlFiles as $sqlFile) {
+            echo "\n⚙️  Menjalankan: " . basename($sqlFile) . "\n";
+
+            try {
+                $sql = file_get_contents($sqlFile);
+                Yii::$app->db->createCommand($sql)->execute();
+                echo "✅ Sukses: " . basename($sqlFile) . "\n";
+            } catch (\yii\db\Exception $e) {
+                echo "❌ Error pada file: " . basename($sqlFile) . "\n";
+                echo "   Pesan: " . $e->getMessage() . "\n";
+            }
+        }
     }
 }

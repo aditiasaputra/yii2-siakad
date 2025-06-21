@@ -385,6 +385,30 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
+    // Di model User.php
+    public function getProvince()
+    {
+        return $this->hasOne(Region::class, ['kode' => 'province_code'])
+            ->andWhere(['level' => 'province']);
+    }
+
+    public function getRegency()
+    {
+        return $this->hasOne(Region::class, ['kode' => 'regency_code'])
+            ->andWhere(['level' => 'regency']);
+    }
+
+    public function getDistrict()
+    {
+        return $this->hasOne(Region::class, ['kode' => 'district_code'])
+            ->andWhere(['level' => 'district']);
+    }
+
+    public function getVillage()
+    {
+        return $this->hasOne(Region::class, ['kode' => 'village_code'])
+            ->andWhere(['level' => 'village']);
+    }
 
     public function create()
     {

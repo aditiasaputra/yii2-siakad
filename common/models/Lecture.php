@@ -76,7 +76,6 @@ class Lecture extends ActiveRecord
             ['teacher_national_number', 'integer'],
 
             ['field_of_study', 'trim'],
-            ['field_of_study', 'unique'],
             ['field_of_study', 'string', 'min' => 2],
 
             ['is_match_field', 'integer'],

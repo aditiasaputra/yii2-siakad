@@ -31,10 +31,7 @@ class SeedController extends Controller
         Yii::$app->db->createCommand()->truncateTable(Employee::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Lecture::tableName())->execute();
 
-        Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
-
-
-        echo "Seeding users, employee, students, and lectures...\n";
+        echo "\nSeeding users, employee, students, and lectures...\n";
 
         $avatars = ['avatar.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.png'];
 
@@ -143,7 +140,35 @@ class SeedController extends Controller
             }
         }
 
-        echo "✅ Seed selesai.\n";
+        $this->seedSql();
+        Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
+
+        echo "\n✅ Seed selesai.\n";
         Yii::$app->cache->flush();
+    }
+
+    private function seedSql()
+    {
+        $path = Yii::getAlias('@console/sql');
+        $sqlFiles = glob($path . '/*.sql');
+        sort($sqlFiles, SORT_DESC);
+
+        if (empty($sqlFiles)) {
+            echo "\n❗ Tidak ada file .sql ditemukan di folder: $path\n";
+            return;
+        }
+
+        foreach ($sqlFiles as $sqlFile) {
+            echo "\n⚙️  Menjalankan: " . basename($sqlFile) . "\n";
+
+            try {
+                $sql = file_get_contents($sqlFile);
+                Yii::$app->db->createCommand($sql)->execute();
+                echo "✅ Sukses: " . basename($sqlFile) . "\n";
+            } catch (\yii\db\Exception $e) {
+                echo "❌ Error pada file: " . basename($sqlFile) . "\n";
+                echo "   Pesan: " . $e->getMessage() . "\n";
+            }
+        }
     }
 }
