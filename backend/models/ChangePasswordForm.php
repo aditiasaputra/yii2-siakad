@@ -8,7 +8,7 @@ use common\models\User;
 
 class ChangePasswordForm extends Model
 {
-    public $id, $old_password, $new_password, $repeat_password;
+    public $id, $new_password, $repeat_password;
 
     private $_user;
 
@@ -17,19 +17,10 @@ class ChangePasswordForm extends Model
         return [
             [['id'], 'required'],
             [['id'], 'integer'],
-            [['old_password', 'new_password', 'repeat_password'], 'required'],
-            [['old_password', 'new_password', 'repeat_password'], 'string', 'min' => 6],
+            [['new_password', 'repeat_password'], 'required'],
+            [['new_password', 'repeat_password'], 'string', 'min' => 6],
             ['repeat_password', 'compare', 'compareAttribute' => 'new_password', 'message' => 'Password baru tidak cocok.'],
-            ['old_password', 'validateOldPassword'],
         ];
-    }
-
-    public function validateOldPassword($attribute)
-    {
-        $user = $this->getUser();
-        if (!$user || !$user->validatePassword($this->old_password)) {
-            $this->addError($attribute, 'Password lama salah.');
-        }
     }
 
     public function changePassword()

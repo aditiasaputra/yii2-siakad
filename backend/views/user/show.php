@@ -202,14 +202,6 @@ JS);
                             ]) ?>
 
                             <div class="form-group">
-                                <?= $form->field($changePasswordmodel, 'old_password')->passwordInput([
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Masukkan password lama',
-                                    'required' => true,
-                                ])->label('Password Lama') ?>
-                            </div>
-
-                            <div class="form-group">
                                 <?= $form->field($changePasswordmodel, 'new_password')->passwordInput([
                                     'class' => 'form-control',
                                     'placeholder' => 'Masukkan password baru',

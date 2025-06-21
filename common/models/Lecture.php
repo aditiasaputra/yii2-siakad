@@ -77,12 +77,12 @@ class Lecture extends ActiveRecord
 
             ['field_of_study', 'trim'],
             ['field_of_study', 'unique'],
-            ['field_of_study', 'string', 'min' => 2, 'max' => 10],
+            ['field_of_study', 'string', 'min' => 2],
 
             ['is_match_field', 'integer'],
 
             ['competence', 'trim'],
-            ['competence', 'string', 'min' => 2, 'max' => 10],
+            ['competence', 'string', 'min' => 2],
 
             ['certificate_date', 'required'],
             ['certificate_date', 'date', 'format' => 'php:Y-m-d'],

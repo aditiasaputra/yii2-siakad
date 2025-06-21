@@ -121,10 +121,11 @@ class SeedController extends Controller
                 if ($employee->save()) {
                     $lecture = new Lecture();
                     $lecture->employee_id = $employee->id;
-                    $lecture->lecture_nationality_number = 'NIDN' . str_pad($i, 4, '0', STR_PAD_LEFT);
+                    $lecture->lecture_nationality_number = (int) str_pad($i, 4, '0', STR_PAD_LEFT);
                     $lecture->competence = $faker->jobTitle;
                     $lecture->field_of_study = $faker->word;
                     $lecture->is_match_field = rand(0, 1);
+                    $lecture->certificate_date = date('Y-m-d');
                     $lecture->created_at = date('Y-m-d H:i:s');
                     $lecture->updated_at = date('Y-m-d H:i:s');
 
