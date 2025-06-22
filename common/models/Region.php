@@ -8,7 +8,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "wilayah".
  *
  * @property string $kode
- * @property string $nama
+ * @property string $name
  */
 class Region extends ActiveRecord
 {
@@ -26,9 +26,9 @@ class Region extends ActiveRecord
     public function rules()
     {
         return [
-            [['kode', 'nama'], 'required'],
+            [['kode', 'name'], 'required'],
             [['kode'], 'string', 'max' => 20],
-            [['nama'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 255],
             [['kode'], 'unique'],
         ];
     }
@@ -40,37 +40,24 @@ class Region extends ActiveRecord
     {
         return [
             'kode' => 'Kode Wilayah',
-            'nama' => 'Nama Wilayah',
+            'name' => 'Nama Wilayah',
         ];
     }
 
-    public static function getList($parentCode = null)
+    /**
+     * Get a list of child regions by parent kode and level
+     *
+     * @param string|null $parentKode
+     * @param string $level
+     * @return array
+     */
+    public static function getList(?string $parentKode = null, string $level): array
     {
-        if ($parentCode === null) {
-            // Provinsi: kode panjangnya 2 karakter
-            return self::find()
-                ->where(['LENGTH(kode)' => 2])
-                ->orderBy('nama')
-                ->asArray()
-                ->all();
-        }
-
-        $length = strlen($parentCode);
-        $nextLength = match($length) {
-            2 => 5,   // dari provinsi ke kabupaten
-            5 => 8,   // dari kabupaten ke kecamatan
-            8 => 13,  // dari kecamatan ke desa
-            default => null,
-        };
-
-        if ($nextLength === null) {
-            return [];
-        }
-
         return self::find()
-            ->where(['like', 'kode', $parentCode . '%', false])
-            ->andWhere(['LENGTH(kode)' => $nextLength])
-            ->orderBy('nama')
+            ->select(['kode AS id', 'name AS text'])
+            ->where(['level' => $level])
+            ->andFilterWhere(['parent_kode' => $parentKode])
+            ->orderBy('name')
             ->asArray()
             ->all();
     }

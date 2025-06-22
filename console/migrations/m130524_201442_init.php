@@ -69,12 +69,6 @@ class m130524_201442_init extends Migration
             'CASCADE',
             'CASCADE'
         );
-
-        // $this->addForeignKey('fk-user-religion_id', '{{%user}}', 'religion_id', '{{%religion}}', 'id', NULL, 'CASCADE');
-        // $this->addForeignKey('fk-user-province', 'user', 'province_code', 'region', 'kode', NULL, 'CASCADE');
-        // $this->addForeignKey('fk-user-regency', 'user', 'regency_code', 'region', 'kode', NULL, 'CASCADE');
-        // $this->addForeignKey('fk-user-district', 'user', 'district_code', 'region', 'kode', NULL, 'CASCADE');
-        // $this->addForeignKey('fk-user-village', 'user', 'village_code', 'region', 'kode', NULL, 'CASCADE');
     }
 
     public function down()

@@ -31,7 +31,10 @@ DROP TABLE IF EXISTS region;
 CREATE TABLE region (
     id INT AUTO_INCREMENT PRIMARY KEY,
     kode VARCHAR(20) NOT NULL UNIQUE,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    level ENUM('province', 'regency', 'district', 'village') NOT NULL,
+    parent_kode VARCHAR(20) NULL,
+    FOREIGN KEY (parent_kode) REFERENCES region(kode)
 );
 
 CREATE INDEX region_name_idx ON region (name);
@@ -91778,3 +91781,22 @@ VALUES
 ('95.08.32.2002','Trim'),
 ('95.08.32.2003','Benggem'),
 ('95.08.32.2004','Pasir Putih');
+
+-- Update level berdasarkan pola kode
+UPDATE region SET
+    level = CASE
+        WHEN kode REGEXP '^[0-9]+$' THEN 'province'
+        WHEN kode REGEXP '^[0-9]+\.[0-9]+$' THEN 'regency'
+        WHEN kode REGEXP '^[0-9]+\.[0-9]+\.[0-9]+$' THEN 'district'
+        WHEN kode REGEXP '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' THEN 'village'
+    END;
+
+-- Update parent_kode berdasarkan pola hierarki
+UPDATE region SET
+    parent_kode = CASE
+        WHEN level = 'regency' THEN SUBSTRING_INDEX(kode, '.', 1)
+        WHEN level = 'district' THEN SUBSTRING_INDEX(kode, '.', 2)
+        WHEN level = 'village' THEN SUBSTRING_INDEX(kode, '.', 3)
+        ELSE NULL
+    END
+WHERE level != 'province';
