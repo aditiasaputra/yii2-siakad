@@ -4,7 +4,6 @@ use common\widgets\Alert;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-/** @var $searchModel backend\models\ReligionSearch */
 /** @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Master Agama';
@@ -18,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-12 col-md-12 col-sm-12" id="religion-container-data">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                // 'filterModel' => $searchModel,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
