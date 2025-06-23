@@ -4,6 +4,7 @@ use common\widgets\Alert;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
+/** @var $searchModel backend\models\ReligionSearch */
 /** @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Master Agama';
