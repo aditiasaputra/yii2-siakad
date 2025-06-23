@@ -35,11 +35,11 @@ INSERT INTO
 	(`id`, `name`, `created_at`, `updated_at`, `deleted_at`, `created_by`, `updated_by`, `deleted_by`)
 VALUES
 	(1, 'Islam', NULL, NULL, NULL, 1, 1, NULL),
-	(2, 'Kristen', NULL, NULL, NULL, NULL, NULL, NULL),
-	(3, 'Katolik', NULL, NULL, NULL, NULL, NULL, NULL),
-	(4, 'Hindu', NULL, NULL, NULL, NULL, NULL, NULL),
-	(5, 'Budha', NULL, NULL, NULL, NULL, NULL, NULL),
-	(6, 'Kong hu cu', NULL, NULL, NULL, NULL, NULL, NULL);
+	(2, 'Kristen', NULL, NULL, NULL, 1, 1, NULL),
+	(3, 'Katolik', NULL, NULL, NULL, 1, 1, NULL),
+	(4, 'Hindu', NULL, NULL, NULL, 1, 1, NULL),
+	(5, 'Budha', NULL, NULL, NULL, 1, 1, NULL),
+	(6, 'Kong hu cu', NULL, NULL, NULL, 1, 1, NULL);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

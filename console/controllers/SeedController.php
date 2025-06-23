@@ -140,7 +140,7 @@ class SeedController extends Controller
             }
         }
 
-        $this->seedSql();
+        // $this->seedSql();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
 
         echo "\n✅ Seed selesai.\n";

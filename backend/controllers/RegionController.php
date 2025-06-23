@@ -6,43 +6,60 @@ use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 use common\models\Region;
-use yii\filters\VerbFilter;
 
 class RegionController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'list' => ['POST'], // hanya menerima POST
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * Action untuk AJAX request region (provinsi, kabupaten, dst)
-     *
-     * @return array JSON
-     */
-    public function actionList()
+    public function actionRegency()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
+        $parents = Yii::$app->request->post('depdrop_parents');
 
-        $parentKode = Yii::$app->request->post('parent_kode');
-        $level = Yii::$app->request->post('level');
+        if ($parents !== null && isset($parents[0])) {
+            $provinceKode = $parents[0];
+            $out = Region::find()
+                ->select(['id' => 'kode', 'name'])
+                ->where(['parent_kode' => $provinceKode, 'level' => 'regency'])
+                ->asArray()
+                ->all();
 
-        if (!$level) {
-            return ['success' => false, 'message' => 'Parameter level tidak ditemukan'];
+            return ['output' => $out, 'selected' => ''];
         }
+        return ['output' => [], 'selected' => ''];
+    }
 
-        $data = Region::getList($parentKode, $level);
+    public function actionDistrict()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $parents = Yii::$app->request->post('depdrop_parents');
 
-        return [
-            'success' => true,
-            'items' => $data,
-        ];
+        if ($parents !== null && count($parents) >= 2) {
+            $regencyKode = $parents[1];
+            $out = Region::find()
+                ->select(['id' => 'kode', 'name'])
+                ->where(['parent_kode' => $regencyKode, 'level' => 'district'])
+                ->asArray()
+                ->all();
+
+            return ['output' => $out, 'selected' => ''];
+        }
+        return ['output' => [], 'selected' => ''];
+    }
+
+    public function actionVillage()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $parents = Yii::$app->request->post('depdrop_parents');
+
+        if ($parents !== null && count($parents) >= 3) {
+            $districtKode = $parents[2];
+            $out = Region::find()
+                ->select(['id' => 'kode', 'name'])
+                ->where(['parent_kode' => $districtKode, 'level' => 'village'])
+                ->asArray()
+                ->all();
+
+            return ['output' => $out, 'selected' => ''];
+        }
+        return ['output' => [], 'selected' => ''];
     }
 }

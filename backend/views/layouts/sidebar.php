@@ -75,6 +75,12 @@
                                 'url' => ['student/index'],
                                 'active' => Yii::$app->controller->id === 'student',
                             ],
+                            [
+                                'label' => 'Agama',
+                                'icon' => 'fas fa-place-of-worship',
+                                'url' => ['religion/index'],
+                                'active' => Yii::$app->controller->id === 'religion',
+                            ],
                         ],
                     ],
                     ['label' => 'LAINNYA', 'header' => true],

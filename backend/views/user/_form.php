@@ -1,7 +1,10 @@
 <?php
 
+use common\models\Region;
+use common\models\Religion;
 use common\models\Role;
 use kartik\date\DatePicker;
+use kartik\depdrop\DepDrop;
 use kartik\file\FileInput;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -118,10 +121,6 @@ if (!$model->isNewRecord) {
                                 'pluginOptions' => ['allowClear' => true],
                             ]) ?>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-7 col-md-12">
-                    <div class="row">
                         <div class="col-md-12">
                             <?= $form->field($model, 'birth_date')->widget(DatePicker::class, [
                                 'type' => DatePicker::TYPE_COMPONENT_APPEND,
@@ -137,6 +136,73 @@ if (!$model->isNewRecord) {
                         </div>
                         <div class="col-md-12">
                             <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'religion_id')->widget(Select2::class, [
+                                'data' => ArrayHelper::map(
+                                    Religion::find()->select(['id', 'name'])->asArray()->all(),
+                                    'id', 'name'
+                                ),
+                                'options' => ['placeholder' => '-- Pilih Agama --', 'value' => $model->religion_id],
+                                'pluginOptions' => ['allowClear' => true],
+                            ])->label('Agama') ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'province_code')->widget(Select2::class, [
+                                    'data' => ArrayHelper::map(
+                                        Region::find()->where(['level' => 'province'])->orderBy('name')->asArray()->all(),
+                                        'kode',
+                                        'name'
+                                    ),
+                                    'options' => ['placeholder' => 'Pilih Provinsi', 'id' => 'province-id'],
+                                    'pluginOptions' => [
+                                        'allowClear' => true
+                                    ],
+                                ])->label('Provinsi');
+                            ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'regency_code')->widget(DepDrop::class, [
+                                'type' => DepDrop::TYPE_SELECT2,
+                                'options' => ['id' => 'regency-id', 'placeholder' => 'Pilih Kabupaten/Kota'],
+                                'pluginOptions' => [
+                                    'depends' => ['province-id'],
+                                    'initialize' => true,
+                                    'url' => Url::to(['/region/regency']),
+                                    'loadingText' => 'Loading...',
+                                    'allowClear' => true,
+                                ],
+                            ])->label('Kota/Kabupaten'); ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'district_code')->widget(DepDrop::class, [
+                                'type' => DepDrop::TYPE_SELECT2,
+                                'options' => ['id' => 'district-id', 'placeholder' => 'Pilih Kecamatan'],
+                                'pluginOptions' => [
+                                    'depends' => ['province-id', 'regency-id'],
+                                    'initialize' => true,
+                                    'url' => Url::to(['/region/district']),
+                                    'loadingText' => 'Loading...',
+                                    'allowClear' => true,
+                                ],
+                            ])->label('Kecamatan'); ?>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <?= $form->field($model, 'village_code')->widget(DepDrop::class, [
+                                'type' => DepDrop::TYPE_SELECT2,
+                                'options' => ['placeholder' => 'Pilih Desa/Kelurahan'],
+                                'pluginOptions' => [
+                                    'depends' => ['province-id', 'regency-id', 'district-id'],
+                                    'initialize' => true,
+                                    'url' => Url::to(['/region/village']),
+                                    'loadingText' => 'Loading...',
+                                    'allowClear' => true,
+                                ],
+                            ])->label('Kelurahan/Desa'); ?>
                         </div>
                         <?php if ($model->isNewRecord): ?>
                             <div class="col-lg-12 col-md-12 col-12">

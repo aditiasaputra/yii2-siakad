@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\base\NotSupportedException;
+use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -26,7 +27,12 @@ use yii\web\IdentityInterface;
  * @property string $image
  * @property integer $status
  * @property integer $gender
+ * @property integer $religion_id
  * @property string $birth_date
+ * @property string $province_code
+ * @property string $regency_code
+ * @property string $district_code
+ * @property string $village_code
  * @property string $address
  * @property string $phone
  * @property integer $role_id
@@ -64,6 +70,11 @@ class User extends ActiveRecord implements IdentityInterface
                 'updatedAtAttribute' => 'updated_at',
                 'value' => new Expression('NOW()'),
             ],
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
         ];
     }
 
@@ -97,6 +108,10 @@ class User extends ActiveRecord implements IdentityInterface
 
             ['gender', 'required'],
             ['gender', 'in', 'range' => [0, 1]],
+
+            ['religion_id', 'integer'],
+
+            [['province_code', 'regency_code', 'district_code', 'village_code'], 'string'],
 
             ['birth_date', 'required'],
             ['birth_date', 'date', 'format' => 'php:Y-m-d'],
