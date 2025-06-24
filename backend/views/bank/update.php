@@ -1,12 +1,10 @@
 <?php
 
-use yii\helpers\Html;
-
 /** @var yii\web\View $this */
 /** @var common\models\Bank $model */
 
 $this->title = 'Update: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Master Agama', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Master Bank', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Form Update';
 ?>
