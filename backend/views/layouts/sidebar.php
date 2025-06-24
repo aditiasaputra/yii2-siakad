@@ -49,7 +49,7 @@
                         'label' => 'Master Data',
                         'icon' => 'fas fa-database',
                         'url' => '#',
-                        'active' => in_array(Yii::$app->controller->id, ['user', 'student', 'lecture', 'employee', 'religion']),
+                        'active' => in_array(Yii::$app->controller->id, ['user', 'student', 'lecture', 'employee', 'religion', 'bank']),
                         'items' => [
                             [
                                 'label' => 'Pengguna',
@@ -80,6 +80,12 @@
                                 'icon' => 'fas fa-place-of-worship',
                                 'url' => ['religion/index'],
                                 'active' => Yii::$app->controller->id === 'religion',
+                            ],
+                            [
+                                'label' => 'Bank',
+                                'icon' => 'fas fa-wallet',
+                                'url' => ['bank/index'],
+                                'active' => Yii::$app->controller->id === 'bank',
                             ],
                         ],
                     ],

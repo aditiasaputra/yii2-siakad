@@ -30,7 +30,7 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="sidebar-mini sidebar-collapse layout-fixed">
+<body class="sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed layout-footer-fixed">
 <?php $this->beginBody() ?>
 
 <?php if(YII_ENV_PROD): ?>

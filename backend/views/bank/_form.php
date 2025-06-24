@@ -30,7 +30,7 @@ CSS
 <?= Alert::widget() ?>
 <div class="card card-primary card-outline mb-3">
     <div class="card-header">
-        <h1 class="card-title">Form Agama</h1>
+        <h1 class="card-title">Form Bank</h1>
     </div>
     <?php $form = ActiveForm::begin([
         'options' => ['enctype' => 'multipart/form-data', 'autocomplete' => 'off']

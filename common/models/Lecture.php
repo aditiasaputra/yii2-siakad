@@ -14,9 +14,14 @@ use yii\db\Expression;
  * @property int $id
  * @property string $employee_id
  * @property string $lecture_nationality_number
- * @property string $competence
+ * @property string $lecture_special_number
+ * @property string $teacher_national_number
  * @property string $field_of_study
  * @property string $is_match_field
+ * @property string $competence
+ * @property string $certificate_date
+ * @property string $certificate_number
+ * @property string $education_number
  * @property string $created_at
  * @property string $updated_at
  * @property int|null $created_by

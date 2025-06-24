@@ -3,8 +3,9 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
 use yii\db\Expression;
+use common\models\Bank;
+use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -123,8 +124,8 @@ class Employee extends \yii\db\ActiveRecord
      * Gets a related Bank model
      * @return \yii\db\ActiveQuery
      */
-    // public function getBank()
-    // {
-    //     return $this->hasOne(Bank::class, ['id' => 'bank_id']);
-    // }
+    public function getBank()
+    {
+        return $this->hasOne(Bank::class, ['id' => 'bank_id']);
+    }
 }

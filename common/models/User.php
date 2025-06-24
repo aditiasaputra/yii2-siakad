@@ -454,6 +454,11 @@ class User extends ActiveRecord implements IdentityInterface
             ->andWhere(['level' => 'village']);
     }
 
+    public function getReligion()
+    {
+        return $this->hasOne(Religion::class, ['id' => 'religion_id']);
+    }
+
     public function create()
     {
         if (!$this->validate()) {

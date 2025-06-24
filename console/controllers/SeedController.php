@@ -110,6 +110,7 @@ class SeedController extends Controller
             if ($user->save()) {
                 $employee = new Employee();
                 $employee->user_id = $user->id;
+                $employee->user_id = rand(1, 438);
                 $employee->employee_number = 'EMP' . str_pad($i, 4, '0', STR_PAD_LEFT);
                 $employee->account_name = $user->name;
                 $employee->account_number = '001' . rand(10000000, 99999999);

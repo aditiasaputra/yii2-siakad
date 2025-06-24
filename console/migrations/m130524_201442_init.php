@@ -29,14 +29,14 @@ class m130524_201442_init extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull()->unique(),
             'username' => $this->string()->notNull()->unique(),
-            'honorific' => $this->string(255)->null(), // Gelar Depan
-            'degree' => $this->string(255)->null(), // Gelar Belakang
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
             'personal_id' => $this->string()->null(), // KTP
             'family_id' => $this->string()->null(), // KK
+            'honorific' => $this->string(255)->null(), // Gelar Depan
+            'degree' => $this->string(255)->null(), // Gelar Belakang
             // 1|Admin,2|Operator,3|Staff,4|Lecturer,5|Student
             'role_id' => $this->integer()->notNull()->defaultValue(5),
             'image' => $this->string()->null(),
