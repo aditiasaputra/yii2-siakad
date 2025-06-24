@@ -27,7 +27,10 @@ use yii\web\IdentityInterface;
  * @property string $image
  * @property integer $status
  * @property integer $gender
+ * @property string $blood_type
  * @property integer $religion_id
+ * @property integer $height
+ * @property integer $weight
  * @property string $birth_date
  * @property string $province_code
  * @property string $regency_code
@@ -105,16 +108,20 @@ class User extends ActiveRecord implements IdentityInterface
             ['family_id', 'trim'],
             ['family_id', 'required'],
             ['family_id', 'string', 'min' => 5, 'max' => 16],
-
+            
             ['gender', 'required'],
             ['gender', 'in', 'range' => [0, 1]],
 
+            ['blood_type', 'string'],
+
+            ['religion_id', 'required'],
             ['religion_id', 'integer'],
+
+            [['height', 'weight'], 'string', 'min' => 2, 'max' => 3],
 
             [['province_code', 'regency_code', 'district_code', 'village_code'], 'string'],
 
             ['birth_date', 'required'],
-            ['birth_date', 'date', 'format' => 'php:Y-m-d'],
             ['birth_date', 'date', 'format' => 'php:Y-m-d'],
 
             ['address', 'trim'],
@@ -328,6 +335,28 @@ class User extends ActiveRecord implements IdentityInterface
     public function checkAccess(): bool
     {
         return ($this->role_id === 1) || ($this->role_id === 2) || $this->role_id === 3 || $this->role_id === 4;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'name' => 'Nama',
+            'personal_id' => 'KTP',
+            'family_id' => 'KK',
+            'gender' => 'Jenis Kelamin',
+            'religion_id' => 'Agama',
+            'birth_date' => 'Tanggal Lahir',
+            'phone' => 'No. HP',
+            'province_code' => 'Provinsi',
+            'regency_code' => 'Kota/Kabupaten',
+            'district_code' => 'Kecamatan',
+            'village_code' => 'Kelurahan/Desa',
+            'height' => 'Tinggi Badan (cm)',
+            'weight' => 'Berat Badan (kg)',
+        ];
     }
 
     /**

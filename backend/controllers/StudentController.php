@@ -110,7 +110,7 @@ class StudentController extends Controller
                     @unlink($filePath);
                 }
 
-                Yii::$app->session->setFlash('error', $e->getMessage());
+                Yii::$app->session->setFlash('error', 'Error Message: ' . $e->getMessage());
             }
         }
 
@@ -173,7 +173,7 @@ class StudentController extends Controller
 
             } catch (\Throwable $e) {
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('error', $e->getMessage());
+                Yii::$app->session->setFlash('error', 'Error Message: ' . $e->getMessage());
             }
         }
 
@@ -214,7 +214,7 @@ class StudentController extends Controller
             Yii::$app->session->setFlash('success', 'Mahasiswa berhasil dihapus.');
         } catch (\Throwable $e) {
             $transaction->rollBack();
-            Yii::$app->session->setFlash('error', $e->getMessage());
+            Yii::$app->session->setFlash('error', 'Error Message: ' . $e->getMessage());
         }
 
         return $this->redirect(['index']);

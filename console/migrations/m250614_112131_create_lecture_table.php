@@ -21,7 +21,7 @@ class m250614_112131_create_lecture_table extends Migration
             'lecture_special_number' => $this->string(10)->null(), // NIDK
             'teacher_national_number' => $this->string(10)->null(), // NUPN
             'field_of_study' => $this->string()->null(), // Rumpun Ilmu
-            'is_match_field' => $this->boolean()->notNull()->defaultValue(0), // Kesesuaian Rumpun Ilmu?
+            'is_match_field' => $this->boolean()->null()->defaultValue(0), // Kesesuaian Rumpun Ilmu?
             'competence' => $this->string()->null(), // Kompetensi
             'certificate_date' => $this->date()->null(), // Tanggal Sertifikat
             'certificate_number' => $this->string()->null(), // No Sertifikat

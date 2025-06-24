@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /** @var $searchModel backend\models\UserSearch */
 /** @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Master Users';
+$this->title = 'Master Pengguna';
 $this->params['breadcrumbs'][] = $this->title;
 
 $gridColumns = [
@@ -112,7 +112,7 @@ $gridColumns = [
 
 $pdfHeader = [
     'L' => [
-        'content' => 'Master User',
+        'content' => 'Master Pengguna',
         'font-size' => 8,
         'color' => '#333333',
     ],
@@ -187,7 +187,7 @@ $pdfFooter = [
                                 </div>
                             </div> -->
                         ',
-                    'heading' => '<i class="fas fa-users"></i>  Master User',
+                    'heading' => '<i class="fas fa-users"></i>  Master Pengguna',
                     'type' => GridView::TYPE_DARK,
                 ],
                 'export' => [
@@ -198,15 +198,15 @@ $pdfFooter = [
                 'exportConfig' => [
                     GridView::EXCEL => [
                         'label' => 'Excel',
-                        'filename' => 'Master-User-' . date('Ymd'),
+                        'filename' => 'Master-Pengguna-' . date('Ymd'),
                     ],
                     GridView::CSV => [
                         'label' => 'CSV',
-                        'filename' => 'Master-User-' . date('Ymd'),
+                        'filename' => 'Master-Pengguna-' . date('Ymd'),
                     ],
                     GridView::PDF => [
                         'label' => 'PDF',
-                        'filename' => 'Master-User-' . date('Ymd'),
+                        'filename' => 'Master-Pengguna-' . date('Ymd'),
                         'config' => [
                             'methods' => [
                                 'SetHeader' => [
@@ -220,22 +220,22 @@ $pdfFooter = [
                     ],
                     // GridView::HTML => [
                     //     'label' => 'HTML',
-                    //     'filename' => 'Master-User-' . date('Ymd'),
+                    //     'filename' => 'Master-Pengguna-' . date('Ymd'),
                     // ],
                     // GridView::TEXT => [
                     //     'label' => 'Text',
-                    //     'filename' => 'Master-User-' . date('Ymd'),
+                    //     'filename' => 'Master-Pengguna-' . date('Ymd'),
                     // ],
                     // GridView::JSON => [
                     //     'label' => 'JSON',
-                    //     'filename' => 'Data-User-' . date('Ymd'),
+                    //     'filename' => 'Data-Pengguna-' . date('Ymd'),
                     // ],
                 ],
                 // set your toolbar
                 'toolbar' =>  [
                     [
                         'content' =>
-                            Html::a('<i class="fas fa-user-plus mr-1"></i>', ['create'], ['class' => 'btn btn-md btn-success', 'title' => "Create User", 'onclick' => 'return event.stopPropagation();']) . ' '.
+                            Html::a('<i class="fas fa-user-plus mr-1"></i>', ['create'], ['class' => 'btn btn-md btn-success', 'title' => "Tambah Pengguna", 'onclick' => 'return event.stopPropagation();']) . ' '.
                             Html::a('<i class="fas fa-redo"></i>', ['index'], [
                                 'class' => 'btn btn-outline-secondary',
                                 'title'=> 'Reset Grid',

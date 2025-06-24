@@ -30,8 +30,15 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="sidebar-mini sidebar-collapse layout-fixed">
 <?php $this->beginBody() ?>
+
+<?php if(YII_ENV_PROD): ?>
+    <!-- Preloader -->
+    <div class="preloader flex-column justify-content-center align-items-center">
+        <img class="animation__shake" src="<?= $assetDir; ?>/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+    </div>
+<?php endif; ?>
 
 <div class="wrapper">
     <!-- Navbar -->

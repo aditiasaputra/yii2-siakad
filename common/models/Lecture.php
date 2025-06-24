@@ -89,8 +89,6 @@ class Lecture extends ActiveRecord
             ['competence', 'trim'],
             ['competence', 'string', 'min' => 2],
 
-            ['certificate_date', 'required'],
-            ['certificate_date', 'date', 'format' => 'php:Y-m-d'],
             ['certificate_date', 'date', 'format' => 'php:Y-m-d'],
 
             ['certificate_number', 'trim'],
@@ -109,6 +107,14 @@ class Lecture extends ActiveRecord
         return [
             'id' => 'ID',
             'lecture_nationality_number' => 'NIDN',
+            'lecture_special_number' => 'NIDK',
+            'teacher_national_number' => 'NUP/NIP',
+            'field_of_study' => 'Rumpun Ilmu',
+            'is_match_field' => 'Sesuai Rumpun Ilmu?',
+            'competence' => 'Kompetensi',
+            'certificate_date' => 'Tanggal Sertifikasi',
+            'certificate_number' => 'Nomor Sertifikasi',
+            'education_number' => 'NUPTK',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

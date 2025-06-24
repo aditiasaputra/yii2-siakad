@@ -20,14 +20,24 @@ use yii\helpers\Url;
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 
 $avatars = ['avatar.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.png'];
-// $assetDir = Yii::getAlias('@web/img/');
 
 $this->registerCss(<<<CSS
     .avatar-choice {
         border: 2px solid transparent;
+        transition: border-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        border-radius: 8px;
+        object-fit: cover;
+        margin-right: 10px;
     }
-    input[type="radio"]:checked + .avatar-choice {
+
+    .avatar-choice:hover {
+        transform: scale(1.05);
         border-color: #007bff;
+    }
+
+    .avatar-choice.selected {
+        border-color: #28a745;
+        box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
     }
 CSS
 );
@@ -39,7 +49,6 @@ $this->registerJs(<<<JS
         $(this).css('border-color', '#007bff');
         $('.file-preview-image').attr('src', $(this).attr('src'));
     });
-    // $('.avatar-choice').eq(0).trigger('click');
 JS
 );
 if (!$model->isNewRecord) {
@@ -56,192 +65,195 @@ if (!$model->isNewRecord) {
 
 ?>
 <?= Alert::widget() ?>
+
 <div class="card card-primary card-outline mb-3">
     <div class="card-header">
-        <h1 class="card-title">Form Pengguna</h1>
+        <h3 class="card-title mb-0">Form Pengguna</h3>
     </div>
     <?php $form = ActiveForm::begin([
-        'options' => ['enctype' => 'multipart/form-data', 'autocomplete' => 'off']
+        'options' => ['enctype' => 'multipart/form-data', 'autocomplete' => 'off'],
+        'type' => ActiveForm::TYPE_HORIZONTAL,
+        'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL],
     ]); ?>
         <div class="card-body">
 
             <div class="row">
-                <div class="col-lg-5 col-md-12">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'personal_id')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'family_id')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'role_id')->widget(Select2::class, [
-                                'data' => ArrayHelper::map(
-                                    Role::find()->select(['id', 'name'])->asArray()->all(),
-                                    'id', 'name'
-                                ),
-                                'options' => ['placeholder' => '-- Pilih Role --', 'value' => $model->role_id],
-                                'pluginOptions' => ['allowClear' => true],
-                            ])->label('Role') ?>
-                        </div>
-                        <div class="col-md-12">
-                            <?= $form->field($model, 'gender')->widget(Select2::class, [
-                                'data' => [
-                                    1 => 'Laki-laki',
-                                    0 => 'Perempuan',
-                                ],
-                                'options' => ['placeholder' => '-- Pilih Jenis Kelamin --'],
-                                'pluginOptions' => ['allowClear' => true],
-                            ])->label('Jenis Kelamin') ?>
-                        </div>
-                        <div class="col-md-12">
-                            <?= $form->field($model, 'address')->textarea([
-                                'rows' => 3,
-                                'class' => 'form-control form-control-user',
-                                'placeholder' => 'Masukkan Alamat Lengkap...',
-                                'autofocus' => true
-                            ])->label('Alamat') ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'status')->widget(Select2::class, [
-                                'data' => [
-                                    10 => 'Active',
-                                    0 => 'Inactive',
-                                ],
-                                'options' => ['placeholder' => '-- Pilih Status --', 'value' => $model->status ?? 10],
-                                'pluginOptions' => ['allowClear' => true],
-                            ]) ?>
-                        </div>
-                        <div class="col-md-12">
-                            <?= $form->field($model, 'birth_date')->widget(DatePicker::class, [
-                                'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                                'pluginOptions' => [
-                                    'format' => 'yyyy-mm-dd',
-                                    'autoclose' => true,
-                                    'todayHighlight' => true,
-                                    'todayBtn' => true,
-                                    'clearBtn' => true,
-                                    'endDate' => date('Y-m-d'),
-                                ]
-                            ])->label('Tanggal Lahir') ?>
-                        </div>
-                        <div class="col-md-12">
-                            <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
-                        </div>
-                    </div>
+                <!-- Kolom Kiri: Informasi Personal & Kontak -->
+                <div class="col-lg-12 col-md-12">
+                    <h5 class="mb-3 text-primary">Informasi Dasar</h5>
+                    <hr>
+                    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
+                    <?php if ($model->isNewRecord): ?>
+                        <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+                    <?php endif; ?>
+
+                    <?= $form->field($model, 'role_id')->widget(Select2::class, [
+                        'data' => ArrayHelper::map(
+                            Role::find()->select(['id', 'name'])->asArray()->all(),
+                            'id', 'name'
+                        ),
+                        'options' => ['placeholder' => '-- Pilih Role --', 'value' => $model->role_id],
+                        'pluginOptions' => ['allowClear' => true],
+                    ])->label('Role') ?>
+
+                    <?= $form->field($model, 'status')->widget(Select2::class, [
+                        'data' => [
+                            10 => 'Aktif',
+                            0 => 'Non-aktif',
+                        ],
+                        'options' => ['placeholder' => '-- Pilih Status --', 'value' => $model->status ?? 10],
+                        'pluginOptions' => ['allowClear' => true],
+                    ]) ?>
+
+                    <h5 class="mt-4 mb-3 text-primary">Detail Pribadi</h5>
+                    <hr>
+                    <?= $form->field($model, 'personal_id')->textInput(['type' => 'number', 'maxlength' => true]) ?>
+                    <?= $form->field($model, 'family_id')->textInput(['type' => 'number', 'maxlength' => true]) ?>
+
+                    <?= $form->field($model, 'gender')->widget(Select2::class, [
+                        'data' => [
+                            1 => 'Laki-laki',
+                            0 => 'Perempuan',
+                        ],
+                        'options' => ['placeholder' => '-- Pilih Jenis Kelamin --'],
+                        'pluginOptions' => ['allowClear' => true],
+                    ])->label('Jenis Kelamin') ?>
+
+                    <?= $form->field($model, 'blood_type')->widget(Select2::class, [
+                        'data' => [
+                            'A' => 'A',
+                            'B' => 'B',
+                            'AB' => 'AB',
+                            'O' => 'O',
+                        ],
+                        'options' => ['placeholder' => '-- Pilih Golongan Darah --'],
+                        'pluginOptions' => ['allowClear' => true],
+                    ])->label('Golongan Darah') ?>
+
+                    <?= $form->field($model, 'height')->textInput(['type' => 'number', 'maxlength' => true]) ?>
+                    <?= $form->field($model, 'weight')->textInput(['type' => 'number', 'maxlength' => true]) ?>
+
+                    <?= $form->field($model, 'religion_id')->widget(Select2::class, [
+                        'data' => ArrayHelper::map(
+                            Religion::find()->select(['id', 'name'])->asArray()->all(),
+                            'id', 'name'
+                        ),
+                        'options' => ['placeholder' => '-- Pilih Agama --', 'value' => $model->religion_id],
+                        'pluginOptions' => ['allowClear' => true],
+                    ])->label('Agama') ?>
+
+                    <?= $form->field($model, 'birth_date')->widget(DatePicker::class, [
+                        'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                        'pluginOptions' => [
+                            'format' => 'yyyy-mm-dd',
+                            'autoclose' => true,
+                            'todayHighlight' => true,
+                            'todayBtn' => true,
+                            'clearBtn' => true,
+                            'endDate' => date('Y-m-d'),
+                        ]
+                    ])->label('Tanggal Lahir') ?>
+
+                    <?= $form->field($model, 'phone')->textInput(['maxlength' => true])->hint('Contoh: 081234556789 / +6281234556789') ?>
                 </div>
-                <div class="col-lg-7 col-md-12">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'religion_id')->widget(Select2::class, [
-                                'data' => ArrayHelper::map(
-                                    Religion::find()->select(['id', 'name'])->asArray()->all(),
-                                    'id', 'name'
-                                ),
-                                'options' => ['placeholder' => '-- Pilih Agama --', 'value' => $model->religion_id],
-                                'pluginOptions' => ['allowClear' => true],
-                            ])->label('Agama') ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'province_code')->widget(Select2::class, [
-                                    'data' => ArrayHelper::map(
-                                        Region::find()->where(['level' => 'province'])->orderBy('name')->asArray()->all(),
-                                        'kode',
-                                        'name'
-                                    ),
-                                    'options' => ['placeholder' => 'Pilih Provinsi', 'id' => 'province-id'],
-                                    'pluginOptions' => [
-                                        'allowClear' => true
-                                    ],
-                                ])->label('Provinsi');
-                            ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'regency_code')->widget(DepDrop::class, [
-                                'type' => DepDrop::TYPE_SELECT2,
-                                'options' => ['id' => 'regency-id', 'placeholder' => 'Pilih Kabupaten/Kota'],
-                                'pluginOptions' => [
-                                    'depends' => ['province-id'],
-                                    'initialize' => true,
-                                    'url' => Url::to(['/region/regency']),
-                                    'loadingText' => 'Loading...',
-                                    'allowClear' => true,
-                                ],
-                            ])->label('Kota/Kabupaten'); ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'district_code')->widget(DepDrop::class, [
-                                'type' => DepDrop::TYPE_SELECT2,
-                                'options' => ['id' => 'district-id', 'placeholder' => 'Pilih Kecamatan'],
-                                'pluginOptions' => [
-                                    'depends' => ['province-id', 'regency-id'],
-                                    'initialize' => true,
-                                    'url' => Url::to(['/region/district']),
-                                    'loadingText' => 'Loading...',
-                                    'allowClear' => true,
-                                ],
-                            ])->label('Kecamatan'); ?>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12">
-                            <?= $form->field($model, 'village_code')->widget(DepDrop::class, [
-                                'type' => DepDrop::TYPE_SELECT2,
-                                'options' => ['placeholder' => 'Pilih Desa/Kelurahan'],
-                                'pluginOptions' => [
-                                    'depends' => ['province-id', 'regency-id', 'district-id'],
-                                    'initialize' => true,
-                                    'url' => Url::to(['/region/village']),
-                                    'loadingText' => 'Loading...',
-                                    'allowClear' => true,
-                                ],
-                            ])->label('Kelurahan/Desa'); ?>
-                        </div>
-                        <?php if ($model->isNewRecord): ?>
-                            <div class="col-lg-12 col-md-12 col-12">
-                                <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
-                            </div>
-                        <?php endif; ?>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label"><strong>Pilih Avatar</strong></label>
-                            <div class="d-flex justify-content-evenly flex-wrap gap-4">
+
+                <!-- Kolom Kanan: Alamat & Avatar/Gambar -->
+                <div class="col-lg-12 col-md-12">
+                    <h5 class="mt-4 mb-3 text-primary">Alamat Lengkap</h5>
+                    <hr>
+                    <?= $form->field($model, 'province_code')->widget(Select2::class, [
+                            'data' => ArrayHelper::map(
+                                Region::find()->where(['level' => 1])->orderBy('name')->asArray()->all(),
+                                'kode',
+                                'name'
+                            ),
+                            'options' => ['placeholder' => 'Pilih Provinsi', 'id' => 'province-id'],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+                        ])->label('Provinsi');
+                    ?>
+
+                    <?= $form->field($model, 'regency_code')->widget(DepDrop::class, [
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'options' => ['id' => 'regency-id', 'placeholder' => 'Pilih Kabupaten/Kota'],
+                        'pluginOptions' => [
+                            'depends' => ['province-id'],
+                            'initialize' => true,
+                            'url' => Url::to(['/region/regency']),
+                            'loadingText' => 'Memuat Kabupaten/Kota...',
+                            'allowClear' => true,
+                        ],
+                    ])->label('Kota/Kabupaten'); ?>
+
+                    <?= $form->field($model, 'district_code')->widget(DepDrop::class, [
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'options' => ['id' => 'district-id', 'placeholder' => 'Pilih Kecamatan'],
+                        'pluginOptions' => [
+                            'depends' => ['province-id', 'regency-id'],
+                            'initialize' => true,
+                            'url' => Url::to(['/region/district']),
+                            'loadingText' => 'Memuat Kecamatan...',
+                            'allowClear' => true,
+                        ],
+                    ])->label('Kecamatan'); ?>
+
+                    <?= $form->field($model, 'village_code')->widget(DepDrop::class, [
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'options' => ['placeholder' => 'Pilih Desa/Kelurahan'],
+                        'pluginOptions' => [
+                            'depends' => ['province-id', 'regency-id', 'district-id'],
+                            'initialize' => true,
+                            'url' => Url::to(['/region/village']),
+                            'loadingText' => 'Memuat Desa/Kelurahan...',
+                            'allowClear' => true,
+                        ],
+                    ])->label('Kelurahan/Desa'); ?>
+
+                    <?= $form->field($model, 'address')->textarea([
+                        'rows' => 3,
+                        'placeholder' => 'Masukkan Alamat Lengkap...',
+                    ])->label('Alamat') ?>
+
+                    <h5 class="mt-4 mb-3 text-primary">Avatar/Foto Pengguna</h5>
+                    <hr>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Pilih Avatar</label>
+                        <div class="col-sm-9">
+                            <div class="d-flex justify-content-start flex-wrap gap-3">
                                 <?php foreach ($avatars as $avatar): ?>
                                     <label class="text-center">
                                         <input type="radio" name="User[avatar]" value="<?= 'img/' . $avatar ?>"
-                                            <?= ($model->image === 'img/' . $avatar) ? 'checked' : '' ?> style="display: none;">
-                                        <img src="<?= $assetDir . '/img/' . $avatar ?>" class="img-thumbnail avatar-choice" style="width: 80px; height: 80px; cursor: pointer;">
+                                            <?= ($model->image === 'img/' . $avatar) ? 'checked' : '' ?> style="display: none;" class="avatar-radio">
+                                        <img src="<?= $assetDir . '/img/' . $avatar ?>" class="img-thumbnail avatar-choice <?= ($model->image === 'img/' . $avatar) ? 'selected' : '' ?>" style="width: 80px; height: 80px; cursor: pointer;">
                                     </label>
                                 <?php endforeach; ?>
                             </div>
-                            <div class="form-text text-muted mt-2">Atau upload gambar kustom di bawah ini</div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <?= $form->field($model, 'image')->widget(FileInput::class, [
-                                'options' => ['accept' => 'image/*'],
-                                'pluginOptions' => [
-                                    'initialPreview' => ($model->isNewRecord || !$model->image
-                                    ? false
-                                    : [Yii::getAlias('@web/uploads/' . $model->image)]),
-                                    'initialPreviewAsData' => true,
-                                    'initialCaption' => $model->image,
-                                    'overwriteInitial' => true,
-                                    'showRemove' => true,
-                                    'showUpload' => false,
-                                ]
-                            ]) ?>
+                            <small class="form-text text-muted mt-2">Atau unggah foto di bawah ini</small>
                         </div>
                     </div>
+
+                    <?= $form->field($model, 'image')->widget(FileInput::class, [
+                        'options' => ['accept' => 'image/*'],
+                        'pluginOptions' => [
+                            'initialPreview' => ($model->image && file_exists(Yii::getAlias('@webroot/uploads/' . $model->image))
+                                ? [Yii::getAlias('@web/uploads/' . $model->image)]
+                                : []),
+                            'initialPreviewAsData' => true,
+                            'initialCaption' => $model->image,
+                            'overwriteInitial' => true,
+                            'showRemove' => true,
+                            'showUpload' => false,
+                            'browseLabel' => 'Pilih Gambar',
+                            'removeLabel' => 'Hapus',
+                            'uploadLabel' => 'Unggah',
+                        ]
+                    ])->label('Unggah Foto') ?>
                 </div>
             </div>
-
         </div>
 
         <div class="card-footer d-flex">

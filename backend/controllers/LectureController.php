@@ -107,7 +107,7 @@ class LectureController extends Controller
 
             } catch (\Throwable $e) {
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('error', $e->getMessage());
+                Yii::$app->session->setFlash('error', 'Error Message: ' . $e->getMessage());
             }
         }
 
@@ -182,7 +182,7 @@ class LectureController extends Controller
 
             } catch (\Throwable $e) {
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('error', $e->getMessage());
+                Yii::$app->session->setFlash('error', 'Error Message: ' . $e->getMessage());
             }
         }
 
@@ -225,7 +225,7 @@ class LectureController extends Controller
 
         } catch (\Throwable $e) {
             $transaction->rollBack();
-            Yii::$app->session->setFlash('error', $e->getMessage());
+            Yii::$app->session->setFlash('error', 'Error Message: ' . $e->getMessage());
         }
 
         return $this->redirect(['index']);
