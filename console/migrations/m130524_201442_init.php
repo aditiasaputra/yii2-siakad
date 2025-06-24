@@ -41,7 +41,7 @@ class m130524_201442_init extends Migration
             'role_id' => $this->integer()->notNull()->defaultValue(5),
             'image' => $this->string()->null(),
             'gender' => $this->integer()->notNull()->defaultValue(0),
-            'religion_id' => $this->integer()->notNull()->defaultValue(1),
+            'religion_id' => $this->integer()->null(),
             'province_code' => $this->string()->null(),
             'regency_code' => $this->string()->null(),
             'district_code' => $this->string()->null(),

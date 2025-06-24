@@ -42,6 +42,7 @@ class SeedController extends Controller
         $admin->email = 'admin@admin.com';
         $admin->personal_id = rand(100000000000000, 999999999999999);
         $admin->family_id = rand(100000000000000, 999999999999999);
+        $admin->religion_id = rand(1, 6);
         $admin->image = 'img/' . $avatars[array_rand($avatars)];
         $admin->birth_date = $faker->date('Y-m-d', '-30 years');
         $admin->address = $faker->address;
@@ -62,6 +63,7 @@ class SeedController extends Controller
             $user->username = $faker->unique()->userName;
             $user->email = $faker->unique()->safeEmail;
             $user->personal_id = rand(100000000000000, 999999999999999);
+            $user->religion_id = rand(1, 6);
             $user->family_id = rand(100000000000000, 999999999999999);
             $user->image = 'img/' . $avatars[array_rand($avatars)];
             $user->birth_date = $faker->date('Y-m-d', '-22 years');
@@ -96,6 +98,7 @@ class SeedController extends Controller
             $user->username = $faker->unique()->userName;
             $user->email = $faker->unique()->safeEmail;
             $user->personal_id = rand(100000000000000, 999999999999999);
+            $user->religion_id = rand(1, 6);
             $user->family_id = rand(100000000000000, 999999999999999);
             $user->image = 'img/' . $avatars[array_rand($avatars)];
             $user->birth_date = $faker->date('Y-m-d', '-30 years');
@@ -110,7 +113,6 @@ class SeedController extends Controller
             if ($user->save()) {
                 $employee = new Employee();
                 $employee->user_id = $user->id;
-                $employee->user_id = rand(1, 438);
                 $employee->employee_number = 'EMP' . str_pad($i, 4, '0', STR_PAD_LEFT);
                 $employee->account_name = $user->name;
                 $employee->account_number = '001' . rand(10000000, 99999999);
@@ -141,7 +143,7 @@ class SeedController extends Controller
             }
         }
 
-        // $this->seedSql();
+        $this->seedSql();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
 
         echo "\n✅ Seed selesai.\n";
