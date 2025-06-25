@@ -141,40 +141,89 @@ JS
                 <div class="tab-content">
                     <div class="tab-pane active" id="profil">
                         <dl class="row">
-                            <dt class="col-sm-4">KTP</dt>
-                            <dd class="col-sm-8"><?= $model->user->personal_id ?? '-' ?></dd>
+                            <dt class="col-sm-4 col-lg-3">Nama Lengkap</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->name ?? '-') ?></dd>
 
-                            <dt class="col-sm-4">Nama Lengkap</dt>
-                            <dd class="col-sm-8"><?= $model->user->name ?></dd>
+                            <dt class="col-sm-4 col-lg-3">Gelar Depan</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->honorific ?? '-') ?></dd>
 
-                            <dt class="col-sm-4">Username</dt>
-                            <dd class="col-sm-8"><?= $model->user->username ?></dd>
+                            <dt class="col-sm-4 col-lg-3">Gelar Belakang</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->degree ?? '-') ?></dd>
 
-                            <dt class="col-sm-4">Jenis Kelamin</dt>
-                            <dd class="col-sm-8"><?= Html::encode($model->user->getGenderLabel() ?? '-') ?></dd>
+                            <?php if ($model->user->student): ?>
+                                <dt class="col-sm-4 col-lg-3">Jurusan</dt>
+                                <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->student->major->name ?? '-') ?></dd>
+                            <?php endif; ?>
 
-                            <dt class="col-sm-4">Role/Level</dt>
-                            <dd class="col-sm-8"><?= ucfirst($model->user->role->name) ?></dd>
+                            <dt class="col-sm-4 col-lg-3">Username</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->username ?? '-') ?></dd>
 
-                            <dt class="col-sm-4">Tanggal Registrasi</dt>
-                            <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->user->created_at, 'long') ?></dd>
+                            <dt class="col-sm-4 col-lg-3">Email</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->email ?? '-') ?></dd>
 
-                            <dt class="col-sm-4">Terakhir Diperbarui</dt>
-                            <dd class="col-sm-8"><?= Yii::$app->formatter->asDate($model->user->updated_at, 'long') ?></dd>
+                            <dt class="col-sm-4 col-lg-3">KTP</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->personal_id ?? '-') ?></dd>
 
-                            <dt class="col-sm-4">Status</dt>
-                            <dd class="col-sm-8"><span class="badge badge-pill <?= $model->user->status == 10 ? 'badge-success' : 'badge-danger' ?>">
-                        <?= $model->user->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
-                    </span></dd>
+                            <dt class="col-sm-4 col-lg-3">Kartu Keluarga</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->family_id ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Jenis Kelamin</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->getGenderLabel() ?? '-') ?></dd>
+                            
+                            <dt class="col-sm-4 col-lg-3">Golongan Darah</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->blood_type ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Role/Level</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(ucfirst($model->user->role->name ?? '-')) ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Tanggal Registrasi</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->user->created_at, 'long') ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Terakhir Diperbarui</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->user->updated_at, 'long') ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Tanggal Lahir</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->user->birth_date, 'long') ?? '-') ?></dd>
+                            
+                            <dt class="col-sm-4 col-lg-3">Telepon</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->phone ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Agama</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->religion->name ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Alamat Lengkap</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->address ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Provinsi</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->province->name ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Kota/Kabupaten</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->regency->name ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Kecamatan</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->district->name ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Kelurahan/Desa</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->village->name ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Kode Pos</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->post_code ?? '-') ?></dd>
                         </dl>
                     </div>
                     <div class="tab-pane" id="employee">
                         <dl class="row">
-                            <dt class="col-sm-4">NIDN</dt>
-                            <dd class="col-sm-8"><?= $model->lecture_nationality_number ?? '-' ?></dd>
+                            <dt class="col-sm-3">NIDN</dt>
+                            <dd class="col-sm-9">: <?= $model->lecture_nationality_number ?? '-' ?></dd>
 
-                            <dt class="col-sm-4">NIP</dt>
-                            <dd class="col-sm-8"><?= $model->employee_id ?? '-' ?></dd>
+                            <dt class="col-sm-3">NIP</dt>
+                            <dd class="col-sm-9">: <?= $model->employee_id ?? '-' ?></dd>
+
+                            <dt class="col-sm-3">Status</dt>
+                            <dd class="col-sm-9">: 
+                                <span class="badge badge-pill <?= $model->user->status == 10 ? 'badge-success' : 'badge-danger' ?>">
+                                    <?= $model->user->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
+                                </span>
+                            </dd>
                         </dl>
                     </div>
                     <div class="tab-pane" id="change-password">

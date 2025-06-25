@@ -37,6 +37,7 @@ use yii\web\IdentityInterface;
  * @property string $district_code
  * @property string $village_code
  * @property string $address
+ * @property integer $post_code
  * @property string $phone
  * @property integer $role_id
  * @property string $created_at
@@ -112,7 +113,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['gender', 'required'],
             ['gender', 'in', 'range' => [0, 1]],
 
-            ['blood_type', 'string'],
+            [['honorific', 'degree', 'blood_type'], 'string'],
 
             ['religion_id', 'required'],
             ['religion_id', 'integer'],
@@ -125,6 +126,8 @@ class User extends ActiveRecord implements IdentityInterface
             ['birth_date', 'date', 'format' => 'php:Y-m-d'],
 
             ['address', 'trim'],
+
+            ['post_code', 'integer'],
 
             ['role_id', 'required'],
             ['role_id', 'integer'],
@@ -346,6 +349,9 @@ class User extends ActiveRecord implements IdentityInterface
             'name' => 'Nama',
             'personal_id' => 'KTP',
             'family_id' => 'KK',
+            'honorific' => 'Gelar Depan',
+            'degree' => 'Gelar Belakang',
+            'role_id' => 'Role',
             'gender' => 'Jenis Kelamin',
             'religion_id' => 'Agama',
             'birth_date' => 'Tanggal Lahir',
@@ -354,6 +360,9 @@ class User extends ActiveRecord implements IdentityInterface
             'regency_code' => 'Kota/Kabupaten',
             'district_code' => 'Kecamatan',
             'village_code' => 'Kelurahan/Desa',
+            'address' => 'Alamat',
+            'post_code' => 'Kode POS',
+            'blood_type' => 'Golongan Darah',
             'height' => 'Tinggi Badan (cm)',
             'weight' => 'Berat Badan (kg)',
         ];

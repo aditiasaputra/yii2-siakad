@@ -144,6 +144,12 @@ JS);
                             <dt class="col-sm-4 col-lg-3">Nama Lengkap</dt>
                             <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->name ?? '-') ?></dd>
 
+                            <dt class="col-sm-4 col-lg-3">Gelar Depan</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->honorific ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Gelar Belakang</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->degree ?? '-') ?></dd>
+
                             <?php if ($model->student): ?>
                                 <dt class="col-sm-4 col-lg-3">Jurusan</dt>
                                 <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->student->major->name ?? '-') ?></dd>
@@ -176,13 +182,6 @@ JS);
                             <dt class="col-sm-4 col-lg-3">Terakhir Diperbarui</dt>
                             <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->updated_at, 'long') ?? '-') ?></dd>
 
-                            <dt class="col-sm-4 col-lg-3">Status</dt>
-                            <dd class="col-sm-8 col-lg-9">
-                                <span class="badge badge-pill <?= $model->status == 10 ? 'badge-success' : 'badge-danger' ?>">
-                                    <?= $model->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
-                                </span>
-                            </dd>
-
                             <dt class="col-sm-4 col-lg-3">Tanggal Lahir</dt>
                             <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->birth_date, 'long') ?? '-') ?></dd>
                             
@@ -191,6 +190,9 @@ JS);
 
                             <dt class="col-sm-4 col-lg-3">Agama</dt>
                             <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->religion->name ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Alamat Lengkap</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->address ?? '-') ?></dd>
 
                             <dt class="col-sm-4 col-lg-3">Provinsi</dt>
                             <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->province->name ?? '-') ?></dd>
@@ -203,9 +205,16 @@ JS);
 
                             <dt class="col-sm-4 col-lg-3">Kelurahan/Desa</dt>
                             <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->village->name ?? '-') ?></dd>
-                            
-                            <dt class="col-sm-4 col-lg-3">Alamat Lengkap</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->address ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Kode Pos</dt>
+                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->post_code ?? '-') ?></dd>
+
+                            <dt class="col-sm-4 col-lg-3">Status</dt>
+                            <dd class="col-sm-8 col-lg-9">: 
+                                <span class="badge badge-pill <?= $model->status == 10 ? 'badge-success' : 'badge-danger' ?>">
+                                    <?= $model->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
+                                </span>
+                            </dd>
                         </dl>
                     </div>
                     <div class="tab-pane" id="change-password">

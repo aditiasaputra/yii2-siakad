@@ -99,8 +99,7 @@ JS);
             <div class="card-body">
                 <dl class="row">
                     <dt class="col-sm-3">Nama Agama</dt>
-                    <dd>:</dd>
-                    <dd class="col-sm-8"><?= $model->name ?></dd>
+                    <dd class="col-sm-8">: <?= $model->name ?></dd>
                 </dl>
             </div>
         </div>

@@ -83,6 +83,8 @@ if (!$model->isNewRecord) {
                     <h5 class="mb-3 text-primary">Informasi Dasar</h5>
                     <hr>
                     <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                    <?= $form->field($model, 'honorific')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                    <?= $form->field($model, 'degree')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
                     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
@@ -217,6 +219,7 @@ if (!$model->isNewRecord) {
                         'rows' => 3,
                         'placeholder' => 'Masukkan Alamat Lengkap...',
                     ])->label('Alamat') ?>
+                    <?= $form->field($model, 'post_code')->textInput(['type' => 'number', 'maxlength' => true, 'autofocus' => true]) ?>
 
                     <h5 class="mt-4 mb-3 text-primary">Avatar/Foto Pengguna</h5>
                     <hr>

@@ -48,6 +48,7 @@ class m130524_201442_init extends Migration
             'village_code' => $this->string()->null(),
             'birth_date' => $this->date()->null(),
             'address' => $this->text()->null(),
+            'post_code' => $this->integer()->null(),
             'phone' => $this->string(16)->null(),
             'blood_type' => $this->string(255)->null(), // Golongan Darah
             'height' => $this->string(3)->null(), // Tinggi

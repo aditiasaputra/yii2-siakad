@@ -15,6 +15,7 @@ SweetAlert2Asset::register($this);
 ToastrAsset::register($this);
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+$logo = $assetDir . '/img/AdminLTELogo.png';
 
 $publishedRes = Yii::$app->assetManager->publish('@vendor/hail812/yii2-adminlte3/src/web/js');
 $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\hail812\adminlte3\assets\AdminLteAsset']);
@@ -36,7 +37,7 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
 <?php if(YII_ENV_PROD): ?>
     <!-- Preloader -->
     <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="<?= $assetDir; ?>/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        <img class="animation__shake" src="<?= $logo; ?>" alt="LOGO" height="60" width="60">
     </div>
 <?php endif; ?>
 
@@ -46,7 +47,7 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <?= $this->render('sidebar', ['assetDir' => $assetDir]) ?>
+    <?= $this->render('sidebar', ['assetDir' => $assetDir, 'logo' => $logo]) ?>
 
     <!-- Content Wrapper. Contains page content -->
     <?= $this->render('content', ['content' => $content, 'assetDir' => $assetDir]) ?>
