@@ -4,15 +4,14 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use app\assets\ToastrAsset;
-use app\assets\SweetAlert2Asset;
+use backend\assets\AppAsset;
+use dominus77\sweetalert2\Alert;
 
 \hail812\adminlte3\assets\FontAwesomeAsset::register($this);
 \hail812\adminlte3\assets\AdminLteAsset::register($this);
 $this->registerCssFile('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback');
 
-SweetAlert2Asset::register($this);
-ToastrAsset::register($this);
+AppAsset::register($this);
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 $logo = $assetDir . '/img/AdminLTELogo.png';
@@ -40,7 +39,7 @@ $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\ha
         <img class="animation__shake" src="<?= $logo; ?>" alt="LOGO" height="60" width="60">
     </div>
 <?php endif; ?>
-
+<?= Alert::widget(['useSessionFlash' => true]) ?>
 <div class="wrapper">
     <!-- Navbar -->
     <?= $this->render('navbar', ['assetDir' => $assetDir]) ?>

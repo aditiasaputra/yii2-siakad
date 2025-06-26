@@ -15,12 +15,12 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
-        'js/yii-override.js',
+        'js/yii.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap4\BootstrapAsset',
-        SweetAlert2Asset::class,
-        ToastrAsset::class,
+        'app\assets\SweetAlert2Asset',
+        'app\assets\ToastrAsset',
     ];
 }

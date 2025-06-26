@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
-use common\widgets\Alert;
+use dominus77\sweetalert2\Alert;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */

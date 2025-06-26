@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\Html;
-use common\widgets\Alert;
+
 use yii\widgets\ActiveForm;
 
 $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
@@ -68,7 +68,6 @@ $('#change-password-form').on('beforeSubmit', function(e) {
 JS);
 ?>
 
-<?= Alert::widget() ?>
 
 <div class="d-flex mb-3">
     <div id="action-left">

@@ -1,7 +1,6 @@
 <?php
 
 use kartik\grid\GridView;
-use dominus77\sweetalert2\Alert;
 use yii\helpers\Html;
 
 /** @var $searchModel backend\models\UserSearch */
@@ -143,10 +142,8 @@ $pdfFooter = [
     ],
     'line' => true,
 ];
-Yii::$app->session->setFlash('message', 'Any fool can use a computer');
-?>
 
-<?= Alert::widget(['useSessionFlash' => true]) ?>
+?>
 
 <div class="container-fluid">
     <div class="row">
