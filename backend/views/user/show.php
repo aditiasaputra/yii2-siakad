@@ -3,7 +3,6 @@ use yii\helpers\Html;
 
 use yii\widgets\ActiveForm;
 
-$assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 $this->title = 'Detail';
 
 $this->params['breadcrumbs'][] = ['label' => 'Master Pengguna', 'url' => ['index']];
@@ -11,6 +10,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
+$this->registerCssFile("@web/css/profile.css");
+$this->registerJsFile("@web/css/profile.js");
 $this->registerJs(<<<JS
 $('#change-password-form').on('beforeSubmit', function(e) {
     e.preventDefault();
@@ -124,12 +125,59 @@ JS);
                         </p>
                     </li>
                 </ul>
+
+                <div class="profile-sidebar">
+                    <div class="menu-section mb-3">
+                        <a class="menu-header d-flex justify-content-between align-items-center" data-toggle="collapse" data-target="#generalMenu" aria-expanded="true">
+                            <span><i class="fas fa-user mr-2"></i><strong>General</strong></span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </a>
+                        <div id="generalMenu" class="collapse show">
+                            <ul class="nav flex-column mt-2">
+                                <li class="nav-item"><a href="#" class="nav-link active">Personal</a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Employment</a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Education & Experience</a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Additional Info</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="menu-section mb-3">
+                        <a class="menu-header d-flex justify-content-between align-items-center" data-toggle="collapse" data-target="#timeManagementMenu" aria-expanded="false">
+                            <span><i class="fas fa-clock mr-2"></i><strong>Time Management</strong></span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </a>
+                        <div id="timeManagementMenu" class="collapse">
+                            <ul class="nav flex-column mt-2">
+                                <li class="nav-item"><a href="#" class="nav-link">Personal</a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Employment</a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Education & Experience</a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Additional Info</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="menu-section mb-3">
+                        <a href="#" class="menu-link d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-calculator mr-2"></i>Payroll</span>
+                        </a>
+                    </div>
+                    <div class="menu-section mb-3">
+                        <a href="#" class="menu-link d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-wallet mr-2"></i>Finance</span>
+                        </a>
+                    </div>
+                    <div class="menu-section mb-3">
+                        <a href="#" class="menu-link d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-folder-open mr-2"></i>Files</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="col-md-9">
-        <div class="card">
+        <div class="card card-info card-outline">
             <div class="card-header p-2">
                 <ul class="nav nav-pills">
                     <li class="nav-item"><a class="nav-link active" href="#profil" data-toggle="tab">Profil</a></li>

@@ -1,71 +1,68 @@
 <?php
 use yii\helpers\Html;
 use common\widgets\Alert;
-use yii\bootstrap4\ActiveForm;
-
-$assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
-$this->title = 'Detail';
-
-$this->params['breadcrumbs'][] = ['label' => 'Master Mahasiswa', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
-$this->registerJs(<<<JS
-$('#change-password-form').on('beforeSubmit', function(e) {
-    e.preventDefault();
+$this->registerCssFile("@web/css/profile.css");
+$this->registerJsFile("@web/css/profile.js");
+if(Yii::$app->controller->action->id == 'show') {
+    $this->registerJs(<<<JS
+        $('#change-password-form').on('beforeSubmit', function(e) {
+            e.preventDefault();
 
-    const form = $(this);
-    const data = form.serialize();
-    const btnSubmit = form.find(':submit');
+            const form = $(this);
+            const data = form.serialize();
+            const btnSubmit = form.find(':submit');
 
-    let btnSubmitText = btnSubmit.text();
+            let btnSubmitText = btnSubmit.text();
 
-    form.find('.is-invalid').removeClass('is-invalid');
-    form.find('.invalid-feedback').remove();
+            form.find('.is-invalid').removeClass('is-invalid');
+            form.find('.invalid-feedback').remove();
 
-    form.find('.form-control').attr('readonly', true);
-    btnSubmit.attr('disabled', true);
+            form.find('.form-control').attr('readonly', true);
+            btnSubmit.attr('disabled', true);
 
-    btnSubmit.text('Processing..');
+            btnSubmit.text('Processing..');
 
-    $.post(form.attr('action'), data)
-        .done(function(response) {
-            if (response.success) {
-                toastr.success(response.message);
-                form[0].reset();
-                form.find('.form-control').removeAttr('readonly');
-                btnSubmit.removeAttr('disabled');
-                btnSubmit.text(btnSubmitText);
-            }
-        })
-        .fail(function(jqXHR) {
-            const response = jqXHR.responseJSON;
+            $.post(form.attr('action'), data)
+                .done(function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        form[0].reset();
+                        form.find('.form-control').removeAttr('readonly');
+                        btnSubmit.removeAttr('disabled');
+                        btnSubmit.text(btnSubmitText);
+                    }
+                })
+                .fail(function(jqXHR) {
+                    const response = jqXHR.responseJSON;
 
-            if (jqXHR.status === 422) {
-                const errors = response.errors || {};
+                    if (jqXHR.status === 422) {
+                        const errors = response.errors || {};
 
-                Object.entries(errors).forEach(([attribute, messages]) => {
-                    const input = form.find('[name*="[' + attribute + ']"]');
-                    input.addClass('is-invalid');
+                        Object.entries(errors).forEach(([attribute, messages]) => {
+                            const input = form.find('[name*="[' + attribute + ']"]');
+                            input.addClass('is-invalid');
 
-                    const feedback = $('<div class="invalid-feedback"></div>');
-                    feedback.text(messages[0]);
+                            const feedback = $('<div class="invalid-feedback"></div>');
+                            feedback.text(messages[0]);
 
-                    input.after(feedback);
+                            input.after(feedback);
+                        });
+                    }
+
+                    toastr.error(response.message);
+                    form.find('.form-control').removeAttr('readonly');
+                    btnSubmit.removeAttr('disabled');
+                    btnSubmit.text(btnSubmitText);
                 });
-            }
 
-            toastr.error(response.message);
-            form.find('.form-control').removeAttr('readonly');
-            btnSubmit.removeAttr('disabled');
-            btnSubmit.text(btnSubmitText);
+            return false;
         });
 
-    return false;
-});
-
-JS);
+    JS);
+}
 ?>
 
 <?= Alert::widget() ?>
@@ -126,142 +123,59 @@ JS);
                         </p>
                     </li>
                 </ul>
+
+                <div class="profile-sidebar">
+                    <div class="menu-section mb-1">
+                        <span class="menu-header d-flex justify-content-between align-items-center" data-toggle="collapse" data-target="#generalMenu" aria-expanded="true">
+                            <h6><strong>LIST MENU</strong></h6>
+                        </span>
+                    </div>
+                    <div class="menu-section">
+                        <?= Html::a(
+                            '<span><i class="fas fa-user-graduate mr-2"></i>Detail</span>',
+                            ['show', 'id' =>$model->id],
+                            [
+                                'class' => 'menu-link d-flex justify-content-between align-items-center ' . 
+                                    (Yii::$app->controller->action->id == 'show' ? 'active' : '')
+                            ]
+                        ) ?>
+                    </div>
+
+                    <div class="menu-section">
+                        <?= Html::a(
+                            '<span><i class="fas fa-calendar-alt mr-2"></i>Jadwal</span>',
+                            ['schedule', 'id' => $model->id],
+                            [
+                                'class' => 'menu-link d-flex justify-content-between align-items-center ' . 
+                                    (Yii::$app->controller->action->id == 'schedule' ? 'active' : '')
+                            ]
+                        ) ?>
+                    </div>
+
+                    <div class="menu-section">
+                        <?= Html::a(
+                            '<span><i class="fas fa-calendar-check mr-2"></i>Kehadiran</span>',
+                            ['presence', 'id' => $model->id],
+                            [
+                                'class' => 'menu-link d-flex justify-content-between align-items-center ' . 
+                                    (Yii::$app->controller->action->id == 'presence' ? 'active' : '')
+                            ]
+                        ) ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="col-md-9">
-        <div class="card">
-            <div class="card-header p-2">
-                <ul class="nav nav-pills">
-                    <li class="nav-item"><a class="nav-link active" href="#profil" data-toggle="tab">Profil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#student" data-toggle="tab">Kemahasiswaan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#change-password" data-toggle="tab">Ganti Password</a></li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="profil">
-                        <dl class="row">
-                            <dt class="col-sm-4 col-lg-3">Nama Lengkap</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->name ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Gelar Depan</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->honorific ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Gelar Belakang</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->degree ?? '-') ?></dd>
-
-                            <?php if ($model->user->student): ?>
-                                <dt class="col-sm-4 col-lg-3">Jurusan</dt>
-                                <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->student->major->name ?? '-') ?></dd>
-                            <?php endif; ?>
-
-                            <dt class="col-sm-4 col-lg-3">Username</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->username ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Email</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->email ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">KTP</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->personal_id ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Kartu Keluarga</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->family_id ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Jenis Kelamin</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->getGenderLabel() ?? '-') ?></dd>
-                            
-                            <dt class="col-sm-4 col-lg-3">Golongan Darah</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->blood_type ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Role/Level</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(ucfirst($model->user->role->name ?? '-')) ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Tanggal Registrasi</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->user->created_at, 'long') ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Terakhir Diperbarui</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->user->updated_at, 'long') ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Tanggal Lahir</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode(Yii::$app->formatter->asDate($model->user->birth_date, 'long') ?? '-') ?></dd>
-                            
-                            <dt class="col-sm-4 col-lg-3">Telepon</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->phone ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Agama</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->religion->name ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Alamat Lengkap</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->address ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Provinsi</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->province->name ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Kota/Kabupaten</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->regency->name ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Kecamatan</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->district->name ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Kelurahan/Desa</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->village->name ?? '-') ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Kode Pos</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= Html::encode($model->user->post_code ?? '-') ?></dd>
-                        </dl>
-                    </div>
-                    <div class="tab-pane" id="student">
-                        <dl class="row">
-                            <dt class="col-sm-4 col-lg-3">NIM/NPM</dt>
-                            <dd class="col-sm-8 col-lg-9">: <?= $model->student_nationality_number ?? '-' ?></dd>
-
-                            <dt class="col-sm-4 col-lg-3">Status</dt>
-                            <dd class="col-sm-8 col-lg-9">: 
-                                <span class="badge badge-pill <?= $model->user->status == 10 ? 'badge-success' : 'badge-danger' ?>">
-                                    <?= $model->user->status == 10 ? 'Aktif' : 'Tidak Aktif' ?>
-                                </span>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="tab-pane" id="change-password">
-                        <?php $form = ActiveForm::begin([
-                            'id' => 'change-password-form',
-                            'action' => ['change-password/validate'],
-                            'enableClientValidation' => false,
-                            'enableAjaxValidation' => false,
-                            'options' => ['class' => 'needs-validation', 'novalidate' => true],
-                        ]); ?>
-
-                            <?= Html::activeHiddenInput($changePasswordmodel, 'id', [
-                                'value' => $model->id
-                            ]) ?>
-
-                            <div class="form-group">
-                                <?= $form->field($changePasswordmodel, 'new_password')->passwordInput([
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Masukkan password baru',
-                                    'required' => true,
-                                ])->label('Password Baru') ?>
-                            </div>
-
-                            <div class="form-group">
-                                <?= $form->field($changePasswordmodel, 'repeat_password')->passwordInput([
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Ulangi password baru',
-                                    'required' => true,
-                                ])->label('Ulangi Password Baru') ?>
-                            </div>
-                            <hr>
-                            <div class="form-group">
-                                <?= Html::submitButton('Ubah Password', ['class' => 'btn btn-sm btn-info btn-block']) ?>
-                            </div>
-
-                        <?php ActiveForm::end(); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php if(Yii::$app->controller->action->id == 'show'): ?>
+            <?= $this->render('_show', compact('model', 'changePasswordmodel')) ?>
+        <?php endif; ?>
+        <?php if(Yii::$app->controller->action->id == 'schedule'): ?>
+            <?= $this->render('_schedule', compact('model')) ?>
+        <?php endif; ?>
+        <?php if(Yii::$app->controller->action->id == 'presence'): ?>
+            <?= $this->render('_presence', compact('model')) ?>
+        <?php endif; ?>
     </div>
 </div>

@@ -51,6 +51,26 @@ class LectureController extends Controller
         ]);
     }
 
+    public function actionSchedule($id)
+    {
+        $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+
+        return $this->render('show', [
+            'model' => $this->findModel($id),
+            'assetDir' => $assetDir,
+        ]);
+    }
+
+    public function actionPresence($id)
+    {
+        $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+
+        return $this->render('show', [
+            'model' => $this->findModel($id),
+            'assetDir' => $assetDir,
+        ]);
+    }
+
     public function actionCreate()
     {
         $userModel = new User();

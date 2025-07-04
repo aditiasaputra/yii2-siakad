@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use common\widgets\Alert;
 use yii\widgets\ActiveForm;
 
-$assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 $this->title = 'Detail';
 
 $this->params['breadcrumbs'][] = ['label' => 'Master Pegawai', 'url' => ['index']];
@@ -132,7 +131,7 @@ JS);
     </div>
 
     <div class="col-md-9">
-        <div class="card">
+        <div class="card card-info card-outline">
             <div class="card-header p-2">
                 <ul class="nav nav-pills">
                     <li class="nav-item"><a class="nav-link active" href="#profil" data-toggle="tab">Profil</a></li>
