@@ -53,6 +53,10 @@ class m130524_201442_init extends Migration
             'blood_type' => $this->string(255)->null(), // Golongan Darah
             'height' => $this->string(3)->null(), // Tinggi
             'weight' => $this->string(3)->null(), // Berat
+            // 1|Belum Kawin,2|Kawin Tercatat,3|Kawin Belum Tercatat,4|Cerai Hidup,5|Cerai Mati.
+            'marriage_status' => $this->integer()->null(),
+            // 1|Rumah pribadi,2|asrama,3|kos,4|rumah orang tua,5|ikut keluarga
+            'residential_status' => $this->integer()->null(),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->dateTime()->notNull(),
             'updated_at' => $this->dateTime()->notNull(),

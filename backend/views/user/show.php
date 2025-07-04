@@ -128,6 +128,9 @@ JS);
 
                 <div class="profile-sidebar">
                     <div class="menu-section mb-3">
+                        <h6><strong>LIST MENU</strong></h6>
+                    </div>
+                    <div class="menu-section mb-3">
                         <a class="menu-header d-flex justify-content-between align-items-center" data-toggle="collapse" data-target="#generalMenu" aria-expanded="true">
                             <span><i class="fas fa-user mr-2"></i><strong>General</strong></span>
                             <i class="fas fa-chevron-down toggle-icon"></i>
