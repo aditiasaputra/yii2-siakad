@@ -29,7 +29,6 @@ use yii\behaviors\TimestampBehavior;
  * @property string|null $website Website
  * @property string|null $email Email
  * @property string|null $logo Logo
- * @property bool $is_active Status Aktif
  * @property int $created_at
  * @property int $updated_at
  * @property int|null $created_by
@@ -76,7 +75,6 @@ class University extends ActiveRecord
         return [
             [['unit_code', 'unit_name'], 'required'],
             [['address'], 'string'],
-            [['is_active'], 'boolean'],
             [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['unit_code'], 'string', 'max' => 20],
             [['unit_name', 'unit_name_en', 'work_unit', 'website', 'logo'], 'string', 'max' => 255],
@@ -119,7 +117,6 @@ class University extends ActiveRecord
             'website' => 'Website',
             'email' => 'Email',
             'logo' => 'Logo',
-            'is_active' => 'Status Aktif',
             'created_at' => 'Dibuat Pada',
             'updated_at' => 'Diubah Pada',
             'created_by' => 'Dibuat Oleh',
@@ -186,34 +183,13 @@ class University extends ActiveRecord
     }
 
     /**
-     * Get status label
-     *
-     * @return string
-     */
-    public function getStatusLabel()
-    {
-        return $this->is_active ? 'Aktif' : 'Tidak Aktif';
-    }
-
-    /**
-     * Get active universities
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public static function findActive()
-    {
-        return self::find()->where(['is_active' => true]);
-    }
-
-    /**
      * Get university dropdown data
      *
      * @return array
      */
     public static function getDropdownData()
     {
-        return self::findActive()
-            ->select(['id', 'unit_name'])
+        return self::select(['id', 'unit_name'])
             ->orderBy('unit_name ASC')
             ->asArray()
             ->all();

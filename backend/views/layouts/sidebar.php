@@ -49,7 +49,7 @@
                         'label' => 'Master Data',
                         'icon' => 'fas fa-database',
                         'url' => '#',
-                        'active' => in_array(Yii::$app->controller->id, ['user', 'student', 'lecture', 'employee', 'religion', 'bank']),
+                        'active' => in_array(Yii::$app->controller->id, ['university', 'user', 'student', 'lecture', 'employee', 'religion', 'bank']),
                         'items' => [
                             [
                                 'label' => 'Pengguna',

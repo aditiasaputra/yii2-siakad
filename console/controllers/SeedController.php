@@ -9,6 +9,7 @@ use common\models\Lecture;
 use common\models\Student;
 use common\models\Employee;
 use yii\console\Controller;
+use backend\models\University;
 
 class SeedController extends Controller
 {
@@ -26,12 +27,13 @@ class SeedController extends Controller
         // Truncate all related tables
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
 
+        Yii::$app->db->createCommand()->truncateTable(University::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(User::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Student::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Employee::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Lecture::tableName())->execute();
 
-        echo "\nSeeding users, employee, students, and lectures...\n";
+        echo "\nSeeding university, users, employee, students, and lectures...\n";
 
         $avatars = ['avatar.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.png'];
 
@@ -143,7 +145,8 @@ class SeedController extends Controller
             }
         }
 
-        $this->seedSql();
+        // $this->seedSql();
+        $this->seedUniversity();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
 
         echo "\n✅ Seed selesai.\n";
@@ -172,6 +175,43 @@ class SeedController extends Controller
                 echo "❌ Error pada file: " . basename($sqlFile) . "\n";
                 echo "   Pesan: " . $e->getMessage() . "\n";
             }
+        }
+    }
+    
+    private function seedUniversity(): void
+    {
+        // Create sample university data
+        $faker = Factory::create('id_ID');
+        
+        $university = new University();
+        
+        $university->unit_code = 'UGM';
+        $university->unit_name = 'Universitas Gadjah Mada';
+        $university->unit_name_en = 'Gadjah Mada University';
+        $university->abbreviation = 'UGM';
+        $university->address = 'Jalan Sosio Yustisia No. 1, Bulaksumur, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281';
+        $university->work_unit = 'Perguruan Tinggi Negeri';
+        $university->phone = '+62-274-588688';
+        $university->accreditation = University::ACCREDITATION_UNGGUL;
+        $university->accreditation_sk_number = 'SK/BAN-PT/Ak-PPJ/PT/XII/2019';
+        $university->establishment_permit_number = 'SK Menteri Pendidikan No. 31 Tahun 1949';
+        $university->rector = 'Prof. Dr. Ova Emilia, M.Med.Ed., Sp.OG(K)., Ph.D';
+        $university->vice_rector_1 = 'Prof. Dr. Ir. Suratman, M.Sc.';
+        $university->vice_rector_2 = 'Prof. Dr. drg. Ika Dewi Ana, S.U.';
+        $university->vice_rector_3 = 'Dr. Ir. Nizam, M.Sc.';
+        $university->website = 'https://www.ugm.ac.id';
+        $university->email = 'humas@ugm.ac.id';
+        $university->logo = null;
+        $university->created_at = time();
+        $university->updated_at = time();
+        $university->created_by = 1;
+        $university->updated_by = 1;
+
+        if ($university->save()) {
+            echo "✅ University seeded successfully: {$university->unit_name}\n";
+        } else {
+            echo "❌ Failed to seed university\n";
+            print_r($university->getErrors());
         }
     }
 }

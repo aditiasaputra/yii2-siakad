@@ -10,7 +10,6 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
-use dominus77\sweetalert2\Alert;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
@@ -64,7 +63,6 @@ if (!$model->isNewRecord) {
 
 
 ?>
-<?= Alert::widget() ?>
 
 <div class="card card-primary card-outline mb-3">
     <div class="card-header">

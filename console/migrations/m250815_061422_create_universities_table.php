@@ -31,7 +31,6 @@ class m250815_061422_create_universities_table extends Migration
             'website' => $this->string(255)->null()->comment('Website'),
             'email' => $this->string(100)->null()->comment('Email'),
             'logo' => $this->string(255)->null()->comment('Logo'),
-            'is_active' => $this->boolean()->defaultValue(true)->comment('Status Aktif'),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->null(),
@@ -43,12 +42,6 @@ class m250815_061422_create_universities_table extends Migration
             '{{%idx-universities-unit_code}}',
             '{{%universities}}',
             'unit_code'
-        );
-
-        $this->createIndex(
-            '{{%idx-universities-is_active}}',
-            '{{%universities}}',
-            'is_active'
         );
 
         // Add foreign key for created_by and updated_by
@@ -90,11 +83,6 @@ class m250815_061422_create_universities_table extends Migration
         // Drop indexes
         $this->dropIndex(
             '{{%idx-universities-unit_code}}',
-            '{{%universities}}'
-        );
-
-        $this->dropIndex(
-            '{{%idx-universities-is_active}}',
             '{{%universities}}'
         );
 
