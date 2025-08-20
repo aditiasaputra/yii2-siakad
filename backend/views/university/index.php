@@ -361,27 +361,81 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Action Buttons -->
-            <div class="col-lg-12">
+
+                <!-- Action Buttons -->
                 <div class="card profile-card">
                     <div class="card-body text-center">
-                        <div class="btn-group-wrapper">
-                            <?= Html::a('<i class="fas fa-edit mr-2"></i>Edit Profil', ['university/update'], [
-                                'class' => 'btn btn-warning mr-2 mb-2'
-                            ]) ?>
-                            <?= Html::a('<i class="fas fa-list mr-2"></i>Halaman Fakultas', ['faculty/index'], [
-                                'class' => 'btn btn-outline-info mr-2 mb-2'
-                            ]) ?>
-                            <?= Html::a('<i class="fas fa-list mr-2"></i>Halaman Program Studi', ['study-program/index'], [
-                                'class' => 'btn btn-outline-info mr-2 mb-2'
-                            ]) ?>
-                            <?= Html::a('<i class="fas fa-list mr-2"></i>Halaman Jenjang Pendidikan', ['education-level/index'], [
-                                'class' => 'btn btn-outline-info mr-2 mb-2'
-                            ]) ?>
-                            <?= Html::a('<i class="fas fa-tachometer-alt mr-2"></i>Kembali ke Home', ['site/index'], [
-                                'class' => 'btn btn-secondary mb-2'
-                            ]) ?>
+                        <div class="navigation-actions">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?= Html::a('<i class="fas fa-edit mr-2"></i>Edit Profil', ['university/update', 'id' => $model->id], [
+                                        'class' => 'btn btn-warning btn-block'
+                                    ]) ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <?= Html::a('<i class="fas fa-tachometer-alt mr-2"></i>Dashboard', ['site/index'], [
+                                    'class' => 'btn btn-outline-dark btn-block'
+                                ]) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Action Buttons Section - Improved Layout -->
+            <div class="col-lg-8">
+                <!-- Management Menu Card -->
+                <div class="card profile-card mb-4">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-sitemap text-success mr-2"></i>
+                            Manajemen Akademik
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <?= Html::a(
+                                    '<div class="menu-item-icon bg-primary text-white mb-2">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <h6 class="mb-1">Fakultas</h6>
+                                    <small class="text-muted">Kelola data fakultas</small>',
+                                    ['faculty/index'],
+                                    [
+                                        'class' => 'btn btn-outline-primary btn-block text-center p-2 menu-card',
+                                        'style' => 'height: 120px; text-decoration: none;'
+                                    ]
+                                ) ?>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <?= Html::a(
+                                    '<div class="menu-item-icon bg-success text-white mb-2">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <h6 class="mb-1">Program Studi</h6>
+                                    <small class="text-muted">Kelola program studi</small>',
+                                    ['study-program/index'],
+                                    [
+                                        'class' => 'btn btn-outline-success btn-block text-center p-2 menu-card',
+                                        'style' => 'height: 120px; text-decoration: none;'
+                                    ]
+                                ) ?>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <?= Html::a(
+                                    '<div class="menu-item-icon bg-info text-white mb-2">
+                                        <i class="fas fa-layer-group"></i>
+                                    </div>
+                                    <h6 class="mb-1">Jenjang Pendidikan</h6>
+                                    <small class="text-muted">Kelola jenjang pendidikan</small>',
+                                    ['education-level/index'],
+                                    [
+                                        'class' => 'btn btn-outline-info btn-block text-center p-2 menu-card',
+                                        'style' => 'height: 120px; text-decoration: none;'
+                                    ]
+                                ) ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -533,6 +587,56 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.
 .quick-info-item:last-child {
     border-bottom: none;
     margin-bottom: 0;
+}
+
+/* Menu Card Styles */
+.menu-card {
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.menu-card:hover {
+    border-color: #007bff;
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+    transform: translateY(-3px);
+    text-decoration: none !important;
+}
+
+.menu-card.btn-outline-primary:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+.menu-card.btn-outline-success:hover {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.menu-card.btn-outline-info:hover {
+    background-color: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.menu-item-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+
+@media (max-width: 768px) {
+    .menu-card {
+        height: auto !important;
+        padding: 1.5rem !important;
+    }
 }
 
 /* Responsive */
