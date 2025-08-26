@@ -7,6 +7,7 @@ use common\models\User;
 use yii\db\ActiveRecord;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "faculties".
@@ -28,6 +29,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_at
  * @property int|null $created_by
  * @property int|null $updated_by
+ * @property string|null $deleted_at
  *
  * @property User $createdBy
  * @property User $updatedBy
@@ -49,8 +51,17 @@ class Faculty extends ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::class,
-            BlameableBehavior::class,
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
         ];
     }
 
@@ -63,7 +74,7 @@ class Faculty extends ActiveRecord
             [['unit_code', 'unit_name'], 'required'],
             [['address'], 'string'],
             [['is_active'], 'boolean'],
-            [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['created_by', 'updated_by', 'deleted_at'], 'integer'],
             [['unit_code'], 'string', 'max' => 20],
             [['unit_name', 'unit_name_en', 'work_unit'], 'string', 'max' => 255],
             [['abbreviation'], 'string', 'max' => 50],
@@ -99,6 +110,7 @@ class Faculty extends ActiveRecord
             'updated_at' => 'Diubah Pada',
             'created_by' => 'Dibuat Oleh',
             'updated_by' => 'Diubah Oleh',
+            'deleted_at' => 'Tanggal Dihapus',
         ];
     }
 
@@ -143,13 +155,28 @@ class Faculty extends ActiveRecord
     }
 
     /**
-     * Get active faculties
-     *
-     * @return \yii\db\ActiveQuery
+     * Get status badge
      */
-    public static function findActive()
+    public function getUnitCode()
     {
-        return self::find()->where(['is_active' => true]);
+        return '<span class="badge badge-secondary">' . $this->unit_code . '</span>';
+    }
+
+    /**
+     * Get status badge
+     */
+    public function getStatusBadge()
+    {
+        $class = $this->is_active ? 'badge-success' : 'badge-secondary';
+        return '<span class="badge ' . $class . '">' . $this->getStatusLabel() . '</span>';
+    }
+
+    /**
+     * Search active faculties
+     */
+    public static function getActiveFaculties()
+    {
+        return static::find()->where(['is_active' => true])->all();
     }
 
     /**

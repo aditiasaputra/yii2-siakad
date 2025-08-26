@@ -31,8 +31,8 @@ class m250815_061422_create_universities_table extends Migration
             'website' => $this->string(255)->null()->comment('Website'),
             'email' => $this->string(100)->null()->comment('Email'),
             'logo' => $this->string(255)->null()->comment('Logo'),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'created_at' => $this->dateTime()->notNull(),
+            'updated_at' => $this->dateTime()->notNull(),
             'created_by' => $this->integer()->null(),
             'updated_by' => $this->integer()->null(),
         ]);

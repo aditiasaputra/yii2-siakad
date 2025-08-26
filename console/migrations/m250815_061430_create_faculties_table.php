@@ -26,10 +26,11 @@ class m250815_061430_create_faculties_table extends Migration
             'vice_dean_2' => $this->string(255)->null()->comment('Wakil Ketua 2'),
             'vice_dean_3' => $this->string(255)->null()->comment('Wakil Ketua 3'),
             'is_active' => $this->boolean()->defaultValue(true)->comment('Status Aktif'),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'created_at' => $this->dateTime()->notNull(),
+            'updated_at' => $this->dateTime()->notNull(),
             'created_by' => $this->integer()->null(),
             'updated_by' => $this->integer()->null(),
+            'deleted_at' => $this->dateTime()->null(),
         ]);
 
         // Create indexes
