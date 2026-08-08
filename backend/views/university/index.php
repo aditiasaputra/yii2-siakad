@@ -128,7 +128,7 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.
                                 <i class="fas fa-calendar fa-2x"></i>
                             </div>
                             <div>
-                                <h3 class="mb-0 font-weight-bold"><?= date('Y') - date('Y', $model->created_at) ?></h3>
+                                <h3 class="mb-0 font-weight-bold"><?= date('Y') - date('Y', strtotime($model->created_at)) ?></h3>
                                 <p class="mb-0 opacity-75">Tahun Berdiri</p>
                             </div>
                         </div>
@@ -350,13 +350,13 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.
                         <div class="quick-info-item mb-3">
                             <div class="d-flex justify-content-between">
                                 <span class="text-muted">Dibuat</span>
-                                <span><?= date('d M Y', $model->created_at) ?></span>
+                                <span><?= Yii::$app->formatter->asDate($model->created_at, 'php:d M Y') ?></span>
                             </div>
                         </div>
                         <div class="quick-info-item">
                             <div class="d-flex justify-content-between">
                                 <span class="text-muted">Terakhir Update</span>
-                                <span><?= date('d M Y', $model->updated_at) ?></span>
+                                <span><?= Yii::$app->formatter->asDate($model->updated_at, 'php:d M Y') ?></span>
                             </div>
                         </div>
                     </div>

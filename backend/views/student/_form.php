@@ -261,13 +261,11 @@ JS
         <div class="card-footer d-flex">
             <?php if (!$studentModel->isNewRecord): ?>
                 <div id="action-left">
-                    <?= Html::a('Kembali', ['show', 'id' => $studentModel->id], [
-                        'class' => 'btn btn-sm btn-default'
-                    ]) ?>
+                    <?= Html::a('Kembali', ['index'], ['class' => 'btn btn-sm btn-default']) ?>
                 </div>
             <?php endif; ?>
             <div class="ml-auto" id="action-right">
-                <?= Html::a('<i class="fas fa-fw fa-arrow-left"></i><span> Batal</span>', Url::to(['index']), ['class' => 'btn btn-sm btn-secondary mr-1']) ?>
+                <?= Html::a('<i class="fas fa-fw fa-arrow-left"></i><span> Batal</span>', $studentModel->isNewRecord ? Url::to(['index']) : Url::to(['show', 'id' => $studentModel->id]), ['class' => 'btn btn-sm btn-secondary mr-1']) ?>
                 <?= Html::submitButton('<i class="fas fa-fw fa-check"></i><span> ' . ($studentModel->isNewRecord ? 'Simpan' : 'Ubah') . '</span>', ['class' => 'btn btn-sm btn-' . ($studentModel->isNewRecord ? 'success' : 'warning')]) ?>
             </div>
         </div>

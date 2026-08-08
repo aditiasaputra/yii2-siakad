@@ -49,7 +49,13 @@
                         'label' => 'Master Data',
                         'icon' => 'fas fa-database',
                         'url' => '#',
-                        'active' => in_array(Yii::$app->controller->id, ['university', 'faculty', 'user', 'student', 'lecture', 'employee', 'religion', 'bank']),
+                        'active' => in_array(Yii::$app->controller->id, [
+                            'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system',
+                            'subject', 'semester', 'academic-year', 'class', 'room', 'schedule',
+                            'marital-status', 'blood-type', 'citizenship', 'gender', 'position',
+                            'rank', 'employment-status', 'work-unit', 'expertise-field', 'region',
+                            'user', 'student', 'lecture', 'employee', 'religion', 'bank',
+                        ]),
                         'items' => [
                             [
                                 'label' => 'Pengguna',
@@ -92,7 +98,7 @@
                                 'icon' => 'fas fa-list-alt',
                                 'url' => '#',
                                 'active' => in_array(Yii::$app->controller->id, [
-                                    'university', 'faculty', 'study-program', 'education-level',
+                                    'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system',
                                     'subject', 'semester', 'academic-year', 'class', 'room', 'schedule',
                                     'marital-status', 'blood-type', 'citizenship', 'gender',
                                     'position', 'rank', 'employment-status', 'work-unit', 'expertise-field',
@@ -103,6 +109,7 @@
                                         'label' => 'Perguruan Tinggi',
                                         'icon' => 'fas fa-university',
                                         'url' => '#',
+                                        'active' => in_array(Yii::$app->controller->id, ['university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system']),
                                         'items' => [
                                             [
                                                 'label' => 'Universitas',
@@ -123,10 +130,28 @@
                                                 'active' => Yii::$app->controller->id === 'study-program',
                                             ],
                                             [
+                                                'label' => 'Konsentrasi',
+                                                'icon' => 'fas fa-sitemap',
+                                                'url' => ['concentration/index'],
+                                                'active' => Yii::$app->controller->id === 'concentration',
+                                            ],
+                                            [
                                                 'label' => 'Jenjang Pendidikan',
                                                 'icon' => 'fas fa-level-up-alt',
                                                 'url' => ['education-level/index'],
                                                 'active' => Yii::$app->controller->id === 'education-level',
+                                            ],
+                                            [
+                                                'label' => 'Tingkat Pendidikan Universitas',
+                                                'icon' => 'fas fa-university',
+                                                'url' => ['university-education-level/index'],
+                                                'active' => Yii::$app->controller->id === 'university-education-level',
+                                            ],
+                                            [
+                                                'label' => 'Sistem Kuliah',
+                                                'icon' => 'fas fa-chalkboard-teacher',
+                                                'url' => ['lecture-system/index'],
+                                                'active' => Yii::$app->controller->id === 'lecture-system',
                                             ],
                                         ],
                                     ],

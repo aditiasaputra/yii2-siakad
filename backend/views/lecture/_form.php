@@ -332,15 +332,13 @@ $avatars = ['avatar.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.
                     </div>
                 </div>
                 <div class="card-footer d-flex">
-                    <?php if (!$employeeModel->isNewRecord): ?>
+                    <?php if (!$lectureModel->isNewRecord): ?>
                         <div id="action-left">
-                            <?= Html::a('Kembali', ['show', 'id' => $employeeModel->id], [
-                                'class' => 'btn btn-sm btn-default'
-                            ]) ?>
+                            <?= Html::a('Kembali', ['index'], ['class' => 'btn btn-sm btn-default']) ?>
                         </div>
                     <?php endif; ?>
                     <div class="ml-auto" id="action-right">
-                        <?= Html::a('<i class="fas fa-fw fa-arrow-left"></i><span> Batal</span>', Url::to(['index']), ['class' => 'btn btn-sm btn-secondary mr-1']) ?>
+                        <?= Html::a('<i class="fas fa-fw fa-arrow-left"></i><span> Batal</span>', $lectureModel->isNewRecord ? Url::to(['index']) : Url::to(['show', 'id' => $lectureModel->id]), ['class' => 'btn btn-sm btn-secondary mr-1']) ?>
                         <?= Html::submitButton('<i class="fas fa-fw fa-check"></i><span> ' . ($employeeModel->isNewRecord ? 'Simpan' : 'Ubah') . '</span>', ['class' => 'btn btn-sm btn-' . ($employeeModel->isNewRecord ? 'success' : 'warning')]) ?>
                     </div>
                 </div>

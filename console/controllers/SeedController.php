@@ -3,6 +3,11 @@
 namespace console\controllers;
 
 use backend\models\Faculty;
+use backend\models\Concentration;
+use backend\models\EducationLevel;
+use backend\models\LectureSystem;
+use backend\models\StudyProgram;
+use backend\models\UniversityEducationLevel;
 use Yii;
 use Faker\Factory;
 use common\models\User;
@@ -28,7 +33,13 @@ class SeedController extends Controller
         // Truncate all related tables
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
 
+        Yii::$app->db->createCommand()->truncateTable(Concentration::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(StudyProgram::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(EducationLevel::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(UniversityEducationLevel::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(LectureSystem::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(University::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Faculty::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(User::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Student::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Employee::tableName())->execute();
@@ -126,7 +137,13 @@ class SeedController extends Controller
                     $lecture->employee_id = $employee->id;
                     $lecture->lecture_nationality_number = (int) str_pad($i, 4, '0', STR_PAD_LEFT);
                     $lecture->competence = $faker->jobTitle;
-                    $lecture->field_of_study = $faker->word;
+                    $lecture->field_of_study = $faker->randomElement([
+                        'Teknik Informatika',
+                        'Sistem Informasi',
+                        'Matematika Terapan',
+                        'Manajemen Pendidikan',
+                        'Ilmu Komputer',
+                    ]);
                     $lecture->is_match_field = rand(0, 1);
                     $lecture->certificate_date = date('Y-m-d');
                     $lecture->created_at = date('Y-m-d H:i:s');
@@ -146,9 +163,14 @@ class SeedController extends Controller
             }
         }
 
-        // $this->seedSql();
+        $this->seedSql();
         $this->seedUniversity();
         $this->seedFaculties();
+        $this->seedEducationLevels();
+        $this->seedUniversityEducationLevels();
+        $this->seedStudyPrograms();
+        $this->seedConcentrations();
+        $this->seedLectureSystems();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
 
         echo "\n✅ Seed selesai.\n";
@@ -204,8 +226,6 @@ class SeedController extends Controller
         $university->website = 'https://www.ugm.ac.id';
         $university->email = 'humas@ugm.ac.id';
         $university->logo = null;
-        $university->created_at = time();
-        $university->updated_at = time();
         $university->created_by = 1;
         $university->updated_by = 1;
 
@@ -430,5 +450,114 @@ class SeedController extends Controller
         }
 
         echo "Seeded " . count($faculties) . " UGM faculties successfully.\n";
+    }
+
+    private function seedEducationLevels(): void
+    {
+        $levels = [
+            ['SD', 'Sekolah Dasar', 2, false], ['SMP', 'Sekolah Menengah Pertama', 3, false],
+            ['SMA', 'Sekolah Menengah Atas', 4, false], ['D1', 'Diploma Satu', 5, true],
+            ['D2', 'Diploma Dua', 6, true], ['D3', 'Diploma Tiga', 7, true],
+            ['S1', 'Strata Satu', 8, true], ['S2', 'Strata Dua', 9, true], ['S3', 'Strata Tiga', 10, true],
+        ];
+
+        foreach ($levels as [$level, $name, $sortOrder, $isUniversity]) {
+            $model = new EducationLevel([
+                'level' => $level, 'name' => $name, 'sort_order' => $sortOrder, 'is_university' => $isUniversity,
+            ]);
+            $this->saveSeedModel($model, "jenjang pendidikan {$level}");
+        }
+    }
+
+    private function seedStudyPrograms(): void
+    {
+        $facultyIds = Faculty::find()->select('id')->indexBy('unit_code')->column();
+        $programs = [
+            ['55201', 'Teknik Informatika', 'Informatika', 'Informatics', 'FT', 'S1', 'Fakultas Teknik', 'TI', 120, 'Unggul'],
+            ['55202', 'Sistem Informasi', 'Sistem Informasi', 'Information Systems', 'FT', 'S1', 'Fakultas Teknik', 'SI', 100, 'Baik Sekali'],
+            ['84201', 'Matematika', 'Matematika', 'Mathematics', 'FMIPA', 'S1', 'Fakultas Matematika dan Ilmu Pengetahuan Alam', 'MAT', 80, 'A'],
+            ['79201', 'Sastra Inggris', 'Sastra Inggris', 'English Literature', 'FIB', 'S1', 'Fakultas Ilmu Budaya', 'SING', 80, 'A'],
+            ['15401', 'Kebidanan', 'D3 Kebidanan', 'Midwifery', 'FKKMK', 'D3', 'Fakultas Kedokteran, Kesehatan Masyarakat, dan Keperawatan', 'BID', 75, 'Baik Sekali'],
+        ];
+
+        foreach ($programs as [$code, $name, $shortName, $nameEn, $facultyCode, $type, $workUnit, $nimPrefix, $capacity, $grade]) {
+            if (!isset($facultyIds[$facultyCode])) {
+                echo "Faculty {$facultyCode} tidak ditemukan; program {$code} dilewati.\n";
+                continue;
+            }
+            $model = new StudyProgram([
+                'code' => $code, 'name' => $name, 'short_name' => $shortName, 'name_en' => $nameEn,
+                'faculty_id' => $facultyIds[$facultyCode], 'program_type' => $type, 'work_unit' => $workUnit,
+                'phone' => '0274-000000', 'address' => 'Kampus Bulaksumur, Yogyakarta', 'capacity' => $capacity,
+                'grade' => $grade, 'nim_prefix' => $nimPrefix, 'nim_sequence_length' => 3,
+                'allow_choice_1' => true, 'allow_choice_2' => true, 'allow_choice_3' => true, 'is_active' => true,
+                'minimum_graduation_credits' => $type === 'D3' ? 108 : 144, 'minimum_graduation_gpa' => 2.00,
+                'degree' => $type === 'D3' ? 'Ahli Madya' : 'Sarjana', 'degree_abbreviation' => $type === 'D3' ? 'A.Md.' : 'S.T.',
+            ]);
+            $this->saveSeedModel($model, "program studi {$name}");
+        }
+    }
+
+    private function seedUniversityEducationLevels(): void
+    {
+        $levelIds = EducationLevel::find()->select('id')->indexBy('level')->column();
+        $data = [
+            ['D1', 2, 2, 4], ['D2', 3, 2, 12], ['D3', 6, 4, 10],
+            ['S1', 8, 6, 14], ['S2', 4, 4, 8], ['S3', 6, 6, 14],
+        ];
+        foreach ($data as [$level, $studyPeriod, $maxLeave, $maxStudy]) {
+            if (!isset($levelIds[$level])) {
+                continue;
+            }
+            $this->saveSeedModel(new UniversityEducationLevel([
+                'education_level_id' => $levelIds[$level], 'study_period_semesters' => $studyPeriod,
+                'max_leave_semesters' => $maxLeave, 'max_study_semesters' => $maxStudy,
+            ]), "tingkat pendidikan universitas {$level}");
+        }
+    }
+
+    private function seedConcentrations(): void
+    {
+        $programIds = StudyProgram::find()->select('id')->indexBy('code')->column();
+        $concentrations = [
+            ['55201', '01', 'Sistem Cerdas', 'Intelligent Systems'],
+            ['55201', '02', 'Rekayasa Perangkat Lunak', 'Software Engineering'],
+            ['55201', '03', 'Jaringan dan Keamanan Siber', 'Network and Cyber Security'],
+            ['55202', '01', 'Sistem Informasi Manajemen', 'Management Information Systems'],
+            ['55202', '02', 'Analitik Data Bisnis', 'Business Data Analytics'],
+        ];
+
+        foreach ($concentrations as [$programCode, $code, $name, $nameEn]) {
+            if (!isset($programIds[$programCode])) {
+                continue;
+            }
+            $this->saveSeedModel(new Concentration([
+                'study_program_id' => $programIds[$programCode], 'code' => $code, 'name' => $name, 'name_en' => $nameEn,
+            ]), "konsentrasi {$name}");
+        }
+    }
+
+    private function seedLectureSystems(): void
+    {
+        $systems = [
+            ['1', 'Reguler'],
+            ['2', 'Non Reguler'],
+            ['3', 'Kelas Karyawan'],
+        ];
+
+        foreach ($systems as [$code, $name]) {
+            $this->saveSeedModel(new LectureSystem([
+                'code' => $code,
+                'name' => $name,
+            ]), "sistem kuliah {$name}");
+        }
+    }
+
+    private function saveSeedModel($model, string $label): void
+    {
+        if (!$model->save()) {
+            echo "Gagal menyimpan {$label}:\n";
+            print_r($model->getErrors());
+        }
     }
 }

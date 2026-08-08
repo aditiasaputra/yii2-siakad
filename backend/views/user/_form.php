@@ -70,6 +70,9 @@ if (!$model->isNewRecord) {
     </div>
     <?php $form = ActiveForm::begin([
         'options' => ['enctype' => 'multipart/form-data', 'autocomplete' => 'off'],
+        'enableClientValidation' => true,
+        'validateOnChange' => true,
+        'validateOnSubmit' => true,
         'type' => ActiveForm::TYPE_HORIZONTAL,
         'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_SMALL],
     ]); ?>
@@ -260,13 +263,11 @@ if (!$model->isNewRecord) {
         <div class="card-footer d-flex">
             <?php if (!$model->isNewRecord): ?>
                 <div id="action-left">
-                    <?= Html::a('Kembali', ['show', 'id' => $model->id], [
-                        'class' => 'btn btn-sm btn-default'
-                    ]) ?>
+                    <?= Html::a('Kembali', ['index'], ['class' => 'btn btn-sm btn-default']) ?>
                 </div>
             <?php endif; ?>
             <div class="ml-auto" id="action-right">
-                <?= Html::a('<i class="fas fa-fw fa-arrow-left"></i><span> Batal</span>', Url::to(['index']), ['class' => 'btn btn-sm btn-secondary mr-1']) ?>
+                <?= Html::a('<i class="fas fa-fw fa-arrow-left"></i><span> Batal</span>', $model->isNewRecord ? Url::to(['index']) : Url::to(['show', 'id' => $model->id]), ['class' => 'btn btn-sm btn-secondary mr-1']) ?>
                 <?= Html::submitButton('<i class="fas fa-fw fa-check"></i><span> ' . ($model->isNewRecord ? 'Simpan' : 'Ubah') . '</span>', ['class' => 'btn btn-sm btn-' . ($model->isNewRecord ? 'success' : 'warning')]) ?>
             </div>
         </div>

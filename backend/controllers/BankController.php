@@ -55,9 +55,7 @@ class BankController extends Controller
             }
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render('create', compact('model'));
     }
 
     public function actionUpdate($id)
@@ -73,9 +71,7 @@ class BankController extends Controller
             }
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render('update', compact('model'));
     }
 
     public function actionDelete($id)

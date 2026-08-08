@@ -47,6 +47,9 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.
     <div class="container">
         <?php $form = ActiveForm::begin([
             'options' => ['enctype' => 'multipart/form-data', 'class' => 'edit-profile-form', 'autocomplete' => 'off'],
+            'enableClientValidation' => true,
+            'validateOnChange' => true,
+            'validateOnSubmit' => true,
             'fieldConfig' => [
                 'template' => "{label}\n{input}\n{error}",
                 'labelOptions' => ['class' => 'form-label font-weight-semibold'],
@@ -260,21 +263,15 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.
 
                 <!-- Action Buttons Card -->
                 <div class="card profile-edit-card">
-                    <div class="card-body">
-                        <div class="action-buttons">
+                        <div class="card-body">
+                        <div class="action-buttons d-flex justify-content-end">
+                            <?= Html::a('<i class="fas fa-arrow-left mr-1"></i> Batal', ['university/index'], [
+                                'class' => 'btn btn-secondary mr-2'
+                            ]) ?>
                             <?= Html::submitButton(
-                                '<i class="fas fa-save mr-2"></i>Simpan Perubahan',
-                                ['class' => 'btn btn-success btn-lg btn-block mb-3 save-btn']
+                                '<i class="fas fa-check mr-1"></i>Ubah',
+                                ['class' => 'btn btn-warning']
                             ) ?>
-                            
-                            <div class="btn-group btn-block" role="group">
-                                <?= Html::a('<i class="fas fa-eye mr-1"></i> Preview', ['university/index'], [
-                                    'class' => 'btn btn-info btn-sm',
-                                    'target' => '_blank'
-                                ]) ?>
-                                <?= Html::a('<i class="fas fa-times mr-1"></i> Batal', ['university/index'], [
-                                    'class' => 'btn btn-secondary btn-sm'
-                                ]) ?>
                             </div>
 
                             <div class="mt-3 text-center">

@@ -45,13 +45,13 @@ class Region extends ActiveRecord
     }
 
     /**
-     * Get a list of child regions by parent kode and level
+     * Get a list of regions by level, optionally limited by parent kode.
      *
-     * @param string|null $parentKode
      * @param string $level
+     * @param string|null $parentKode
      * @return array
      */
-    public static function getList(?string $parentKode = null, string $level): array
+    public static function getList(string $level, ?string $parentKode = null): array
     {
         return self::find()
             ->select(['kode AS id', 'name AS text'])

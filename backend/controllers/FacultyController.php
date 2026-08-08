@@ -84,9 +84,7 @@ class FacultyController extends Controller
             return $this->redirect(['show', 'id' => $model->id]);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render('create', compact('model'));
     }
 
     /**
@@ -105,9 +103,7 @@ class FacultyController extends Controller
             return $this->redirect(['show', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render('update', compact('model'));
     }
 
     /**

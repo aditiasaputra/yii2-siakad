@@ -7,6 +7,7 @@ use common\models\User;
 use yii\db\ActiveRecord;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "universities".
@@ -29,8 +30,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string|null $website Website
  * @property string|null $email Email
  * @property string|null $logo Logo
- * @property int $created_at
- * @property int $updated_at
+ * @property string $created_at
+ * @property string $updated_at
  * @property int|null $created_by
  * @property int|null $updated_by
  *
@@ -62,7 +63,12 @@ class University extends ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::class,
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
             BlameableBehavior::class,
         ];
     }
@@ -75,7 +81,7 @@ class University extends ActiveRecord
         return [
             [['unit_code', 'unit_name'], 'required'],
             [['address'], 'string'],
-            [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['created_by', 'updated_by'], 'integer'],
             [['unit_code'], 'string', 'max' => 20],
             [['unit_name', 'unit_name_en', 'work_unit', 'website', 'logo'], 'string', 'max' => 255],
             [['abbreviation'], 'string', 'max' => 50],
