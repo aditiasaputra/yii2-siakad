@@ -1,0 +1,3 @@
+<?php
+namespace backend\models; use yii\behaviors\TimestampBehavior; use yii\db\ActiveRecord; use yii\db\Expression;
+class GradeElement extends ActiveRecord { public static function tableName(){return 'grade_elements';} public function behaviors(){return [['class'=>TimestampBehavior::class,'value'=>new Expression('NOW()')]];} public function rules(){return [[['code','name','short_name'],'required'],['code','match','pattern'=>'/^\d+$/','message'=>'Kode harus berupa angka.'],['code','string','max'=>20],['name','string','max'=>255],['short_name','string','max'=>50],['code','unique']];} public function attributeLabels(){return ['code'=>'Kode','name'=>'Nama Unsur','short_name'=>'Nama Singkat'];}}

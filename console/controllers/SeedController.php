@@ -6,6 +6,17 @@ use backend\models\Faculty;
 use backend\models\Concentration;
 use backend\models\EducationLevel;
 use backend\models\LectureSystem;
+use backend\models\LectureRoom;
+use backend\models\AcademicActivity;
+use backend\models\AcademicCalendar;
+use backend\models\ExternalUniversity;
+use backend\models\Company;
+use backend\models\CompanyContact;
+use backend\models\GradeElement;
+use backend\models\Job;
+use backend\models\Income;
+use backend\models\StudentStatus;
+use backend\models\Transportation;
 use backend\models\StudyProgram;
 use backend\models\UniversityEducationLevel;
 use Yii;
@@ -34,6 +45,17 @@ class SeedController extends Controller
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
 
         Yii::$app->db->createCommand()->truncateTable(Concentration::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(LectureRoom::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(AcademicActivity::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(AcademicCalendar::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(ExternalUniversity::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Company::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(CompanyContact::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(GradeElement::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Job::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Income::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(StudentStatus::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Transportation::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(StudyProgram::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(EducationLevel::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(UniversityEducationLevel::tableName())->execute();
@@ -169,6 +191,17 @@ class SeedController extends Controller
         $this->seedEducationLevels();
         $this->seedUniversityEducationLevels();
         $this->seedStudyPrograms();
+        $this->seedLectureRooms();
+        $this->seedAcademicActivities();
+        $this->seedAcademicCalendars();
+        $this->seedExternalUniversities();
+        $this->seedCompanies();
+        $this->seedCompanyContacts();
+        $this->seedGradeElements();
+        $this->seedJobs();
+        $this->seedIncomes();
+        $this->seedStudentStatuses();
+        $this->seedTransportations();
         $this->seedConcentrations();
         $this->seedLectureSystems();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
@@ -513,6 +546,139 @@ class SeedController extends Controller
                 'education_level_id' => $levelIds[$level], 'study_period_semesters' => $studyPeriod,
                 'max_leave_semesters' => $maxLeave, 'max_study_semesters' => $maxStudy,
             ]), "tingkat pendidikan universitas {$level}");
+        }
+    }
+
+    private function seedLectureRooms(): void
+    {
+        $programIds = StudyProgram::find()->select('id')->indexBy('code')->column();
+        $rooms = [
+            ['55201', '01', 'Ruang Kuliah 1', 'G.202', 30],
+            ['55201', '02', 'Laboratorium Komputer', 'G.203', 25],
+            ['55202', '03', 'Ruang Sistem Informasi', 'B.002', 25],
+        ];
+
+        foreach ($rooms as [$programCode, $code, $name, $location, $capacity]) {
+            if (!isset($programIds[$programCode])) {
+                continue;
+            }
+            $this->saveSeedModel(new LectureRoom([
+                'study_program_id' => $programIds[$programCode],
+                'code' => $code,
+                'name' => $name,
+                'location' => $location,
+                'capacity' => $capacity,
+                'is_active' => true,
+            ]), "ruang kuliah {$name}");
+        }
+    }
+
+    private function seedAcademicActivities(): void
+    {
+        $activities = [
+            ['01', 'KKN', '#ff0080'], ['02', 'PKL', '#000000'], ['021', 'Orientasi Mahasiswa', '#ef9a12'],
+            ['023', 'Seminar Proposal', '#00ff00'], ['024', 'Seminar Hasil', '#000000'], ['03', 'Workshop', '#4caf50'],
+            ['04', 'Pameran', '#2196f3'], ['05', 'Penelitian', '#404fc7'], ['07', 'Asistensi', '#795548'],
+        ];
+        foreach ($activities as [$code, $name, $background]) {
+            $this->saveSeedModel(new AcademicActivity(compact('code', 'name', 'background')), "kegiatan akademik {$name}");
+        }
+    }
+
+    private function seedAcademicCalendars(): void
+    {
+        $activityIds = AcademicActivity::find()->select('id')->indexBy('code')->column();
+        foreach ([['01', '2017/2018 Ganjil', '2017-08-07', '2017-08-14', 'KKN 2017', true, false], ['021', '2017/2018 Ganjil', '2017-09-04', '2017-09-11', 'Orientasi Mahasiswa', false, false]] as [$code, $period, $start, $end, $description, $academicHoliday, $nationalHoliday]) {
+            if (isset($activityIds[$code])) $this->saveSeedModel(new AcademicCalendar(['academic_activity_id' => $activityIds[$code], 'period' => $period, 'start_date' => $start, 'end_date' => $end, 'description' => $description, 'is_academic_holiday' => $academicHoliday, 'is_national_holiday' => $nationalHoliday]), "kalender akademik {$description}");
+        }
+    }
+
+    private function seedExternalUniversities(): void
+    {
+        foreach ([['001001', 'Universitas Gadjah Mada', 'Bulaksumur, Kec. Depok', '0274-588688'], ['001002', 'Universitas Indonesia', 'Jalan Salemba Raya 4, Kota Jakarta Pusat', '021-7270020'], ['001003', 'Universitas Sumatera Utara', 'Jalan Dr T Mansur No 9, Medan', '061-8214033']] as [$code, $name, $address, $phone]) {
+            $this->saveSeedModel(new ExternalUniversity(compact('code', 'name', 'address', 'phone')), "universitas luar {$name}");
+        }
+    }
+
+    private function seedCompanies(): void
+    {
+        foreach ([['1', 'PT. Sevima', 'Jalan Medokan Asri Tengah MA 2 Blok Q 16', '03125426589'], ['2', 'PT Sentra Vidya Utama', 'Jalan Medokan Asri Tengah MA 2 Blok Q 16', '234567']] as [$number, $name, $address, $phone]) $this->saveSeedModel(new Company(compact('number', 'name', 'address', 'phone')), "perusahaan {$name}");
+    }
+
+    private function seedCompanyContacts(): void
+    {
+        $companyIds = Company::find()->select('id')->indexBy('number')->column();
+        $contacts = [
+            ['1', 'Ali Shadikin', '085730075044', 'ali.shadikin@sevima.com', 'Jalan Medokan Asri Tengah MA 2 Blok Q 16'],
+            ['2', 'Dewi Lestari', '081234567890', 'dewi.lestari@sentra-vidya.co.id', 'Jalan Medokan Asri Tengah MA 2 Blok Q 16'],
+        ];
+
+        foreach ($contacts as [$companyNumber, $name, $phone, $email, $address]) {
+            if (!isset($companyIds[$companyNumber])) {
+                continue;
+            }
+            $this->saveSeedModel(new CompanyContact([
+                'company_id' => $companyIds[$companyNumber],
+                'name' => $name,
+                'phone' => $phone,
+                'email' => $email,
+                'address' => $address,
+                'gender' => 1,
+            ]), "contact person {$name}");
+        }
+    }
+
+    private function seedGradeElements(): void
+    {
+        foreach ([['1','TUGAS INDIVIDU','TGINV'],['2','UTS','UTS'],['3','UAS','UAS'],['4','PRAKTIKUM','PRAK'],['5','DISKUSI','DICS'],['6','KEHADIRAN','ABS']] as [$code,$name,$shortName]) $this->saveSeedModel(new GradeElement(['code'=>$code,'name'=>$name,'short_name'=>$shortName]), "unsur nilai {$name}");
+    }
+
+    private function seedJobs(): void
+    {
+        foreach ([
+            ['0', 'Tidak Bekerja'],
+            ['1', 'Bekerja'],
+            ['2', 'Ibu Rumah Tangga'],
+            ['3', 'Belum Bekerja'],
+            ['4', 'PNS'],
+            ['5', 'BUMN'],
+            ['6', 'Pelajar'],
+            ['7', 'Wiraswasta'],
+            ['8', 'Pegawai Swasta'],
+            ['9', 'Profesional'],
+        ] as [$code, $name]) {
+            $this->saveSeedModel(new Job(['code' => $code, 'name' => $name]), "pekerjaan {$name}");
+        }
+    }
+
+    private function seedIncomes(): void
+    {
+        foreach ([
+            ['0', 'Kurang dari 500.000'],
+            ['1', '500.000 - 999.999'],
+            ['2', '1.000.000 - 1.999.999'],
+            ['3', '2.000.000 - 4.999.999'],
+            ['4', '5.000.000 - 20.000.000'],
+            ['5', 'Lebih dari 20.000.000'],
+        ] as [$code, $name]) {
+            $this->saveSeedModel(new Income(['code' => $code, 'name' => $name]), "penghasilan {$name}");
+        }
+    }
+
+    private function seedStudentStatuses(): void
+    {
+        foreach ([
+            ['A', 'Aktif'], ['C', 'Cuti'], ['D', 'Drop Out / Dikeluarkan'], ['G', 'Sedang Double Degree'],
+            ['K', 'Mengundurkan Diri / Keluar'], ['L', 'Lulus'], ['N', 'Non Aktif'], ['T', 'Transfer / Mutasi'], ['W', 'Wafat'],
+        ] as [$code, $name]) {
+            $this->saveSeedModel(new StudentStatus(['code' => $code, 'name' => $name]), "status mahasiswa {$name}");
+        }
+    }
+
+    private function seedTransportations(): void
+    {
+        foreach ([['0', 'Kendaraan Umum'], ['1', 'Sepeda'], ['2', 'Motor'], ['3', 'Mobil']] as [$code, $name]) {
+            $this->saveSeedModel(new Transportation(['code' => $code, 'name' => $name]), "transportasi {$name}");
         }
     }
 

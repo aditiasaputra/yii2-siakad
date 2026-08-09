@@ -1,0 +1,6 @@
+<?php
+use kartik\detail\DetailView;
+use yii\helpers\Html;
+$this->title = $model->name; $this->params['breadcrumbs'][] = ['label' => 'Master Kegiatan Akademik', 'url' => ['index']]; $this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="academic-activity-view"><div class="d-flex justify-content-between align-items-center mb-4"><h1><?= Html::encode($this->title) ?></h1><div><?= Html::a('<i class="fas fa-arrow-left"></i> Kembali ke Daftar', ['index'], ['class' => 'btn btn-outline-secondary']) ?> <?= Html::a('<i class="fas fa-edit"></i> Ubah', ['update', 'id' => $model->id], ['class' => 'btn btn-warning ml-2']) ?> <?= Html::a('<i class="fas fa-trash"></i> Hapus', ['delete', 'id' => $model->id], ['class' => 'btn btn-danger ml-2', 'data' => ['confirm' => 'Hapus kegiatan akademik ini?', 'method' => 'post']]) ?></div></div><?= DetailView::widget(['model' => $model, 'mode' => DetailView::MODE_VIEW, 'panel' => ['heading' => '<i class="fas fa-calendar-alt"></i> Detail Kegiatan Akademik', 'type' => DetailView::TYPE_PRIMARY], 'attributes' => ['code', 'name', ['attribute' => 'background', 'format' => 'raw', 'value' => $model->background ? Html::tag('span', Html::encode($model->background), ['class' => 'badge', 'style' => 'background:' . Html::encode($model->background) . ';color:#fff;padding:.45rem .7rem;']) : '-']]]) ?></div>

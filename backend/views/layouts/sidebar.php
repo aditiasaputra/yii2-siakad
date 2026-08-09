@@ -50,11 +50,11 @@
                         'icon' => 'fas fa-database',
                         'url' => '#',
                         'active' => in_array(Yii::$app->controller->id, [
-                            'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system',
-                            'subject', 'semester', 'academic-year', 'class', 'room', 'schedule',
+                            'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system', 'external-university', 'company', 'company-contact',
+                            'subject', 'semester', 'academic-year', 'academic-calendar', 'class', 'room', 'lecture-room', 'academic-activity', 'schedule',
                             'marital-status', 'blood-type', 'citizenship', 'gender', 'position',
                             'rank', 'employment-status', 'work-unit', 'expertise-field', 'region',
-                            'user', 'student', 'lecture', 'employee', 'religion', 'bank',
+                            'user', 'student', 'lecture', 'employee', 'religion', 'bank', 'grade-element', 'job', 'income', 'transportation', 'student-status',
                         ]),
                         'items' => [
                             [
@@ -93,13 +93,18 @@
                                 'url' => ['bank/index'],
                                 'active' => Yii::$app->controller->id === 'bank',
                             ],
+                            ['label' => 'Unsur Nilai', 'icon' => 'fas fa-list-ol', 'url' => ['grade-element/index'], 'active' => Yii::$app->controller->id === 'grade-element'],
+                            ['label' => 'Pekerjaan', 'icon' => 'fas fa-briefcase', 'url' => ['job/index'], 'active' => Yii::$app->controller->id === 'job'],
+                            ['label' => 'Penghasilan', 'icon' => 'fas fa-money-bill-wave', 'url' => ['income/index'], 'active' => Yii::$app->controller->id === 'income'],
+                            ['label' => 'Transportasi', 'icon' => 'fas fa-bus', 'url' => ['transportation/index'], 'active' => Yii::$app->controller->id === 'transportation'],
+                            ['label' => 'Status Mahasiswa', 'icon' => 'fas fa-user-check', 'url' => ['student-status/index'], 'active' => Yii::$app->controller->id === 'student-status'],
                             [
                                 'label' => 'Referensi',
                                 'icon' => 'fas fa-list-alt',
                                 'url' => '#',
                                 'active' => in_array(Yii::$app->controller->id, [
-                                    'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system',
-                                    'subject', 'semester', 'academic-year', 'class', 'room', 'schedule',
+                                    'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system', 'external-university', 'company', 'company-contact',
+                                    'subject', 'semester', 'academic-year', 'academic-calendar', 'class', 'room', 'lecture-room', 'academic-activity', 'schedule',
                                     'marital-status', 'blood-type', 'citizenship', 'gender',
                                     'position', 'rank', 'employment-status', 'work-unit', 'expertise-field',
                                     'region'
@@ -109,7 +114,7 @@
                                         'label' => 'Perguruan Tinggi',
                                         'icon' => 'fas fa-university',
                                         'url' => '#',
-                                        'active' => in_array(Yii::$app->controller->id, ['university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system']),
+                                        'active' => in_array(Yii::$app->controller->id, ['university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system', 'lecture-room', 'academic-activity', 'academic-calendar', 'external-university', 'company', 'company-contact']),
                                         'items' => [
                                             [
                                                 'label' => 'Universitas',
@@ -153,6 +158,27 @@
                                                 'url' => ['lecture-system/index'],
                                                 'active' => Yii::$app->controller->id === 'lecture-system',
                                             ],
+                                            [
+                                                'label' => 'Ruang Kuliah',
+                                                'icon' => 'fas fa-door-open',
+                                                'url' => ['lecture-room/index'],
+                                                'active' => Yii::$app->controller->id === 'lecture-room',
+                                            ],
+                                            [
+                                                'label' => 'Kegiatan Akademik',
+                                                'icon' => 'fas fa-calendar-alt',
+                                                'url' => ['academic-activity/index'],
+                                                'active' => Yii::$app->controller->id === 'academic-activity',
+                                            ],
+                                            [
+                                                'label' => 'Kalender Akademik',
+                                                'icon' => 'fas fa-calendar',
+                                                'url' => ['academic-calendar/index'],
+                                                'active' => Yii::$app->controller->id === 'academic-calendar',
+                                            ],
+                                            ['label' => 'Universitas Luar', 'icon' => 'fas fa-university', 'url' => ['external-university/index'], 'active' => Yii::$app->controller->id === 'external-university'],
+                                            ['label' => 'Perusahaan', 'icon' => 'fas fa-building', 'url' => ['company/index'], 'active' => Yii::$app->controller->id === 'company'],
+                                            ['label' => 'Contact Person', 'icon' => 'fas fa-address-book', 'url' => ['company-contact/index'], 'active' => Yii::$app->controller->id === 'company-contact'],
                                         ],
                                     ],
 
@@ -160,6 +186,7 @@
                                         'label' => 'Perkuliahan',
                                         'icon' => 'fas fa-chalkboard-teacher',
                                         'url' => '#',
+                                        'active' => in_array(Yii::$app->controller->id, ['subject', 'semester', 'academic-year', 'class', 'room', 'schedule']),
                                         'items' => [
                                             [
                                                 'label' => 'Mata Kuliah',
@@ -184,12 +211,6 @@
                                                 'icon' => 'fas fa-chalkboard',
                                                 'url' => ['class/index'],
                                                 'active' => Yii::$app->controller->id === 'class',
-                                            ],
-                                            [
-                                                'label' => 'Ruangan',
-                                                'icon' => 'fas fa-door-open',
-                                                'url' => ['room/index'],
-                                                'active' => Yii::$app->controller->id === 'room',
                                             ],
                                             [
                                                 'label' => 'Jadwal Kuliah',

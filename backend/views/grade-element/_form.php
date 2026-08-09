@@ -1,0 +1,1 @@
+<?php use kartik\form\ActiveForm; use yii\helpers\Html; $f=ActiveForm::begin(); echo $f->field($model,'code')->textInput(); echo $f->field($model,'name')->textInput(); echo $f->field($model,'short_name')->textInput(); echo Html::submitButton($model->isNewRecord?'Simpan':'Ubah',['class'=>'btn btn-success']); ActiveForm::end();

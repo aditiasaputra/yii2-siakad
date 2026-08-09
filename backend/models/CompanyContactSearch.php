@@ -1,0 +1,3 @@
+<?php
+namespace backend\models; use yii\base\Model; use yii\data\ActiveDataProvider;
+class CompanyContactSearch extends CompanyContact { public function rules(){return [[['company_id'],'integer'],[['name','phone'],'safe']];} public function scenarios(){return Model::scenarios();} public function search($params){$query=CompanyContact::find()->joinWith('company');$provider=new ActiveDataProvider(['query'=>$query]);$this->load($params);if(!$this->validate())return $provider;$query->andFilterWhere(['company_contacts.company_id'=>$this->company_id])->andFilterWhere(['like','company_contacts.name',$this->name])->andFilterWhere(['like','company_contacts.phone',$this->phone]);return $provider;}}

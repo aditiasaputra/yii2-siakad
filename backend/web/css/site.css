@@ -88,3 +88,43 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+/* Normalize default Kartik action links with the project action buttons. */
+.kv-grid-table td:last-child a[title="View"],
+.kv-grid-table td:last-child a[title="Lihat"] {
+    color: #17a2b8 !important;
+    border: 1px solid #17a2b8 !important;
+}
+.kv-grid-table td:last-child a[title="Update"],
+.kv-grid-table td:last-child a[title="Edit"],
+.kv-grid-table td:last-child a[title="Ubah"] {
+    color: #f0ad4e !important;
+    border: 1px solid #f0ad4e !important;
+}
+.kv-grid-table td:last-child a[data-method="post"] {
+    color: #dc3545 !important;
+    border: 1px solid #dc3545 !important;
+}
+.kv-grid-table td:last-child a[title="View"],
+.kv-grid-table td:last-child a[title="Lihat"],
+.kv-grid-table td:last-child a[title="Update"],
+.kv-grid-table td:last-child a[title="Edit"],
+.kv-grid-table td:last-child a[title="Ubah"],
+.kv-grid-table td:last-child a[data-method="post"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 46px;
+    margin: 0 2px;
+    font-size: 1.15rem;
+    background: transparent;
+    border-radius: .3rem;
+    text-decoration: none;
+}
+.kv-grid-table td:last-child a[title="View"]:hover,
+.kv-grid-table td:last-child a[title="Lihat"]:hover { background: #17a2b8; color: #fff !important; }
+.kv-grid-table td:last-child a[title="Update"]:hover,
+.kv-grid-table td:last-child a[title="Edit"]:hover,
+.kv-grid-table td:last-child a[title="Ubah"]:hover { background: #f0ad4e; color: #212529 !important; }
+.kv-grid-table td:last-child a[data-method="post"]:hover { background: #dc3545; color: #fff !important; }
