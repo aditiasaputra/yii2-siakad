@@ -44,7 +44,7 @@ class UserSearch extends User
         if (!empty($this->created_at) && strpos($this->created_at, ' - ') !== false) {
             list($start_date, $end_date) = explode(' - ', $this->created_at);
             $query->andFilterWhere([
-                'between', 'user.created_at',
+                'between', 'users.created_at',
                 date('Y-m-d 00:00:00', strtotime($start_date)),
                 date('Y-m-d 23:59:59', strtotime($end_date))
             ]);
@@ -56,9 +56,9 @@ class UserSearch extends User
             'role_id' => $this->role_id,
         ]);
 
-        $query->andFilterWhere(['like', 'user.name', $this->name])
-            ->andFilterWhere(['like', 'user.username', $this->username])
-            ->andFilterWhere(['like', 'user.email', $this->email]);
+        $query->andFilterWhere(['like', 'users.name', $this->name])
+            ->andFilterWhere(['like', 'users.username', $this->username])
+            ->andFilterWhere(['like', 'users.email', $this->email]);
 
         return $dataProvider;
     }

@@ -17,6 +17,11 @@ use backend\models\Job;
 use backend\models\Income;
 use backend\models\StudentStatus;
 use backend\models\Transportation;
+use backend\models\EmployeeType;
+use backend\models\Rank;
+use backend\models\FunctionalPosition;
+use backend\models\StructuralPosition;
+use backend\models\Country;
 use backend\models\StudyProgram;
 use backend\models\UniversityEducationLevel;
 use Yii;
@@ -35,6 +40,36 @@ class SeedController extends Controller
     public function actionMain()
     {
         $this->seedData();
+    }
+
+    public function actionEmployeeTypes()
+    {
+        $this->seedEmployeeTypes();
+        echo "Seed Jenis Pegawai selesai.\n";
+    }
+
+    public function actionRanks()
+    {
+        $this->seedRanks();
+        echo "Seed Golongan selesai.\n";
+    }
+
+    public function actionFunctionalPositions()
+    {
+        $this->seedFunctionalPositions();
+        echo "Seed Jabatan Fungsional selesai.\n";
+    }
+
+    public function actionStructuralPositions()
+    {
+        $this->seedStructuralPositions();
+        echo "Seed Jabatan Struktural selesai.\n";
+    }
+
+    public function actionCountries()
+    {
+        $this->seedCountries();
+        echo "Seed Negara selesai.\n";
     }
 
     private function seedData()
@@ -56,6 +91,11 @@ class SeedController extends Controller
         Yii::$app->db->createCommand()->truncateTable(Income::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(StudentStatus::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Transportation::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(EmployeeType::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Rank::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(FunctionalPosition::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(StructuralPosition::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(Country::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(StudyProgram::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(EducationLevel::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(UniversityEducationLevel::tableName())->execute();
@@ -202,6 +242,11 @@ class SeedController extends Controller
         $this->seedIncomes();
         $this->seedStudentStatuses();
         $this->seedTransportations();
+        $this->seedEmployeeTypes();
+        $this->seedRanks();
+        $this->seedFunctionalPositions();
+        $this->seedStructuralPositions();
+        $this->seedCountries();
         $this->seedConcentrations();
         $this->seedLectureSystems();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
@@ -679,6 +724,119 @@ class SeedController extends Controller
     {
         foreach ([['0', 'Kendaraan Umum'], ['1', 'Sepeda'], ['2', 'Motor'], ['3', 'Mobil']] as [$code, $name]) {
             $this->saveSeedModel(new Transportation(['code' => $code, 'name' => $name]), "transportasi {$name}");
+        }
+    }
+
+    private function seedEmployeeTypes(): void
+    {
+        $employeeTypes = [
+            ['1', 'Dosen Tetap Yayasan'],
+            ['2', 'Dosen Tetap DPK'],
+            ['3', 'Dosen Luar Biasa'],
+            ['4', 'Dosen Tamu'],
+            ['5', 'Asisten Dosen'],
+            ['6', 'Asisten Laboratorium'],
+            ['7', 'Pegawai BAK'],
+            ['8', 'Pendidik'],
+        ];
+
+        foreach ($employeeTypes as [$code, $name]) {
+            $model = EmployeeType::findOne(['code' => $code]) ?? new EmployeeType(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "jenis pegawai {$name}");
+        }
+    }
+
+    private function seedRanks(): void
+    {
+        $ranks = [
+            ['I A', 'Juru Muda'],
+            ['I B', 'Juru Muda Tingkat I'],
+            ['I C', 'Juru'],
+            ['I D', 'Juru Tingkat I'],
+            ['II A', 'Pengatur Muda'],
+            ['II B', 'Pengatur Muda Tingkat I'],
+            ['II C', 'Pengatur'],
+            ['II D', 'Pengatur Tingkat I'],
+            ['III A', 'Penata Muda'],
+            ['III B', 'Penata Muda Tingkat I'],
+            ['III C', 'Penata'],
+            ['III D', 'Penata Tingkat I'],
+            ['IV A', 'Pembina'],
+            ['IV B', 'Pembina Tingkat I'],
+            ['IV C', 'Pembina Utama Muda'],
+            ['IV D', 'Pembina Utama Madya'],
+            ['IV E', 'Pembina Utama'],
+        ];
+
+        foreach ($ranks as [$code, $name]) {
+            $model = Rank::findOne(['code' => $code]) ?? new Rank(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "golongan {$code}");
+        }
+    }
+
+    private function seedFunctionalPositions(): void
+    {
+        $positions = [
+            ['01', 'Tenaga Pengajar'],
+            ['02', 'Asisten Ahli 100'],
+            ['03', 'Asisten Ahli 150'],
+            ['04', 'Lektor 200'],
+            ['05', 'Lektor 300'],
+            ['06', 'Lektor Kepala 400'],
+            ['07', 'Lektor Kepala 550'],
+            ['08', 'Lektor Kepala 700'],
+            ['09', 'Profesor 850'],
+            ['10', 'Profesor 1050'],
+        ];
+
+        foreach ($positions as [$code, $name]) {
+            $model = FunctionalPosition::findOne(['code' => $code]) ?? new FunctionalPosition(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "jabatan fungsional {$name}");
+        }
+    }
+
+    private function seedStructuralPositions(): void
+    {
+        $positions = [
+            ['01', 'Rektor'],
+            ['011', 'Wakil Rektor I'],
+            ['012', 'Wakil Rektor II'],
+            ['021', 'Dekan'],
+            ['022', 'Wakil Dekan I'],
+            ['023', 'Wakil Dekan II'],
+            ['031', 'Kaprodi'],
+            ['032', 'Sekretaris Prodi'],
+        ];
+
+        foreach ($positions as [$code, $name]) {
+            $model = StructuralPosition::findOne(['code' => $code]) ?? new StructuralPosition(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "jabatan struktural {$name}");
+        }
+    }
+
+    private function seedCountries(): void
+    {
+        $countries = [
+            ['ABW', 'Aruba'],
+            ['AFG', 'Afganistan'],
+            ['AGO', 'Angola'],
+            ['AIA', 'Anguilla'],
+            ['ALA', 'Åland, Kepulauan'],
+            ['ALB', 'Albania'],
+            ['AND', 'Andorra'],
+            ['ANT', 'Antillen Belanda'],
+            ['ARE', 'Uni Emirat Arab'],
+            ['ARG', 'Argentina'],
+        ];
+
+        foreach ($countries as [$code, $name]) {
+            $model = Country::findOne(['code' => $code]) ?? new Country(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "negara {$name}");
         }
     }
 

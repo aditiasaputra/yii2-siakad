@@ -39,7 +39,7 @@ class Lecture extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'lecture';
+        return '{{%lectures}}';
     }
 
     /**

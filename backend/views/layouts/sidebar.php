@@ -1,4 +1,7 @@
 <?php
+
+$controllerId = Yii::$app->controller->id;
+$isRegionMenu = $controllerId === 'region';
 ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -39,24 +42,12 @@
                 'options' => ['class' => 'nav nav-pills nav-sidebar flex-column', 'data-widget' => 'treeview', 'role' => 'menu', 'data-accordion' => 'false'],
                 'encodeLabels' => false,
                 'items' => [
-                    ['label' => 'MAIN NAVIGATION', 'header' => true],
+                    ['label' => 'REFERENSI', 'header' => true],
                     [
                         'label' => 'Home',
                         'icon' => 'fas fa-tachometer-alt',
                         'url' => ['site/index'],
                     ],
-                    [
-                        'label' => 'Master Data',
-                        'icon' => 'fas fa-database',
-                        'url' => '#',
-                        'active' => in_array(Yii::$app->controller->id, [
-                            'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system', 'external-university', 'company', 'company-contact',
-                            'subject', 'semester', 'academic-year', 'academic-calendar', 'class', 'room', 'lecture-room', 'academic-activity', 'schedule',
-                            'marital-status', 'blood-type', 'citizenship', 'gender', 'position',
-                            'rank', 'employment-status', 'work-unit', 'expertise-field', 'region',
-                            'user', 'student', 'lecture', 'employee', 'religion', 'bank', 'grade-element', 'job', 'income', 'transportation', 'student-status',
-                        ]),
-                        'items' => [
                             [
                                 'label' => 'Pengguna',
                                 'icon' => 'fas fa-users',
@@ -98,23 +89,11 @@
                             ['label' => 'Penghasilan', 'icon' => 'fas fa-money-bill-wave', 'url' => ['income/index'], 'active' => Yii::$app->controller->id === 'income'],
                             ['label' => 'Transportasi', 'icon' => 'fas fa-bus', 'url' => ['transportation/index'], 'active' => Yii::$app->controller->id === 'transportation'],
                             ['label' => 'Status Mahasiswa', 'icon' => 'fas fa-user-check', 'url' => ['student-status/index'], 'active' => Yii::$app->controller->id === 'student-status'],
-                            [
-                                'label' => 'Referensi',
-                                'icon' => 'fas fa-list-alt',
-                                'url' => '#',
-                                'active' => in_array(Yii::$app->controller->id, [
-                                    'university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system', 'external-university', 'company', 'company-contact',
-                                    'subject', 'semester', 'academic-year', 'academic-calendar', 'class', 'room', 'lecture-room', 'academic-activity', 'schedule',
-                                    'marital-status', 'blood-type', 'citizenship', 'gender',
-                                    'position', 'rank', 'employment-status', 'work-unit', 'expertise-field',
-                                    'region'
-                                ]),
-                                'items' => [
                                     [
                                         'label' => 'Perguruan Tinggi',
                                         'icon' => 'fas fa-university',
                                         'url' => '#',
-                                        'active' => in_array(Yii::$app->controller->id, ['university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system', 'lecture-room', 'academic-activity', 'academic-calendar', 'external-university', 'company', 'company-contact']),
+                                        'active' => in_array(Yii::$app->controller->id, ['university', 'faculty', 'study-program', 'concentration', 'education-level', 'university-education-level', 'lecture-system', 'lecture-room', 'academic-activity', 'academic-calendar', 'external-university', 'company', 'company-contact', 'employee-type', 'rank', 'functional-position', 'structural-position', 'country', 'region']),
                                         'items' => [
                                             [
                                                 'label' => 'Universitas',
@@ -179,121 +158,31 @@
                                             ['label' => 'Universitas Luar', 'icon' => 'fas fa-university', 'url' => ['external-university/index'], 'active' => Yii::$app->controller->id === 'external-university'],
                                             ['label' => 'Perusahaan', 'icon' => 'fas fa-building', 'url' => ['company/index'], 'active' => Yii::$app->controller->id === 'company'],
                                             ['label' => 'Contact Person', 'icon' => 'fas fa-address-book', 'url' => ['company-contact/index'], 'active' => Yii::$app->controller->id === 'company-contact'],
-                                        ],
-                                    ],
-
-                                    [
-                                        'label' => 'Perkuliahan',
-                                        'icon' => 'fas fa-chalkboard-teacher',
-                                        'url' => '#',
-                                        'active' => in_array(Yii::$app->controller->id, ['subject', 'semester', 'academic-year', 'class', 'room', 'schedule']),
-                                        'items' => [
+                                            ['label' => 'Jenis Pegawai', 'icon' => 'fas fa-user-tag', 'url' => ['employee-type/index'], 'active' => Yii::$app->controller->id === 'employee-type'],
+                                            ['label' => 'Golongan', 'icon' => 'fas fa-medal', 'url' => ['rank/index'], 'active' => Yii::$app->controller->id === 'rank'],
+                                            ['label' => 'Jabatan Fungsional', 'icon' => 'fas fa-user-tie', 'url' => ['functional-position/index'], 'active' => Yii::$app->controller->id === 'functional-position'],
+                                            ['label' => 'Jabatan Struktural', 'icon' => 'fas fa-sitemap', 'url' => ['structural-position/index'], 'active' => Yii::$app->controller->id === 'structural-position'],
+                                            ['label' => 'Negara', 'icon' => 'fas fa-globe-asia', 'url' => ['country/index'], 'active' => Yii::$app->controller->id === 'country'],
                                             [
-                                                'label' => 'Mata Kuliah',
-                                                'icon' => 'fas fa-book',
-                                                'url' => ['subject/index'],
-                                                'active' => Yii::$app->controller->id === 'subject',
-                                            ],
-                                            [
-                                                'label' => 'Semester',
-                                                'icon' => 'fas fa-calendar-alt',
-                                                'url' => ['semester/index'],
-                                                'active' => Yii::$app->controller->id === 'semester',
-                                            ],
-                                            [
-                                                'label' => 'Tahun Akademik',
-                                                'icon' => 'fas fa-calendar-check',
-                                                'url' => ['academic-year/index'],
-                                                'active' => Yii::$app->controller->id === 'academic-year',
-                                            ],
-                                            [
-                                                'label' => 'Kelas',
-                                                'icon' => 'fas fa-chalkboard',
-                                                'url' => ['class/index'],
-                                                'active' => Yii::$app->controller->id === 'class',
-                                            ],
-                                            [
-                                                'label' => 'Jadwal Kuliah',
-                                                'icon' => 'fas fa-clock',
-                                                'url' => ['schedule/index'],
-                                                'active' => Yii::$app->controller->id === 'schedule',
+                                                'label' => 'Wilayah Indonesia',
+                                                'icon' => 'fas fa-map-marked-alt',
+                                                'url' => ['region/index'],
+                                                'active' => $isRegionMenu,
                                             ],
                                         ],
                                     ],
 
-                                    [
-                                        'label' => 'Biodata',
-                                        'icon' => 'fas fa-id-card',
-                                        'url' => '#',
-                                        'items' => [
-                                            [
-                                                'label' => 'Jenis Kelamin',
-                                                'icon' => 'fas fa-venus-mars',
-                                                'url' => ['gender/index'],
-                                                'active' => Yii::$app->controller->id === 'gender',
-                                            ],
-                                            [
-                                                'label' => 'Status Pernikahan',
-                                                'icon' => 'fas fa-ring',
-                                                'url' => ['marital-status/index'],
-                                                'active' => Yii::$app->controller->id === 'marital-status',
-                                            ],
-                                            [
-                                                'label' => 'Golongan Darah',
-                                                'icon' => 'fas fa-tint',
-                                                'url' => ['blood-type/index'],
-                                                'active' => Yii::$app->controller->id === 'blood-type',
-                                            ],
-                                            [
-                                                'label' => 'Kewarganegaraan',
-                                                'icon' => 'fas fa-flag',
-                                                'url' => ['citizenship/index'],
-                                                'active' => Yii::$app->controller->id === 'citizenship',
-                                            ],
-                                        ],
-                                    ],
-
-                                    [
-                                        'label' => 'Kepegawaian',
-                                        'icon' => 'fas fa-briefcase',
-                                        'url' => '#',
-                                        'items' => [
-                                            [
-                                                'label' => 'Jabatan',
-                                                'icon' => 'fas fa-user-cog',
-                                                'url' => ['position/index'],
-                                                'active' => Yii::$app->controller->id === 'position',
-                                            ],
-                                            [
-                                                'label' => 'Pangkat/Golongan',
-                                                'icon' => 'fas fa-medal',
-                                                'url' => ['rank/index'],
-                                                'active' => Yii::$app->controller->id === 'rank',
-                                            ],
-                                            [
-                                                'label' => 'Status Kepegawaian',
-                                                'icon' => 'fas fa-user-check',
-                                                'url' => ['employment-status/index'],
-                                                'active' => Yii::$app->controller->id === 'employment-status',
-                                            ],
-                                            [
-                                                'label' => 'Unit Kerja',
-                                                'icon' => 'fas fa-sitemap',
-                                                'url' => ['work-unit/index'],
-                                                'active' => Yii::$app->controller->id === 'work-unit',
-                                            ],
-                                            [
-                                                'label' => 'Bidang Keahlian',
-                                                'icon' => 'fas fa-tools',
-                                                'url' => ['expertise-field/index'],
-                                                'active' => Yii::$app->controller->id === 'expertise-field',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                    ['label' => 'KEPEGAWAIAN', 'header' => true],
+                    ['label' => 'Jabatan', 'icon' => 'fas fa-user-cog', 'url' => ['position/index'], 'active' => Yii::$app->controller->id === 'position'],
+                    ['label' => 'Status Kepegawaian', 'icon' => 'fas fa-user-check', 'url' => ['employment-status/index'], 'active' => Yii::$app->controller->id === 'employment-status'],
+                    ['label' => 'Unit Kerja', 'icon' => 'fas fa-sitemap', 'url' => ['work-unit/index'], 'active' => Yii::$app->controller->id === 'work-unit'],
+                    ['label' => 'Bidang Keahlian', 'icon' => 'fas fa-tools', 'url' => ['expertise-field/index'], 'active' => Yii::$app->controller->id === 'expertise-field'],
+                    ['label' => 'PERKULIAHAN', 'header' => true],
+                    ['label' => 'Mata Kuliah', 'icon' => 'fas fa-book', 'url' => ['subject/index'], 'active' => Yii::$app->controller->id === 'subject'],
+                    ['label' => 'Semester', 'icon' => 'fas fa-calendar-alt', 'url' => ['semester/index'], 'active' => Yii::$app->controller->id === 'semester'],
+                    ['label' => 'Tahun Akademik', 'icon' => 'fas fa-calendar-check', 'url' => ['academic-year/index'], 'active' => Yii::$app->controller->id === 'academic-year'],
+                    ['label' => 'Kelas', 'icon' => 'fas fa-chalkboard', 'url' => ['class/index'], 'active' => Yii::$app->controller->id === 'class'],
+                    ['label' => 'Jadwal Kuliah', 'icon' => 'fas fa-clock', 'url' => ['schedule/index'], 'active' => Yii::$app->controller->id === 'schedule'],
                     ['label' => 'LAINNYA', 'header' => true],
                     [
                         'label' => 'About us',

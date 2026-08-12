@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bank`
+-- Table structure for table `banks`
 --
-DROP TABLE IF EXISTS `bank`;
-CREATE TABLE IF NOT EXISTS `bank` (
+DROP TABLE IF EXISTS `banks`;
+CREATE TABLE IF NOT EXISTS `banks` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -41,10 +41,10 @@ CREATE TABLE IF NOT EXISTS `bank` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bank`
+-- Dumping data for table `banks`
 --
 
-INSERT INTO `bank` (`id`, `code`, `name`) VALUES
+INSERT INTO `banks` (`id`, `code`, `name`) VALUES
 (1, '002', 'Bank BRI'),
 (2, '008', 'Bank Mandiri'),
 (3, '009', 'Bank BNI'),
@@ -489,9 +489,9 @@ INSERT INTO `bank` (`id`, `code`, `name`) VALUES
 --
 
 --
--- Indexes for table `bank`
+-- Indexes for table `banks`
 --
-ALTER TABLE `bank`
+ALTER TABLE `banks`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -499,9 +499,9 @@ ALTER TABLE `bank`
 --
 
 --
--- AUTO_INCREMENT for table `bank`
+-- AUTO_INCREMENT for table `banks`
 --
-ALTER TABLE `bank`
+ALTER TABLE `banks`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=439;
 COMMIT;
 

@@ -13,6 +13,11 @@ use yii\db\ActiveRecord;
  */
 class Role extends ActiveRecord
 {
+    public static function tableName()
+    {
+        return '{{%roles}}';
+    }
+
     /**
      * Get users
      *
@@ -20,6 +25,6 @@ class Role extends ActiveRecord
      */
     public function getUsers(): ActiveQuery
     {
-        return $this->hasMany(User::class, ['role' => 'role']);
+        return $this->hasMany(User::class, ['role_id' => 'id']);
     }
 }

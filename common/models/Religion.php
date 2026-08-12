@@ -28,7 +28,7 @@ class Religion extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'religion';
+        return '{{%religions}}';
     }
 
     /**

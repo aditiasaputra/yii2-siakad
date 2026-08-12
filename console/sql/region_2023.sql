@@ -24,27 +24,27 @@ See the MIT License for more details
 copyright (c) 2016-2025 by cahya dsn; cahyadsn@gmail.com
 ================================================================================*/
 --
--- Table structure for table region
+-- Table structure for table regions
 --
 
-DROP TABLE IF EXISTS region;
-CREATE TABLE region (
+DROP TABLE IF EXISTS regions;
+CREATE TABLE regions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     kode VARCHAR(20) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     level ENUM('province', 'regency', 'district', 'village') NOT NULL,
     parent_kode VARCHAR(20) NULL,
-    FOREIGN KEY (parent_kode) REFERENCES region(kode)
+    FOREIGN KEY (parent_kode) REFERENCES regions(kode)
 );
 
-CREATE INDEX region_name_idx ON region (name);
+CREATE INDEX region_name_idx ON regions (name);
 
 --
--- Dumping data for table region
+-- Dumping data for table regions
 --
 
 -- Provinsi ACEH
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('11','ACEH'),
 ('11.01','KAB. ACEH SELATAN'),
@@ -6862,7 +6862,7 @@ VALUES
 ('11.75.05.2010','Darussalam');
 
 -- Provinsi SUMATERA UTARA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('12','SUMATERA UTARA'),
 ('12.01','KAB. TAPANULI TENGAH'),
@@ -13465,7 +13465,7 @@ VALUES
 ('12.78.06.2009','Ononamolo II Lot');
 
 -- Provinsi SUMATERA BARAT
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('13','SUMATERA BARAT'),
 ('13.01','KAB. PESISIR SELATAN'),
@@ -14933,7 +14933,7 @@ VALUES
 ('13.77.04.2016','Kajai');
 
 -- Provinsi RIAU
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('14','RIAU'),
 ('14.01','KAB. KAMPAR'),
@@ -16984,7 +16984,7 @@ VALUES
 ('14.72.07.1005','Bumi Ayu');
 
 -- Provinsi JAMBI
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('15','JAMBI'),
 ('15.01','KAB. KERINCI'),
@@ -18729,7 +18729,7 @@ VALUES
 ('15.72.08.2006','Sungai Ning');
 
 -- Provinsi SUMATERA SELATAN
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('16','SUMATERA SELATAN'),
 ('16.01','KAB. OGAN KOMERING ULU'),
@@ -22250,7 +22250,7 @@ VALUES
 ('16.74.06.2004','Tanjung Menang');
 
 -- Provinsi BENGKULU
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('17','BENGKULU'),
 ('17.01','KAB. BENGKULU SELATAN'),
@@ -23907,7 +23907,7 @@ VALUES
 ('17.71.09.1006','Lingkar Timur');
 
 -- Provinsi LAMPUNG
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('18','LAMPUNG'),
 ('18.01','KAB. LAMPUNG SELATAN'),
@@ -26807,7 +26807,7 @@ VALUES
 ('18.72.05.1004','Margodadi');
 
 -- Provinsi Kepulauan BANGKA BELITUNG
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('19','KEPULAUAN BANGKA BELITUNG'),
 ('19.01','KAB. BANGKA'),
@@ -27259,7 +27259,7 @@ VALUES
 ('19.71.07.1005','Semabung Baru');
 
 -- Provinsi KEPULAUAN RIAU
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('21','KEPULAUAN RIAU'),
 ('21.01','KAB. BINTAN'),
@@ -27770,7 +27770,7 @@ VALUES
 ('21.72.04.1005','Tanjung Unggat');
 
 -- Provinsi DKI JAKARTA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('31','DKI JAKARTA'),
 ('31.01','KAB. ADM. KEP. SERIBU'),
@@ -28092,7 +28092,7 @@ VALUES
 ('31.75.10.1008','Ceger');
 
 -- Provinsi JAWA BARAT
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('32','JAWA BARAT'),
 ('32.01','KAB. BOGOR'),
@@ -34708,7 +34708,7 @@ VALUES
 ('32.79.04.2006','Kujangsari');
 
 -- Provinsi JAWA TENGAH
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('33','JAWA TENGAH'),
 ('33.01','KAB. CILACAP'),
@@ -43887,7 +43887,7 @@ VALUES
 ('33.76.04.1007','Pesurungan Lor');
 
 -- Provinsi DAERAH ISTIMEWA YOGYAKARTA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('34','DAERAH ISTIMEWA YOGYAKARTA'),
 ('34.01','KAB. KULON PROGO'),
@@ -44413,7 +44413,7 @@ VALUES
 ('34.71.14.1003','Purbayan');
 
 -- Provinsi JAWA TIMUR
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('35','JAWA TIMUR'),
 ('35.01','KAB. PACITAN'),
@@ -53616,7 +53616,7 @@ VALUES
 ('35.79.03.2007','Torongrejo');
 
 -- Provinsi BANTEN
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('36','BANTEN'),
 ('36.01','KAB. PANDEGLANG'),
@@ -55336,7 +55336,7 @@ VALUES
 ('36.74.07.1006','Bakti Jaya ');
 
 -- Provinsi BALI
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('51','BALI'),
 ('51.01','KAB. JEMBRANA'),
@@ -56123,7 +56123,7 @@ VALUES
 ('51.71.04.2011','Peguyangan Kangin');
 
 -- Provinsi NUSA TENGGARA BARAT
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('52','NUSA TENGGARA BARAT'),
 ('52.01','KAB. LOMBOK BARAT'),
@@ -57421,7 +57421,7 @@ VALUES
 ('52.72.05.1010','Matakando');
 
 -- Provinsi NUSA TENGGARA TIMUR
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('53','NUSA TENGGARA TIMUR'),
 ('53.01','KAB. KUPANG'),
@@ -61205,7 +61205,7 @@ VALUES
 ('53.71.06.1010','Nefonaek');
 
 -- Provinsi KALIMANTAN BARAT
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('61','KALIMANTAN BARAT'),
 ('61.01','KAB. SAMBAS'),
@@ -63543,7 +63543,7 @@ VALUES
 ('61.72.05.1004','Pangmilang');
 
 -- Provinsi KALIMANTAN TENGAH
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('62','KALIMANTAN TENGAH'),
 ('62.01','KAB. KOTAWARINGIN BARAT'),
@@ -65269,7 +65269,7 @@ VALUES
 ('62.71.05.1007','Bukit Sua');
 
 -- Provinsi KALIMANTAN SELATAN
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('63','KALIMANTAN SELATAN'),
 ('63.01','KAB. TANAH LAUT'),
@@ -67459,7 +67459,7 @@ VALUES
 ('63.72.06.1004','Landasan Ulin Selatan');
 
 -- Provinsi KALIMANTAN TIMUR
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('64','KALIMANTAN TIMUR'),
 ('64.01','KAB. PASER'),
@@ -68617,7 +68617,7 @@ VALUES
 ('64.74.03.1003','Kanaan');
 
 -- Provinsi KALIMANTAN UTARA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('65','KALIMANTAN UTARA'),
 ('65.01','KAB. BULUNGAN'),
@@ -69164,7 +69164,7 @@ VALUES
 ('65.71.04.1003','Juata Kerikil');
 
 -- Provinsi SULAWESI UTARA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('71','SULAWESI UTARA'),
 ('71.01','KAB. BOLAANG MONGONDOW'),
@@ -71194,7 +71194,7 @@ VALUES
 ('71.74.04.1006','Mongkonai Barat');
 
 -- Provinsi SULAWESI TENGAH
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('72','SULAWESI TENGAH'),
 ('72.01','KAB. BANGGAI'),
@@ -73404,7 +73404,7 @@ VALUES
 ('72.71.08.1008','Talise Valangguni');
 
 -- Provinsi SULAWESI SELATAN
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('73','SULAWESI SELATAN'),
 ('73.01','KAB. KEPULAUAN SELAYAR'),
@@ -76805,7 +76805,7 @@ VALUES
 ('73.73.09.1005','Buntu Datu');
 
 -- Provinsi SULAWESI TENGGARA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('74','SULAWESI TENGGARA'),
 ('74.01','KAB. KOLAKA'),
@@ -79335,7 +79335,7 @@ VALUES
 ('74.72.08.1006','Nganganaumala');
 
 -- Provinsi GORONTALO
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('75','GORONTALO'),
 ('75.01','KAB. GORONTALO'),
@@ -80152,7 +80152,7 @@ VALUES
 ('75.71.09.1005','Siendeng');
 
 -- Provinsi SULAWESI BARAT
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('76','SULAWESI BARAT'),
 ('76.01','KAB. PASANGKAYU'),
@@ -80880,7 +80880,7 @@ VALUES
 ('76.06.05.2011','Sanjango');
 
 -- Provinsi MALUKU
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('81','MALUKU'),
 ('81.01','KAB. MALUKU TENGAH'),
@@ -82249,7 +82249,7 @@ VALUES
 ('81.72.05.2007','Niela');
 
 -- Provinsi MALUKU UTARA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('82','MALUKU UTARA'),
 ('82.01','KAB. HALMAHERA BARAT'),
@@ -83567,7 +83567,7 @@ VALUES
 ('82.72.08.1007','Jiko Cobo');
 
 -- Provinsi PAPUA
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('91','PAPUA'),
 ('91.03','KAB. JAYAPURA'),
@@ -84685,7 +84685,7 @@ VALUES
 ('91.71.05.2005','Waena');
 
 -- Provinsi PAPUA BARAT
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('92','PAPUA BARAT'),
 ('92.01','KAB. SORONG'),
@@ -86758,7 +86758,7 @@ VALUES
 ('92.71.10.1004','Tanjung Kasuari');
 
 -- Provinsi PAPUA SELATAN
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('93','PAPUA SELATAN'),
 ('93.01','KAB. MERAUKE'),
@@ -87539,7 +87539,7 @@ VALUES
 ('93.04.25.2006','Fakan/Ani');
 
 -- Provinsi PAPUA TENGAH
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('94','PAPUA TENGAH'),
 ('94.01','KAB. NABIRE'),
@@ -88891,7 +88891,7 @@ VALUES
 ('94.08.05.2005','Uwe Onagei');
 
 -- Provinsi PAPUA PEGUNUNGAN
-INSERT INTO region (kode, name)
+INSERT INTO regions (kode, name)
 VALUES
 ('95','PAPUA PEGUNUNGAN'),
 ('95.01','KAB. JAYAWIJAYA'),
@@ -91783,7 +91783,7 @@ VALUES
 ('95.08.32.2004','Pasir Putih');
 
 -- Update level berdasarkan pola kode
-UPDATE region SET
+UPDATE regions SET
     level = CASE
         WHEN kode REGEXP '^[0-9]+$' THEN 'province'
         WHEN kode REGEXP '^[0-9]+\.[0-9]+$' THEN 'regency'
@@ -91792,7 +91792,7 @@ UPDATE region SET
     END;
 
 -- Update parent_kode berdasarkan pola hierarki
-UPDATE region SET
+UPDATE regions SET
     parent_kode = CASE
         WHEN level = 'regency' THEN SUBSTRING_INDEX(kode, '.', 1)
         WHEN level = 'district' THEN SUBSTRING_INDEX(kode, '.', 2)

@@ -17,9 +17,9 @@ SET time_zone = "+00:00";
 --
 
 --
--- Dumping data for table `religion`
+-- Dumping data for table `religions`
 --
-CREATE TABLE religion (
+CREATE TABLE religions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     created_at INT UNSIGNED DEFAULT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE religion (
 );
 
 INSERT INTO 
-	`religion`
+	`religions`
 	(`id`, `name`, `created_at`, `updated_at`, `deleted_at`, `created_by`, `updated_by`, `deleted_by`)
 VALUES
 	(1, 'Islam', NULL, NULL, NULL, 1, 1, NULL),
