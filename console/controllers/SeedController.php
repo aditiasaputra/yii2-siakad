@@ -22,6 +22,16 @@ use backend\models\Rank;
 use backend\models\FunctionalPosition;
 use backend\models\StructuralPosition;
 use backend\models\Country;
+use backend\models\SubjectType;
+use backend\models\SubjectGroup;
+use backend\models\FieldOfStudy;
+use backend\models\CourseClass;
+use backend\models\TimeSlot;
+use backend\models\AttendanceStatus;
+use backend\models\CurriculumYear;
+use backend\models\Subject;
+use backend\models\StudyProgramCurriculum;
+use backend\models\SubjectPrerequisite;
 use backend\models\StudyProgram;
 use backend\models\UniversityEducationLevel;
 use Yii;
@@ -72,6 +82,66 @@ class SeedController extends Controller
         echo "Seed Negara selesai.\n";
     }
 
+    public function actionSubjectTypes()
+    {
+        $this->seedSubjectTypes();
+        echo "Seed Jenis Mata Kuliah selesai.\n";
+    }
+
+    public function actionSubjectGroups()
+    {
+        $this->seedSubjectGroups();
+        echo "Seed Kelompok Mata Kuliah selesai.\n";
+    }
+
+    public function actionFieldsOfStudy()
+    {
+        $this->seedFieldsOfStudy();
+        echo "Seed Bidang Ilmu selesai.\n";
+    }
+
+    public function actionCourseClasses()
+    {
+        $this->seedCourseClasses();
+        echo "Seed Kelas Perkuliahan selesai.\n";
+    }
+
+    public function actionTimeSlots()
+    {
+        $this->seedTimeSlots();
+        echo "Seed Slot Waktu selesai.\n";
+    }
+
+    public function actionAttendanceStatuses()
+    {
+        $this->seedAttendanceStatuses();
+        echo "Seed Status Hadir selesai.\n";
+    }
+
+    public function actionCurriculumYears()
+    {
+        $this->seedCurriculumYears();
+        echo "Seed Tahun Kurikulum selesai.\n";
+    }
+
+    public function actionSubjects()
+    {
+        $this->seedSubjects();
+        echo "Seed Mata Kuliah selesai.\n";
+    }
+
+    public function actionStudyProgramCurricula()
+    {
+        $this->seedStudyProgramCurricula();
+        echo "Seed Kurikulum Prodi selesai.\n";
+    }
+
+    public function actionSubjectPrerequisites()
+    {
+        $this->seedSubjectPrerequisites();
+        echo "Seed Prasyarat Mata Kuliah selesai.\n";
+    }
+
     private function seedData()
     {
         $faker = Factory::create('id_ID');
@@ -79,6 +149,10 @@ class SeedController extends Controller
         // Truncate all related tables
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
 
+        Yii::$app->db->createCommand()->truncateTable(SubjectPrerequisite::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(StudyProgramCurriculum::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable('subject_lecturers')->execute();
+        Yii::$app->db->createCommand()->truncateTable(Subject::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Concentration::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(LectureRoom::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(AcademicActivity::tableName())->execute();
@@ -96,6 +170,13 @@ class SeedController extends Controller
         Yii::$app->db->createCommand()->truncateTable(FunctionalPosition::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(StructuralPosition::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(Country::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(SubjectType::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(SubjectGroup::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(FieldOfStudy::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(CourseClass::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(TimeSlot::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(AttendanceStatus::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(CurriculumYear::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(StudyProgram::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(EducationLevel::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(UniversityEducationLevel::tableName())->execute();
@@ -247,6 +328,16 @@ class SeedController extends Controller
         $this->seedFunctionalPositions();
         $this->seedStructuralPositions();
         $this->seedCountries();
+        $this->seedSubjectTypes();
+        $this->seedSubjectGroups();
+        $this->seedFieldsOfStudy();
+        $this->seedCourseClasses();
+        $this->seedTimeSlots();
+        $this->seedAttendanceStatuses();
+        $this->seedCurriculumYears();
+        $this->seedSubjects();
+        $this->seedStudyProgramCurricula();
+        $this->seedSubjectPrerequisites();
         $this->seedConcentrations();
         $this->seedLectureSystems();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
@@ -837,6 +928,310 @@ class SeedController extends Controller
             $model = Country::findOne(['code' => $code]) ?? new Country(['code' => $code]);
             $model->name = $name;
             $this->saveSeedModel($model, "negara {$name}");
+        }
+    }
+
+    private function seedSubjectTypes(): void
+    {
+        $subjectTypes = [
+            ['A', 'Kuliah'],
+            ['B', 'Blok'],
+            ['KP', 'Kuliah dan Praktikum'],
+            ['MG', 'Magang Kerja'],
+            ['P', 'Praktikum'],
+            ['PK', 'Praktek Kerja'],
+            ['PS', 'Proposal Skripsi'],
+            ['S', 'Skripsi'],
+        ];
+
+        foreach ($subjectTypes as [$code, $name]) {
+            $model = SubjectType::findOne(['code' => $code]) ?? new SubjectType(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "jenis mata kuliah {$name}");
+        }
+    }
+
+    private function seedSubjectGroups(): void
+    {
+        $subjectGroups = [
+            ['KSG', 'Kosong'],
+            ['MBB', 'Mata Kuliah Berkehidupan Bermasyarakat'],
+            ['MKB', 'Mata Kuliah Keahlian Berkarya'],
+            ['MKK', 'Mata Kuliah Keilmuan dan Kepribadian'],
+            ['MKU', 'Mata Kuliah Umum'],
+            ['MPB', 'Mata Kuliah Perilaku Berkarya'],
+            ['MPK', 'Mata Kuliah Pengembangan Kepribadian'],
+        ];
+
+        foreach ($subjectGroups as [$code, $name]) {
+            $model = SubjectGroup::findOne(['code' => $code]) ?? new SubjectGroup(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "kelompok mata kuliah {$name}");
+        }
+    }
+
+    private function seedFieldsOfStudy(): void
+    {
+        $fields = [
+            ['ACC1', 'Accounting'],
+            ['FINC', 'Finance'],
+            ['MRKT', 'Marketing'],
+            ['ORG', 'Organization'],
+        ];
+
+        foreach ($fields as [$code, $name]) {
+            $model = FieldOfStudy::findOne(['code' => $code]) ?? new FieldOfStudy(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "bidang ilmu {$name}");
+        }
+    }
+
+    private function seedCourseClasses(): void
+    {
+        $classes = [
+            ['A', 'Kelas A'],
+            ['B', 'Kelas B'],
+            ['K', 'Kelas K'],
+            ['NA', 'Tidak Ada Kelas'],
+        ];
+
+        foreach ($classes as [$code, $name]) {
+            $model = CourseClass::findOne(['code' => $code]) ?? new CourseClass(['code' => $code]);
+            $model->name = $name;
+            $this->saveSeedModel($model, "kelas perkuliahan {$name}");
+        }
+    }
+
+    private function seedTimeSlots(): void
+    {
+        $times = [
+            '07:15', '07:30', '08:00', '08:15', '08:50', '09:00', '09:15', '09:40', '11:20',
+            '12:00', '12:15', '13:00', '14:40', '15:30', '17:10', '17:30',
+            '18:20', '18:30', '19:10', '20:00', '20:10', '20:50', '21:40', '22:30',
+        ];
+
+        foreach ($times as $time) {
+            $databaseTime = $time . ':00';
+            $model = TimeSlot::findOne(['time' => $databaseTime]) ?? new TimeSlot(['time' => $time]);
+            $model->time = $time;
+            $this->saveSeedModel($model, "slot waktu {$time}");
+        }
+    }
+
+    private function seedAttendanceStatuses(): void
+    {
+        $statuses = [
+            ['A', 'Alfa', false, true, true],
+            ['H', 'Hadir', true, true, true],
+            ['I', 'Izin', false, false, true],
+            ['S', 'Sakit', false, false, true],
+        ];
+
+        foreach ($statuses as [$code, $name, $countsAsPresent, $appliesToLecturers, $appliesToStudents]) {
+            $model = AttendanceStatus::findOne(['code' => $code]) ?? new AttendanceStatus(['code' => $code]);
+            $model->name = $name;
+            $model->counts_as_present = $countsAsPresent;
+            $model->applies_to_lecturers = $appliesToLecturers;
+            $model->applies_to_students = $appliesToStudents;
+            $this->saveSeedModel($model, "status hadir {$name}");
+        }
+    }
+
+    private function seedCurriculumYears(): void
+    {
+        for ($year = 2018; $year <= 2028; $year++) {
+            $model = CurriculumYear::findOne(['year' => $year]) ?? new CurriculumYear(['year' => $year]);
+            $model->description = $year === 2022 ? 'Kurikulum Berbasis KKNI' : "Kurikulum {$year}";
+            $this->saveSeedModel($model, "tahun kurikulum {$year}");
+        }
+    }
+
+    private function seedSubjects(): void
+    {
+        $curriculumId = CurriculumYear::find()->select('id')->where(['year' => 2028])->scalar();
+        $typeIds = SubjectType::find()->select('id')->indexBy('code')->column();
+        $groupIds = SubjectGroup::find()->select('id')->indexBy('code')->column();
+        $programs = StudyProgram::find()->orderBy('code')->all();
+        $lecturerIds = Lecture::find()->select('id')->orderBy('id')->column();
+
+        if (!$curriculumId || !$programs || !isset($typeIds['A'], $typeIds['KP'], $groupIds['MKK'], $groupIds['MKB'])) {
+            echo "Seed Mata Kuliah dilewati karena data relasi belum lengkap.\n";
+            return;
+        }
+
+        $courseTemplates = [
+            ['Landasan Keilmuan', 'Scientific Foundations', 2],
+            ['Teori dan Konsep', 'Theory and Concepts', 3],
+            ['Metode dan Analisis', 'Methods and Analysis', 3],
+            ['Praktik Profesional', 'Professional Practice', 2],
+            ['Teknologi Terapan', 'Applied Technology', 3],
+            ['Proyek Terintegrasi', 'Integrated Project', 4],
+            ['Seminar Akademik', 'Academic Seminar', 1],
+            ['Studi Pilihan', 'Elective Study', 2],
+        ];
+
+        $subjectIndex = 0;
+        foreach ($programs as $program) {
+            $prefix = strtoupper(preg_replace('/[^A-Z0-9]/', '', $program->nim_prefix ?: $program->short_name ?: $program->code));
+            $prefix = substr($prefix, 0, 8) ?: 'PRODI';
+            for ($semester = 1; $semester <= 8; $semester++) {
+                $courseCount = $semester <= 6 ? 8 : ($semester === 7 ? 5 : 3);
+                foreach (array_slice($courseTemplates, 0, $courseCount) as $sequence => [$templateName, $templateNameEn, $credits]) {
+                    $number = $sequence + 1;
+                    $code = sprintf('%s-S%02d-%02d', $prefix, $semester, $number);
+                    $name = "{$templateName} {$program->name} {$semester}.{$number}";
+                    $nameEn = "{$templateNameEn} {$program->name_en} {$semester}.{$number}";
+                    $isPracticum = $number >= 5;
+                    $model = Subject::findOne(['curriculum_year_id' => $curriculumId, 'code' => $code]) ?? new Subject();
+                    $model->setAttributes([
+                        'curriculum_year_id' => $curriculumId, 'code' => $code, 'name' => $name, 'name_en' => $nameEn,
+                        'subject_type_id' => $typeIds[$isPracticum ? 'KP' : 'A'],
+                        'subject_group_id' => $groupIds[$isPracticum ? 'MKB' : 'MKK'],
+                        'study_program_id' => $program->id, 'credits' => $credits,
+                        'face_to_face_credits' => $isPracticum ? max(1, $credits - 1) : $credits,
+                        'practicum_credits' => $isPracticum && $credits > 1 ? 1 : 0,
+                        'lab_credits' => 0, 'ksk_credits' => 0, 'pbl_credits' => 0,
+                        'syllabus' => "Silabus {$name}",
+                    ]);
+                    if (!$model->save()) {
+                        echo "Gagal menyimpan mata kuliah {$name}:\n";
+                        print_r($model->errors);
+                        continue;
+                    }
+                    Yii::$app->db->createCommand()->delete('subject_lecturers', ['subject_id' => $model->id])->execute();
+                    if ($lecturerIds) {
+                        Yii::$app->db->createCommand()->insert('subject_lecturers', [
+                            'subject_id' => $model->id,
+                            'lecturer_id' => $lecturerIds[$subjectIndex % count($lecturerIds)],
+                        ])->execute();
+                    }
+                    $subjectIndex++;
+                }
+            }
+        }
+    }
+
+    private function seedStudyProgramCurricula(): void
+    {
+        $subjects = Subject::find()->with('curriculumYear')->orderBy('code')->all();
+        $semesterCredits = [];
+        foreach ($subjects as $index => $subject) {
+            $isGenerated = preg_match('/-S(0[1-8])-(0[1-8])$/', $subject->code, $matches);
+            if ($isGenerated) {
+                $semester = (int) $matches[1];
+                $sequence = (int) $matches[2];
+                $allowedCourseCount = $semester <= 6 ? 8 : ($semester === 7 ? 5 : 3);
+                if ($sequence > $allowedCourseCount) {
+                    $obsolete = StudyProgramCurriculum::findOne([
+                        'study_program_id' => $subject->study_program_id,
+                        'curriculum_year_id' => $subject->curriculum_year_id,
+                        'subject_id' => $subject->id,
+                    ]);
+                    if ($obsolete) {
+                        $obsolete->delete();
+                    }
+                    continue;
+                }
+            } else {
+                $semester = ($index % 2) + 1;
+            }
+            $creditKey = $subject->study_program_id . ':' . $subject->curriculum_year_id . ':' . $semester;
+            $currentCredits = $semesterCredits[$creditKey] ?? (float) StudyProgramCurriculum::find()
+                ->alias('spc')->joinWith('subject s')->where([
+                    'spc.study_program_id' => $subject->study_program_id,
+                    'spc.curriculum_year_id' => $subject->curriculum_year_id,
+                    'spc.semester' => $semester,
+                ])->sum('s.credits');
+            $existing = StudyProgramCurriculum::findOne([
+                'study_program_id' => $subject->study_program_id,
+                'curriculum_year_id' => $subject->curriculum_year_id,
+                'subject_id' => $subject->id,
+            ]);
+            if (!$existing && $currentCredits + (float) $subject->credits > 23) {
+                echo "Mata kuliah {$subject->code} dilewati: total semester {$semester} akan melebihi 23 SKS.\n";
+                continue;
+            }
+            $model = StudyProgramCurriculum::findOne([
+                'study_program_id' => $subject->study_program_id,
+                'curriculum_year_id' => $subject->curriculum_year_id,
+                'subject_id' => $subject->id,
+            ]) ?? new StudyProgramCurriculum();
+            $model->setAttributes([
+                'study_program_id' => $subject->study_program_id,
+                'curriculum_year_id' => $subject->curriculum_year_id,
+                'subject_id' => $subject->id,
+                'semester' => $semester,
+                'minimum_grade' => 'E',
+                'is_mandatory' => true,
+                'is_package' => $index < 6,
+                'minimum_credits' => 0,
+            ]);
+            $this->saveSeedModel($model, "kurikulum prodi {$subject->code}");
+            $semesterCredits[$creditKey] = $existing ? $currentCredits : $currentCredits + (float) $subject->credits;
+        }
+
+        $violations = (new \yii\db\Query())->select(['spc.study_program_id', 'spc.curriculum_year_id', 'spc.semester', 'total_credits' => 'SUM(s.credits)'])
+            ->from(['spc' => StudyProgramCurriculum::tableName()])->innerJoin(['s' => Subject::tableName()], 's.id = spc.subject_id')
+            ->groupBy(['spc.study_program_id', 'spc.curriculum_year_id', 'spc.semester'])->having(['>', 'SUM(s.credits)', 23])->all();
+        if ($violations) {
+            throw new \RuntimeException('Seeder Kurikulum Prodi menghasilkan semester dengan total lebih dari 23 SKS.');
+        }
+    }
+
+    private function seedSubjectPrerequisites(): void
+    {
+        $curricula = [];
+        $generatedCurricula = [];
+        foreach (StudyProgramCurriculum::find()->with('subject')->all() as $curriculum) {
+            $curricula[$curriculum->subject->code] = $curriculum;
+            if (preg_match('/-S(0[1-8])-(0[1-7])$/', $curriculum->subject->code, $matches)) {
+                $generatedCurricula[$curriculum->study_program_id][(int) $matches[1]][(int) $matches[2]] = $curriculum;
+            }
+        }
+        $prerequisites = [
+            ['IF202803', 'IF202802', 'passed', 'C'],
+            ['IF202804', 'IF202801', 'passed', 'C'],
+            ['IF202805', 'IF202802', 'passed', 'D'],
+            ['SI202803', 'SI202801', 'passed', 'C'],
+            ['SI202805', 'SI202804', 'passed', 'C'],
+        ];
+
+        foreach ($prerequisites as [$courseCode, $prerequisiteCode, $type, $minimumGrade]) {
+            if (!isset($curricula[$courseCode], $curricula[$prerequisiteCode])) { continue; }
+            $model = SubjectPrerequisite::findOne([
+                'course_curriculum_id' => $curricula[$courseCode]->id,
+                'prerequisite_curriculum_id' => $curricula[$prerequisiteCode]->id,
+            ]) ?? new SubjectPrerequisite();
+            $model->setAttributes([
+                'course_curriculum_id' => $curricula[$courseCode]->id,
+                'prerequisite_curriculum_id' => $curricula[$prerequisiteCode]->id,
+                'requirement_type' => $type,
+                'minimum_grade' => $minimumGrade,
+            ]);
+            $this->saveSeedModel($model, "prasyarat {$courseCode} - {$prerequisiteCode}");
+        }
+
+        foreach ($generatedCurricula as $programId => $semesters) {
+            for ($semester = 2; $semester <= 8; $semester++) {
+                foreach ([1, 2] as $sequence) {
+                    if (!isset($semesters[$semester][$sequence], $semesters[$semester - 1][$sequence])) {
+                        continue;
+                    }
+                    $course = $semesters[$semester][$sequence];
+                    $prerequisite = $semesters[$semester - 1][$sequence];
+                    $model = SubjectPrerequisite::findOne([
+                        'course_curriculum_id' => $course->id,
+                        'prerequisite_curriculum_id' => $prerequisite->id,
+                    ]) ?? new SubjectPrerequisite();
+                    $model->setAttributes([
+                        'course_curriculum_id' => $course->id,
+                        'prerequisite_curriculum_id' => $prerequisite->id,
+                        'requirement_type' => 'passed',
+                        'minimum_grade' => 'C',
+                    ]);
+                    $this->saveSeedModel($model, "prasyarat {$course->subject->code} - {$prerequisite->subject->code}");
+                }
+            }
         }
     }
 
