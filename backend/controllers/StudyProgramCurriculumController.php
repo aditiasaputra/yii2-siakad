@@ -34,11 +34,6 @@ class StudyProgramCurriculumController extends Controller
         $studyProgramId = $study_program_id ?: ($defaultEntry ? $defaultEntry->study_program_id : array_key_first($studyPrograms));
         $curriculumYearId = $curriculum_year_id ?: ($defaultEntry && (string)$defaultEntry->study_program_id === (string)$studyProgramId ? $defaultEntry->curriculum_year_id : array_key_first($curriculumYears));
 
-        $model = new StudyProgramCurriculum([
-            'study_program_id' => $studyProgramId, 'curriculum_year_id' => $curriculumYearId,
-            'minimum_grade' => 'E', 'is_mandatory' => true, 'is_package' => false,
-        ]);
-        $subjects = $this->subjectOptions($studyProgramId, $curriculumYearId);
         $entries = StudyProgramCurriculum::find()->with('subject')
             ->where(['study_program_id' => $studyProgramId, 'curriculum_year_id' => $curriculumYearId])
             ->orderBy(['semester' => SORT_ASC, 'id' => SORT_ASC])->all();
@@ -46,18 +41,21 @@ class StudyProgramCurriculumController extends Controller
         foreach ($entries as $entry) {
             $bySemester[$entry->semester][] = $entry;
         }
-        return $this->render('index', compact('model', 'studyPrograms', 'curriculumYears', 'subjects', 'bySemester', 'studyProgramId', 'curriculumYearId'));
+        return $this->render('index', compact('studyPrograms', 'curriculumYears', 'bySemester', 'studyProgramId', 'curriculumYearId'));
     }
 
-    public function actionCreate()
+    public function actionCreate($study_program_id = null, $curriculum_year_id = null)
     {
-        $model = new StudyProgramCurriculum();
+        $model = new StudyProgramCurriculum(['minimum_grade' => 'E', 'is_mandatory' => true, 'is_package' => false]);
+        if (!Yii::$app->request->isPost) {
+            $model->study_program_id = $study_program_id ?: StudyProgram::find()->select('id')->orderBy('name')->scalar();
+            $model->curriculum_year_id = $curriculum_year_id ?: CurriculumYear::find()->select('id')->orderBy(['year' => SORT_DESC])->scalar();
+        }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Mata kuliah berhasil ditambahkan ke Kurikulum Prodi.');
-        } else {
-            Yii::$app->session->setFlash('error', implode(' ', $model->getFirstErrors()));
+            return $this->redirect(['index', 'study_program_id' => $model->study_program_id, 'curriculum_year_id' => $model->curriculum_year_id]);
         }
-        return $this->redirect(['index', 'study_program_id' => $model->study_program_id, 'curriculum_year_id' => $model->curriculum_year_id]);
+        return $this->render('create', ['model' => $model, 'subjects' => $this->subjectOptions($model->study_program_id, $model->curriculum_year_id)]);
     }
 
     public function actionView($id)
@@ -70,7 +68,7 @@ class StudyProgramCurriculumController extends Controller
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Data Kurikulum Prodi berhasil diperbarui.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index', 'study_program_id' => $model->study_program_id, 'curriculum_year_id' => $model->curriculum_year_id]);
         }
         return $this->render('update', [
             'model' => $model,
@@ -83,6 +81,9 @@ class StudyProgramCurriculumController extends Controller
         $model = $this->findModel($id);
         $params = ['index', 'study_program_id' => $model->study_program_id, 'curriculum_year_id' => $model->curriculum_year_id];
         $model->delete();
+        if (Yii::$app->request->isAjax) {
+            return $this->asJson(['success' => true, 'message' => 'Data Kurikulum Prodi berhasil dihapus.']);
+        }
         Yii::$app->session->setFlash('success', 'Data Kurikulum Prodi berhasil dihapus.');
         return $this->redirect($params);
     }

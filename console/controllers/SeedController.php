@@ -32,6 +32,7 @@ use backend\models\CurriculumYear;
 use backend\models\Subject;
 use backend\models\StudyProgramCurriculum;
 use backend\models\SubjectPrerequisite;
+use backend\models\SubjectEquivalence;
 use backend\models\StudyProgram;
 use backend\models\UniversityEducationLevel;
 use Yii;
@@ -142,6 +143,12 @@ class SeedController extends Controller
         echo "Seed Prasyarat Mata Kuliah selesai.\n";
     }
 
+    public function actionSubjectEquivalences()
+    {
+        $this->seedSubjectEquivalences();
+        echo "Seed Ekivalensi Mata Kuliah selesai.\n";
+    }
+
     private function seedData()
     {
         $faker = Factory::create('id_ID');
@@ -149,6 +156,7 @@ class SeedController extends Controller
         // Truncate all related tables
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
 
+        Yii::$app->db->createCommand()->truncateTable(SubjectEquivalence::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(SubjectPrerequisite::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(StudyProgramCurriculum::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable('subject_lecturers')->execute();
@@ -338,6 +346,7 @@ class SeedController extends Controller
         $this->seedSubjects();
         $this->seedStudyProgramCurricula();
         $this->seedSubjectPrerequisites();
+        $this->seedSubjectEquivalences();
         $this->seedConcentrations();
         $this->seedLectureSystems();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
@@ -1232,6 +1241,71 @@ class SeedController extends Controller
                     $this->saveSeedModel($model, "prasyarat {$course->subject->code} - {$prerequisite->subject->code}");
                 }
             }
+        }
+    }
+
+    private function seedSubjectEquivalences(): void
+    {
+        $newYearId = CurriculumYear::find()->select('id')->where(['year' => 2028])->scalar();
+        $oldYearId = CurriculumYear::find()->select('id')->where(['year' => 2027])->scalar();
+        if (!$newYearId || !$oldYearId) {
+            echo "Seed Ekivalensi Mata Kuliah dilewati karena Kurikulum 2028 atau 2027 tidak ditemukan.\n";
+            return;
+        }
+
+        $newSubjects = Subject::find()->where(['curriculum_year_id' => $newYearId])->orderBy(['study_program_id' => SORT_ASC, 'code' => SORT_ASC])->all();
+        foreach ($newSubjects as $newSubject) {
+            $oldSubject = Subject::findOne([
+                'curriculum_year_id' => $oldYearId,
+                'study_program_id' => $newSubject->study_program_id,
+                'code' => $newSubject->code,
+            ]);
+            if (!$oldSubject) {
+                $oldSubject = new Subject($newSubject->getAttributes([
+                    'code', 'name', 'name_en', 'subject_type_id', 'subject_group_id', 'credits',
+                    'face_to_face_credits', 'practicum_credits', 'lab_credits', 'ksk_credits', 'pbl_credits',
+                    'mku', 'sap', 'syllabus', 'teaching_material', 'module',
+                ]));
+                $oldSubject->curriculum_year_id = $oldYearId;
+                $oldSubject->study_program_id = $newSubject->study_program_id;
+                if (!$oldSubject->save()) {
+                    echo "Gagal membuat Mata Kuliah lama {$newSubject->code}:\n";
+                    print_r($oldSubject->errors);
+                    continue;
+                }
+                foreach ($newSubject->getLecturers()->select('lectures.id')->column() as $lecturerId) {
+                    Yii::$app->db->createCommand()->insert('subject_lecturers', ['subject_id' => $oldSubject->id, 'lecturer_id' => $lecturerId])->execute();
+                }
+            }
+
+            $newCurriculum = StudyProgramCurriculum::findOne([
+                'study_program_id' => $newSubject->study_program_id,
+                'curriculum_year_id' => $newYearId,
+                'subject_id' => $newSubject->id,
+            ]);
+            if ($newCurriculum && !StudyProgramCurriculum::find()->where([
+                'study_program_id' => $newSubject->study_program_id,
+                'curriculum_year_id' => $oldYearId,
+                'subject_id' => $oldSubject->id,
+            ])->exists()) {
+                $oldCurriculum = new StudyProgramCurriculum($newCurriculum->getAttributes([
+                    'semester', 'minimum_grade', 'is_mandatory', 'is_package', 'topic', 'basic_competencies', 'minimum_credits',
+                ]));
+                $oldCurriculum->study_program_id = $newSubject->study_program_id;
+                $oldCurriculum->curriculum_year_id = $oldYearId;
+                $oldCurriculum->subject_id = $oldSubject->id;
+                $this->saveSeedModel($oldCurriculum, "kurikulum lama {$oldSubject->code}");
+            }
+
+            $equivalence = SubjectEquivalence::findOne(['new_subject_id' => $newSubject->id, 'old_subject_id' => $oldSubject->id]) ?? new SubjectEquivalence();
+            $equivalence->setAttributes([
+                'study_program_id' => $newSubject->study_program_id,
+                'new_curriculum_year_id' => $newYearId,
+                'old_curriculum_year_id' => $oldYearId,
+                'new_subject_id' => $newSubject->id,
+                'old_subject_id' => $oldSubject->id,
+            ]);
+            $this->saveSeedModel($equivalence, "ekivalensi {$newSubject->code} 2028-2027");
         }
     }
 

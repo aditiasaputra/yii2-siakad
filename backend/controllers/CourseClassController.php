@@ -55,6 +55,9 @@ class CourseClassController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        if (Yii::$app->request->isAjax) {
+            return $this->asJson(['success' => true, 'message' => 'Kelas Perkuliahan berhasil dihapus.']);
+        }
         Yii::$app->session->setFlash('success', 'Kelas Perkuliahan berhasil dihapus.');
         return $this->redirect(['index']);
     }

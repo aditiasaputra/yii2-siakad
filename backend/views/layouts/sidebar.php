@@ -188,6 +188,7 @@ $isRegionMenu = $controllerId === 'region';
                     ['label' => 'Mata Kuliah', 'icon' => 'fas fa-book', 'url' => ['subject/index'], 'active' => Yii::$app->controller->id === 'subject'],
                     ['label' => 'Kurikulum Prodi', 'icon' => 'fas fa-graduation-cap', 'url' => ['study-program-curriculum/index'], 'active' => Yii::$app->controller->id === 'study-program-curriculum'],
                     ['label' => 'Prasyarat Mata Kuliah', 'icon' => 'fas fa-project-diagram', 'url' => ['subject-prerequisite/index'], 'active' => Yii::$app->controller->id === 'subject-prerequisite'],
+                    ['label' => 'Ekivalensi Mata Kuliah', 'icon' => 'fas fa-exchange-alt', 'url' => ['subject-equivalence/index'], 'active' => Yii::$app->controller->id === 'subject-equivalence'],
                     ['label' => 'LAINNYA', 'header' => true],
                     [
                         'label' => 'About us',

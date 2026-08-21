@@ -12,7 +12,7 @@ use yii\helpers\Html;
             <td>
                 <?= Html::a('<i class="fas fa-cogs"></i>', ['subject-prerequisite/index', 'study_program_id' => $entry->study_program_id, 'curriculum_year_id' => $entry->curriculum_year_id, 'course_curriculum_id' => $entry->id], ['class' => 'btn btn-sm btn-warning', 'title' => 'Lihat Prasyarat']) ?>
                 <?= Html::a('<i class="fas fa-edit"></i>', ['update', 'id' => $entry->id], ['class' => 'btn btn-sm btn-primary', 'title' => 'Edit']) ?>
-                <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $entry->id], ['class' => 'btn btn-sm btn-danger', 'title' => 'Hapus', 'data' => ['confirm' => 'Hapus mata kuliah dari kurikulum prodi?', 'method' => 'post']]) ?>
+                <?= Html::button('<i class="fas fa-trash"></i>', ['class' => 'btn btn-sm btn-danger js-delete-curriculum', 'title' => 'Hapus', 'data-url' => \yii\helpers\Url::to(['delete', 'id' => $entry->id])]) ?>
             </td>
         </tr><?php endforeach; ?>
         </tbody>

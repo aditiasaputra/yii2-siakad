@@ -33,27 +33,33 @@ class SubjectPrerequisiteController extends Controller
         $defaultEntry = StudyProgramCurriculum::find()->joinWith('curriculumYear')->orderBy(['curriculum_years.year' => SORT_DESC, 'study_program_id' => SORT_ASC])->one();
         $studyProgramId = $study_program_id ?: ($defaultEntry ? $defaultEntry->study_program_id : array_key_first($studyPrograms));
         $curriculumYearId = $curriculum_year_id ?: ($defaultEntry && (string)$defaultEntry->study_program_id === (string)$studyProgramId ? $defaultEntry->curriculum_year_id : array_key_first($curriculumYears));
-        $curriculumOptions = $this->curriculumOptions($studyProgramId, $curriculumYearId);
-
-        $model = new SubjectPrerequisite(['course_curriculum_id' => $course_curriculum_id, 'requirement_type' => 'passed']);
         $curriculumIds = StudyProgramCurriculum::find()->select('id')->where(['study_program_id' => $studyProgramId, 'curriculum_year_id' => $curriculumYearId])->column();
         $entries = SubjectPrerequisite::find()->with(['courseCurriculum.subject', 'prerequisiteCurriculum.subject'])
             ->where(['course_curriculum_id' => $curriculumIds])->all();
         usort($entries, static fn($a, $b) => strcmp($a->courseCurriculum->subject->code, $b->courseCurriculum->subject->code));
 
-        return $this->render('index', compact('model', 'entries', 'studyPrograms', 'curriculumYears', 'curriculumOptions', 'studyProgramId', 'curriculumYearId'));
+        return $this->render('index', compact('entries', 'studyPrograms', 'curriculumYears', 'studyProgramId', 'curriculumYearId'));
     }
 
-    public function actionCreate()
+    public function actionCreate($study_program_id = null, $curriculum_year_id = null, $course_curriculum_id = null)
     {
-        $model = new SubjectPrerequisite();
+        $model = new SubjectPrerequisite(['requirement_type' => 'passed']);
+        if (!Yii::$app->request->isPost) {
+            $defaultEntry = StudyProgramCurriculum::find()->joinWith('curriculumYear')->orderBy(['curriculum_years.year' => SORT_DESC, 'study_program_curricula.study_program_id' => SORT_ASC])->one();
+            $study_program_id = $study_program_id ?: ($defaultEntry->study_program_id ?? null);
+            $curriculum_year_id = $curriculum_year_id ?: ($defaultEntry->curriculum_year_id ?? null);
+            $model->course_curriculum_id = $course_curriculum_id;
+        } else {
+            $model->load(Yii::$app->request->post());
+            $course = StudyProgramCurriculum::findOne($model->course_curriculum_id);
+            $study_program_id = $course->study_program_id ?? null;
+            $curriculum_year_id = $course->curriculum_year_id ?? null;
+        }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Prasyarat Mata Kuliah berhasil ditambahkan.');
-        } else {
-            Yii::$app->session->setFlash('error', implode(' ', $model->getFirstErrors()));
+            return $this->redirect(['index', 'study_program_id' => $study_program_id, 'curriculum_year_id' => $curriculum_year_id, 'course_curriculum_id' => $model->course_curriculum_id]);
         }
-        $course = StudyProgramCurriculum::findOne($model->course_curriculum_id);
-        return $this->redirect(['index', 'study_program_id' => $course ? $course->study_program_id : null, 'curriculum_year_id' => $course ? $course->curriculum_year_id : null, 'course_curriculum_id' => $model->course_curriculum_id]);
+        return $this->render('create', ['model' => $model, 'curriculumOptions' => $this->curriculumOptions($study_program_id, $curriculum_year_id), 'studyProgramId' => $study_program_id, 'curriculumYearId' => $curriculum_year_id]);
     }
 
     public function actionView($id)
@@ -67,9 +73,15 @@ class SubjectPrerequisiteController extends Controller
         $options = $this->curriculumOptions($model->courseCurriculum->study_program_id, $model->courseCurriculum->curriculum_year_id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Prasyarat Mata Kuliah berhasil diperbarui.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            $course = StudyProgramCurriculum::findOne($model->course_curriculum_id);
+            return $this->redirect(['index', 'study_program_id' => $course->study_program_id, 'curriculum_year_id' => $course->curriculum_year_id]);
         }
-        return $this->render('update', ['model' => $model, 'curriculumOptions' => $options]);
+        return $this->render('update', [
+            'model' => $model,
+            'curriculumOptions' => $options,
+            'studyProgramId' => $model->courseCurriculum->study_program_id,
+            'curriculumYearId' => $model->courseCurriculum->curriculum_year_id,
+        ]);
     }
 
     public function actionDelete($id)
@@ -77,6 +89,9 @@ class SubjectPrerequisiteController extends Controller
         $model = $this->findModel($id);
         $course = $model->courseCurriculum;
         $model->delete();
+        if (Yii::$app->request->isAjax) {
+            return $this->asJson(['success' => true, 'message' => 'Prasyarat Mata Kuliah berhasil dihapus.']);
+        }
         Yii::$app->session->setFlash('success', 'Prasyarat Mata Kuliah berhasil dihapus.');
         return $this->redirect(['index', 'study_program_id' => $course->study_program_id, 'curriculum_year_id' => $course->curriculum_year_id]);
     }
@@ -85,6 +100,9 @@ class SubjectPrerequisiteController extends Controller
     {
         $ids = StudyProgramCurriculum::find()->select('id')->where(['study_program_id' => $study_program_id, 'curriculum_year_id' => $curriculum_year_id])->column();
         $count = $ids ? SubjectPrerequisite::deleteAll(['course_curriculum_id' => $ids]) : 0;
+        if (Yii::$app->request->isAjax) {
+            return $this->asJson(['success' => true, 'message' => "{$count} prasyarat berhasil dihapus."]);
+        }
         Yii::$app->session->setFlash('success', "{$count} prasyarat berhasil dihapus.");
         return $this->redirect(['index', 'study_program_id' => $study_program_id, 'curriculum_year_id' => $curriculum_year_id]);
     }
