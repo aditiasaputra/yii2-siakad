@@ -1,0 +1,2 @@
+<?php use yii\helpers\Html;$this->title='Laporan Jadwal Mingguan';?>
+<div class="d-flex justify-content-between mb-3"><h1><?=$this->title?></h1><div><?=Html::a('<i class="fas fa-arrow-left"></i> Kembali',['index'],['class'=>'btn btn-primary'])?> <?=Html::a('<i class="fas fa-file-pdf"></i> Cetak PDF',['print']+$filter->attributes,['class'=>'btn btn-danger','target'=>'_blank'])?></div></div><?=$this->render('_report',compact('filter','program','student','classes','university'))?>

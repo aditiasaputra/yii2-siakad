@@ -33,6 +33,13 @@ use backend\models\Subject;
 use backend\models\StudyProgramCurriculum;
 use backend\models\SubjectPrerequisite;
 use backend\models\SubjectEquivalence;
+use backend\models\LectureClass;
+use backend\models\LectureClassMeeting;
+use backend\models\KrsBlock;
+use backend\models\StudyProgramSetting;
+use backend\models\StudentSemesterStatus;
+use backend\models\KrsRegistration;
+use backend\models\KrsRegistrationItem;
 use backend\models\StudyProgram;
 use backend\models\UniversityEducationLevel;
 use Yii;
@@ -51,6 +58,42 @@ class SeedController extends Controller
     public function actionMain()
     {
         $this->seedData();
+    }
+
+    public function actionLectureClasses()
+    {
+        $this->seedLectureClasses();
+        echo "Seed Kelas Kuliah selesai.\n";
+    }
+
+    public function actionWeeklyScheduleReport()
+    {
+        $this->seedLectureClasses();
+        echo "Seed Laporan Jadwal Mingguan selesai.\n";
+    }
+
+    public function actionKrsBlocks()
+    {
+        $this->seedKrsBlocks();
+        echo "Seed Cekal KRS selesai.\n";
+    }
+
+    public function actionStudyProgramSettings()
+    {
+        $this->seedStudyProgramSettings();
+        echo "Seed Pengaturan Prodi selesai.\n";
+    }
+
+    public function actionStudentSemesterStatuses()
+    {
+        $this->seedStudentSemesterStatuses();
+        echo "Seed Status Semester selesai.\n";
+    }
+
+    public function actionKrsRegistrations()
+    {
+        $this->seedKrsRegistrations();
+        echo "Seed Proses KRS selesai.\n";
     }
 
     public function actionEmployeeTypes()
@@ -155,6 +198,15 @@ class SeedController extends Controller
 
         // Truncate all related tables
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
+        Yii::$app->db->createCommand()->truncateTable(KrsRegistrationItem::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(KrsRegistration::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(StudentSemesterStatus::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(StudyProgramSetting::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(KrsBlock::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable(LectureClassMeeting::tableName())->execute();
+        Yii::$app->db->createCommand()->truncateTable('lecture_class_schedules')->execute();
+        Yii::$app->db->createCommand()->truncateTable('lecture_class_lecturers')->execute();
+        Yii::$app->db->createCommand()->truncateTable(LectureClass::tableName())->execute();
 
         Yii::$app->db->createCommand()->truncateTable(SubjectEquivalence::tableName())->execute();
         Yii::$app->db->createCommand()->truncateTable(SubjectPrerequisite::tableName())->execute();
@@ -347,8 +399,13 @@ class SeedController extends Controller
         $this->seedStudyProgramCurricula();
         $this->seedSubjectPrerequisites();
         $this->seedSubjectEquivalences();
-        $this->seedConcentrations();
         $this->seedLectureSystems();
+        $this->seedLectureClasses();
+        $this->seedKrsBlocks();
+        $this->seedStudyProgramSettings();
+        $this->seedStudentSemesterStatuses();
+        $this->seedKrsRegistrations();
+        $this->seedConcentrations();
         Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
 
         echo "\n✅ Seed selesai.\n";
@@ -1343,6 +1400,90 @@ class SeedController extends Controller
                 'code' => $code,
                 'name' => $name,
             ]), "sistem kuliah {$name}");
+        }
+    }
+
+    private function seedLectureClasses(): void
+    {
+        $period = AcademicCalendar::find()->select('period')->orderBy(['period' => SORT_DESC])->scalar() ?: date('Y') . '/' . (date('Y') + 1) . ' Ganjil';
+        $startDate = AcademicCalendar::find()->where(['period' => $period])->min('start_date') ?: date('Y-m-d');
+        $endDate = AcademicCalendar::find()->where(['period' => $period])->max('end_date') ?: date('Y-m-d', strtotime('+5 months'));
+        $systemId = LectureSystem::find()->select('id')->orderBy('id')->scalar();
+        $classIds = CourseClass::find()->select('id')->orderBy('id')->column();
+        $lecturerIds = Lecture::find()->select('id')->orderBy('id')->column();
+        $slots = TimeSlot::find()->orderBy('time')->limit(2)->all();
+        foreach (StudyProgram::find()->all() as $program) {
+            $latestCurriculumYearId = StudyProgramCurriculum::find()->where(['study_program_id' => $program->id])->max('curriculum_year_id');
+            $curricula = StudyProgramCurriculum::find()->with('subject')->where(['study_program_id' => $program->id, 'curriculum_year_id' => $latestCurriculumYearId])->orderBy(['semester' => SORT_ASC, 'id' => SORT_ASC])->all();
+            foreach ($curricula as $index => $curriculum) {
+                $model = LectureClass::findOne(['academic_period' => $period, 'study_program_curriculum_id' => $curriculum->id, 'name' => 'A']) ?? new LectureClass();
+                $model->setAttributes(['academic_period' => $period, 'study_program_curriculum_id' => $curriculum->id, 'course_class_id' => $classIds ? $classIds[$index % count($classIds)] : null, 'lecture_system_id' => $systemId, 'name' => 'A', 'capacity' => 30 + (($index % 3) * 10), 'start_date' => $startDate, 'end_date' => $endDate, 'meeting_count' => 16, 'contract_content' => '<p>Perkuliahan dilaksanakan sesuai jadwal. Mahasiswa wajib mengikuti kegiatan, mengerjakan tugas, dan menaati tata tertib akademik.</p>']);
+                if (!$model->save()) { $this->saveSeedModel($model, 'kelas kuliah ' . $curriculum->subject->code); continue; }
+                Yii::$app->db->createCommand()->delete('lecture_class_lecturers', ['lecture_class_id' => $model->id])->execute();
+                if ($lecturerIds) Yii::$app->db->createCommand()->insert('lecture_class_lecturers', ['lecture_class_id' => $model->id, 'lecturer_id' => $lecturerIds[$index % count($lecturerIds)], 'is_coordinator' => 1])->execute();
+                Yii::$app->db->createCommand()->delete('lecture_class_schedules', ['lecture_class_id' => $model->id])->execute();
+                $roomId = LectureRoom::find()->where(['study_program_id' => $program->id])->select('id')->scalar() ?: null;
+                if (count($slots) >= 2) Yii::$app->db->createCommand()->insert('lecture_class_schedules', ['lecture_class_id' => $model->id, 'weekday' => ($index % 6) + 1, 'start_time_slot_id' => $slots[0]->id, 'end_time_slot_id' => $slots[1]->id, 'lecture_room_id' => $roomId])->execute();
+                LectureClassMeeting::deleteAll(['lecture_class_id' => $model->id]);
+                if (count($slots) >= 2) for ($meetingNo = 1; $meetingNo <= 4; $meetingNo++) {
+                    $meeting = new LectureClassMeeting(['lecture_class_id'=>$model->id,'meeting_number'=>$meetingNo,'schedule_date'=>date('Y-m-d',strtotime($startDate.' +'.($meetingNo-1).' weeks')),'start_time_slot_id'=>$slots[0]->id,'end_time_slot_id'=>$slots[1]->id,'lecture_room_id'=>$roomId,'lecturer_id'=>$lecturerIds?$lecturerIds[$index%count($lecturerIds)]:null,'status'=>$meetingNo===1?'completed':'scheduled','credits'=>$curriculum->subject->credits,'meeting_type'=>'lecture','planned_material'=>'Materi pertemuan '.$meetingNo,'realized_material'=>$meetingNo===1?'Materi pertemuan 1 telah disampaikan':null]);
+                    $this->saveSeedModel($meeting, 'jadwal pertemuan');
+                }
+            }
+        }
+    }
+
+    private function seedKrsBlocks(): void
+    {
+        $period = AcademicCalendar::find()->select('period')->orderBy(['period'=>SORT_DESC])->scalar() ?: date('Y').'/'.(date('Y')+1).' Ganjil';
+        $programIds = StudyProgram::find()->where(['is_active'=>1])->orderBy('id')->select('id')->column();
+        if (!$programIds) return;
+        foreach (Student::find()->orderBy('id')->all() as $index => $student) {
+            $model = KrsBlock::findOne(['student_id'=>$student->id,'academic_period'=>$period]) ?? new KrsBlock();
+            $model->setAttributes(['student_id'=>$student->id,'academic_period'=>$period,'study_program_id'=>$programIds[$index%count($programIds)],'entry_year'=>(int)date('Y')-($index%4),'current_semester'=>($index%8)+1,'academic_block'=>$index%4===0,'finance_block'=>$index%4===1,'library_block'=>$index%4===2,'student_affairs_block'=>$index%4===3,'notes'=>'Data cekal contoh untuk kebutuhan pengujian KRS.']);
+            $this->saveSeedModel($model,'cekal KRS mahasiswa '.$student->student_nationality_number);
+        }
+    }
+
+    private function seedStudyProgramSettings(): void
+    {
+        $period = AcademicCalendar::find()->select('period')->orderBy(['period'=>SORT_DESC])->scalar() ?: date('Y').'/'.(date('Y')+1).' Ganjil';
+        foreach (StudyProgram::find()->where(['is_active'=>1])->orderBy('id')->all() as $index => $program) {
+            $curriculumYearId = StudyProgramCurriculum::find()->where(['study_program_id'=>$program->id])->max('curriculum_year_id');
+            $model = StudyProgramSetting::findOne(['academic_period'=>$period,'study_program_id'=>$program->id]) ?? new StudyProgramSetting();
+            $model->setAttributes(['academic_period'=>$period,'study_program_id'=>$program->id,'new_student_curriculum_year_id'=>$curriculumYearId,'krs_enabled'=>true,'krs_validation_enabled'=>$index%2===0,'khs_enabled'=>true,'grading_enabled'=>true,'questionnaire_enabled'=>$index%3!==0,'lecturer_meeting_generation_enabled'=>true,'notes'=>'Pengaturan awal program studi untuk periode '.$period.'.']);
+            $this->saveSeedModel($model,'pengaturan prodi '.$program->name);
+        }
+    }
+
+    private function seedStudentSemesterStatuses(): void
+    {
+        $period = AcademicCalendar::find()->select('period')->orderBy(['period'=>SORT_DESC])->scalar() ?: date('Y').'/'.(date('Y')+1).' Ganjil';
+        $programIds = StudyProgram::find()->where(['is_active'=>1])->orderBy('id')->select('id')->column();
+        if (!$programIds) return;
+        $statuses = [StudentSemesterStatus::STATUS_ACTIVE,StudentSemesterStatus::STATUS_ACTIVE,StudentSemesterStatus::STATUS_LEAVE,StudentSemesterStatus::STATUS_INACTIVE];
+        foreach (Student::find()->orderBy('id')->all() as $index => $student) {
+            $block = KrsBlock::findOne(['student_id'=>$student->id,'academic_period'=>$period]);
+            $model = StudentSemesterStatus::findOne(['student_id'=>$student->id,'academic_period'=>$period]) ?? new StudentSemesterStatus();
+            $model->setAttributes(['student_id'=>$student->id,'academic_period'=>$period,'study_program_id'=>$block->study_program_id??$programIds[$index%count($programIds)],'semester'=>$block->current_semester??(($index%8)+1),'status'=>$statuses[$index%count($statuses)],'notes'=>'Status semester contoh untuk kebutuhan pengujian.']);
+            $this->saveSeedModel($model,'status semester mahasiswa '.$student->student_nationality_number);
+        }
+    }
+
+    private function seedKrsRegistrations(): void
+    {
+        $period = AcademicCalendar::find()->select('period')->orderBy(['period'=>SORT_DESC])->scalar() ?: date('Y').'/'.(date('Y')+1).' Ganjil';
+        $programIds = StudyProgram::find()->where(['is_active'=>1])->orderBy('id')->select('id')->column();
+        if (!$programIds) return;
+        foreach (Student::find()->orderBy('id')->all() as $index => $student) {
+            $semesterStatus = StudentSemesterStatus::findOne(['student_id'=>$student->id,'academic_period'=>$period]);
+            $programId = $semesterStatus->study_program_id??$programIds[$index%count($programIds)];
+            $model = KrsRegistration::findOne(['student_id'=>$student->id,'academic_period'=>$period]) ?? new KrsRegistration();
+            $model->setAttributes(['student_id'=>$student->id,'academic_period'=>$period,'study_program_id'=>$programId,'semester'=>$semesterStatus->semester??(($index%8)+1),'maximum_credits'=>24,'status'=>$index%3===0?KrsRegistration::STATUS_VALIDATED:KrsRegistration::STATUS_DRAFT,'validated_at'=>$index%3===0?date('Y-m-d H:i:s'):null,'validated_by'=>$index%3===0?1:null,'notes'=>'Data KRS contoh untuk kebutuhan pengujian.']);
+            if (!$model->save()) {$this->saveSeedModel($model,'KRS mahasiswa '.$student->student_nationality_number);continue;}
+            KrsRegistrationItem::deleteAll(['krs_registration_id'=>$model->id]);
+            $classes = LectureClass::find()->alias('lc')->joinWith('curriculum c')->where(['lc.academic_period'=>$period,'c.study_program_id'=>$programId])->orderBy('lc.id')->limit(2)->all();
+            foreach($classes as $class)$this->saveSeedModel(new KrsRegistrationItem(['krs_registration_id'=>$model->id,'lecture_class_id'=>$class->id]),'item KRS');
         }
     }
 

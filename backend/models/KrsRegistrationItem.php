@@ -1,0 +1,3 @@
+<?php
+namespace backend\models;use yii\db\ActiveRecord;
+class KrsRegistrationItem extends ActiveRecord{public static function tableName(){return 'krs_registration_items';}public function rules(){return [[['krs_registration_id','lecture_class_id'],'required'],[['krs_registration_id','lecture_class_id'],'integer'],[['krs_registration_id','lecture_class_id'],'unique','targetAttribute'=>['krs_registration_id','lecture_class_id']]];}public function beforeSave($insert){if($insert)$this->created_at=date('Y-m-d H:i:s');return parent::beforeSave($insert);}public function getLectureClass(){return $this->hasOne(LectureClass::class,['id'=>'lecture_class_id']);}}

@@ -1,0 +1,1 @@
+<?php $this->title='Tambah Jadwal Perkuliahan';?><h1><?=$this->title?></h1><div class="card card-success card-outline"><div class="card-body"><?=$this->render('_meeting_form',compact('class','model','timeSlots','lectureRooms','lecturers'))?></div></div>
